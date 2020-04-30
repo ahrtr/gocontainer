@@ -26,7 +26,7 @@ type Stack struct {
 }
 
 // New creates a stack.
-func New() *Stack {
+func New() Interface {
 	return &Stack{
 		items: []interface{}{},
 	}

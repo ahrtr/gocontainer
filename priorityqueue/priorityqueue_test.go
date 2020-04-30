@@ -100,6 +100,82 @@ func TestPQValue(t *testing.T) {
 	}
 }
 
+func TestPQReverseSort(t *testing.T) {
+	// create priority queue
+	pq := NewWithComparator(&myInt{})
+	pq.Add(15)
+	pq.Add(19)
+	pq.Add(12)
+	pq.Add(8)
+	pq.Add(13)
+	if pq.Len() != 5 {
+		t.Errorf("The length isn't expected, expect: 5, actual: %d\n", pq.Len())
+	}
+
+	// Peek
+	v1 := pq.Peek()
+	if v1 != 19 {
+		t.Errorf("The head element isn't expected, expect: 19, actual: %v\n", v1)
+	}
+	if pq.Len() != 5 {
+		t.Errorf("The length isn't expected, expect: 5, actual: %d\n", pq.Len())
+	}
+
+	// Contains
+	if !pq.Contains(12) {
+		t.Error("The queue should contain 12")
+	}
+
+	// Poll
+	v1 = pq.Poll()
+	if v1 != 19 {
+		t.Errorf("The head element isn't expected, expect: 19, actual: %v\n", v1)
+	}
+	if pq.Len() != 4 {
+		t.Errorf("The length isn't expected, expect: 4, actual: %d\n", pq.Len())
+	}
+
+	v1 = pq.Poll()
+	if v1 != 15 {
+		t.Errorf("The head element isn't expected, expect: 15, actual: %v\n", v1)
+	}
+	if pq.Len() != 3 {
+		t.Errorf("The length isn't expected, expect: 3, actual: %d\n", pq.Len())
+	}
+
+	// Contains (again)
+	if pq.Contains(15) {
+		t.Error("The queue shouldn't contain 15")
+	}
+
+	// Remove
+	if !pq.Contains(12) {
+		t.Error("The queue should contain 12")
+	}
+	if !pq.Remove(12) {
+		t.Error("Failed to remove element 12")
+	}
+	if pq.Contains(12) {
+		t.Error("The queue shouldn't contain 12")
+	}
+}
+
+type myInt struct{}
+
+// Compare returns reverse order
+func (i myInt) Compare(v1, v2 interface{}) (int, error) {
+	i1, i2 := v1.(int), v2.(int)
+	if i1 < i2 {
+		return 1, nil
+	}
+
+	if i1 > i2 {
+		return -1, nil
+	}
+
+	return 0, nil
+}
+
 func TestPQComparator(t *testing.T) {
 	pq := NewWithComparator(&student{})
 
