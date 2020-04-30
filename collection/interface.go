@@ -2,9 +2,9 @@ package collection
 
 // Interface is a type of collection, all containers should implement this interface.
 type Interface interface {
-	// IsEmpty returns true if this list contains no elements.
+	// IsEmpty returns true if this container contains no elements.
 	IsEmpty() bool
-	// Clear removes all of the elements from this list.
+	// Clear removes all of the elements from this container.
 	Clear()
 
 	// Len is the number of elements in the collection.
