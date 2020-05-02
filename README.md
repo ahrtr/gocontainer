@@ -58,7 +58,7 @@ type Interface interface {
 
 	// Len is the number of elements in the container.
 	// Len() is also included in sort.Interface. Only golang 1.14 supports embedding of Interfaces with overlapping method sets,
-	// so let add it in this interface in the future.
+	// so let's add it in this interface in the future.
 	//Len() int
 }
 ```
@@ -68,11 +68,11 @@ Currently this library implements the following containers:
 - Stack
 - Queue
 - Set
-- List
+- List (ArrayList, LinkedList)
 - PriorityQueue
 
 ## Stack
-Stack is a LIFO(last-in-first-out) container. It implements the following interface. Click **[here](examples/stack_example.go)** to find examples on how to use stack. 
+Stack is a LIFO(last-in-first-out) container. It implements the following interface. Click **[here](examples/stack_example.go)** to find examples on how to use a stack. 
 ```
 // Interface is a stack, which is LIFO (last-in-first-out).
 type Interface interface {
@@ -88,7 +88,7 @@ type Interface interface {
 ```
 
 ## Queue
-Queue is a FIFO(first-in-first-out) container. It implements the following interface. Click **[here](examples/queue_example.go)** to find examples on how to use queue.
+Queue is a FIFO(first-in-first-out) container. It implements the following interface. Click **[here](examples/queue_example.go)** to find examples on how to use a queue.
 ```
 // Interface is a type of queue, which is FIFO(first-in-first-out).
 type Interface interface {
@@ -106,7 +106,7 @@ type Interface interface {
 ```
 
 ## Set
-A set contains no duplicate elements. It implements the following interface. Click **[here](examples/set_example.go)** to find examples on how to use set. 
+A set contains no duplicate elements. It implements the following interface. Click **[here](examples/set_example.go)** to find examples on how to use a set. 
 ```
 // Interface is a type of set, which contains no duplicate elements.
 type Interface interface {
@@ -135,7 +135,7 @@ type IterateCallback func(interface{}) bool
 ```
 
 ## List
-This library implements two kinds of list, which are ArrayList and LinkedList, both of which implement the following interface. Click **[here](examples/list_example.go)** to find examples on how to use list.
+This library implements two kinds of list, which are **ArrayList** and **LinkedList**, both of which implement the following interface. Click **[here](examples/list_example.go)** to find examples on how to use a list.
 ```
 // Interface is a type of list, both ArrayList and LinkedList implement this interface.
 type Interface interface {
@@ -169,21 +169,14 @@ type Interface interface {
 The list.Interface has a nested sort.Interface, so a list can be sorted into ascending order, according to the natural ordering of its elements for some golang build-in data types, or sorted into a customized order, according to the comparator provided by applications. Please see [Sort](#sort) to get more detailed info.
 
 ## PriorityQueue
-PriorityQueue is an unbounded priority queue based on a priority heap. It implements the following interface. Click **[here](examples/priorityqueue_example.go)** to find examples on how to use priority queue.
+PriorityQueue is an unbounded priority queue based on a priority heap. It implements the following interface. Click **[here](examples/priorityqueue_example.go)** to find examples on how to use a priority queue.
 ```
 // Interface is a type of priority queue, and PriorityQueue implement this interface.
 type Interface interface {
-	collection.Interface
-	sort.Interface
+	queue.Interface
 
-	// Add inserts the specified element into this priority queue.
-	Add(val interface{})
 	// Contains returns true if this queue contains the specified element.
 	Contains(val interface{}) bool
-	// Peek retrieves, but does not remove, the head of this queue, or return nil if this queue is empty.
-	Peek() interface{}
-	// Poll retrieves and removes the head of the this queue, or return nil if this queue is empty.
-	Poll() interface{}
 	// Remove a single instance of the specified element from this queue, if it is present.
 	// It returns false if the target value isn't present, otherwise returns true.
 	Remove(val interface{}) bool
@@ -217,7 +210,7 @@ Some containers implement interface **sort.Interface**, such as ArrayList, Linke
 - float64
 - string
 
-Applications can also provide a sort.Comparator instance when constructing a container which implements sort.Interface. The rough logic should be something like below. Please find more examples in **[List](#list)** and **[PriorityQueue](#PriorityQueue)**.
+Applications can also provide a sort.Comparator instance when constructing a container which implements sort.Interface. The rough logic should be something like below. Please find more examples in **[List](examples/list_example.go)** and **[PriorityQueue](examples/priorityqueue_example.go)**.
 ```
 type MyComparator struct{}
 

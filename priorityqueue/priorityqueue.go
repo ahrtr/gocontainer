@@ -7,26 +7,18 @@ package priorityqueue
 
 import (
 	"container/heap"
-	"sort"
 
-	"github.com/ahrtr/gocontainer/collection"
+	"github.com/ahrtr/gocontainer/queue"
 
 	gsort "github.com/ahrtr/gocontainer/sort"
 )
 
 // Interface is a type of priority queue, and PriorityQueue implement this interface.
 type Interface interface {
-	collection.Interface
-	sort.Interface
+	queue.Interface
 
-	// Add inserts the specified element into this priority queue.
-	Add(val interface{})
 	// Contains returns true if this queue contains the specified element.
 	Contains(val interface{}) bool
-	// Peek retrieves, but does not remove, the head of this queue, or return nil if this queue is empty.
-	Peek() interface{}
-	// Poll retrieves and removes the head of the this queue, or return nil if this queue is empty.
-	Poll() interface{}
 	// Remove a single instance of the specified element from this queue, if it is present.
 	// It returns false if the target value isn't present, otherwise returns true.
 	Remove(val interface{}) bool
@@ -55,8 +47,12 @@ func NewWithComparator(c gsort.Comparator) Interface {
 	}
 }
 
+// Len returns the length of this priority queue.
 func (pq *PriorityQueue) Len() int { return len(pq.items) }
 
+// Less reports whether the element with index i should sort before the element with index j.
+// Less is supposed to be called only by the functions in package container/heap.
+// Applications shouldn't call this method directly.
 func (pq *PriorityQueue) Less(i, j int) bool {
 	var cmpRet int
 	var err error
@@ -71,6 +67,9 @@ func (pq *PriorityQueue) Less(i, j int) bool {
 	return cmpRet < 0
 }
 
+// Swap swaps the elements with indexes i and j.
+// Swap is supposed to be called only by the functions in package container/heap.
+// Applications shouldn't call this method directly.
 func (pq *PriorityQueue) Swap(i, j int) {
 	pq.items[i], pq.items[j] = pq.items[j], pq.items[i]
 }
@@ -81,13 +80,13 @@ func (pq *PriorityQueue) IsEmpty() bool {
 }
 
 // Push is supposed to be called only by heap.Push.
-// Developers shouldn't call this method directly.
+// Applications shouldn't call this method directly.
 func (pq *PriorityQueue) Push(val interface{}) {
 	pq.items = append(pq.items, val)
 }
 
 // Pop is supposed to be called only by heap.Pop.
-// Developers shouldn't call this method directly.
+// Applications shouldn't call this method directly.
 func (pq *PriorityQueue) Pop() interface{} {
 	size := pq.Len()
 
@@ -107,10 +106,12 @@ func (pq *PriorityQueue) Clear() {
 	pq.items = []interface{}{}
 }
 
+// Add inserts the specified element into this priority queue.
 func (pq *PriorityQueue) Add(val interface{}) {
 	heap.Push(pq, val)
 }
 
+// Peek retrieves, but does not remove, the head of this queue, or return nil if this queue is empty.
 func (pq *PriorityQueue) Peek() interface{} {
 	if pq.Len() > 0 {
 		return pq.items[0]
@@ -118,6 +119,7 @@ func (pq *PriorityQueue) Peek() interface{} {
 	return nil
 }
 
+// Poll retrieves and removes the head of the this queue, or return nil if this queue is empty.
 func (pq *PriorityQueue) Poll() interface{} {
 	if pq.Len() > 0 {
 		return heap.Pop(pq)
@@ -160,6 +162,7 @@ Previously the head of the queue is the the highest priority element, now it's t
 
 Re-implements the following methods in Interface:
 	Less(i, j int) bool   // sort.Interface
+	Swap(i, j int)        // sort.Interface
 	Push(val interface{}) // heap.Interface
 	Pop() interface{}     // heap.Interface
 
@@ -179,12 +182,19 @@ type reverse struct {
 
 // Reverse returns the reverse order for data.
 func Reverse(data Interface) Interface {
+	if _, ok := data.(*PriorityQueue); !ok {
+		panic("The parameter must be a pointer to PriorityQueue")
+	}
 	return &reverse{data}
 }
 
 // Less returns the opposite of the embedded implementation's Less method.
 func (r *reverse) Less(i, j int) bool {
-	return r.Interface.Less(j, i)
+	return r.Interface.(*PriorityQueue).Less(j, i)
+}
+
+func (r *reverse) Swap(i, j int) {
+	r.Interface.(*PriorityQueue).Swap(i, j)
 }
 
 // Push is supposed to be called only by heap.Push.

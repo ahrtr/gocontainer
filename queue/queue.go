@@ -16,9 +16,9 @@ type Interface interface {
 	Len() int
 	// Add inserts an element into the tail of this queue.
 	Add(val interface{})
-	// Peek retrieves but does not remove the head of this queue.
+	// Peek retrieves, but does not remove, the head of this queue, or return nil if this queue is empty.
 	Peek() interface{}
-	// Poll retrieves and removes the head of the this queue.
+	// Poll retrieves and removes the head of the this queue, or return nil if this queue is empty.
 	Poll() interface{}
 }
 

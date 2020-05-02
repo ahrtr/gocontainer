@@ -9,6 +9,6 @@ type Interface interface {
 
 	// Len is the number of elements in the collection.
 	// Len() is also included in sort.Interface. Only golang 1.14 supports embedding of Interfaces with overlapping method sets,
-	// so let add it in this interface in the future.
+	// so let's add it in this interface in the future.
 	//Len() int
 }
