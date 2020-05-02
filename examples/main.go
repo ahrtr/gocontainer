@@ -16,6 +16,7 @@ func main() {
 		priorityqueueExample1,
 		priorityqueueExample2,
 		priorityqueueExample3,
+		priorityqueueExample4,
 
 		listArrayListExample1,
 		listArrayListExample2,

@@ -153,3 +153,73 @@ func (pq *PriorityQueue) indexOf(val interface{}) int {
 	}
 	return -1
 }
+
+/*-----------------------------------------------------------------------------
+The function Reverse() returns the reverse order for the data.
+Previously the head of the queue is the the highest priority element, now it's the lowest priority element.
+
+Re-implements the following methods in Interface:
+	Less(i, j int) bool   // sort.Interface
+	Push(val interface{}) // heap.Interface
+	Pop() interface{}     // heap.Interface
+
+	// Add inserts the specified element into this priority queue.
+	Add(val interface{})
+	// Poll retrieves and removes the head of the this queue, or return nil if this queue is empty.
+	Poll() interface{}
+	// Remove a single instance of the specified element from this queue, if it is present.
+	// It returns false if the target value isn't present, otherwise returns true.
+	Remove(val interface{}) bool
+-----------------------------------------------------------------------------*/
+type reverse struct {
+	// This embedded Interface permits Reverse to use the methods of
+	// another Interface implementation.
+	Interface
+}
+
+// Reverse returns the reverse order for data.
+func Reverse(data Interface) Interface {
+	return &reverse{data}
+}
+
+// Less returns the opposite of the embedded implementation's Less method.
+func (r *reverse) Less(i, j int) bool {
+	return r.Interface.Less(j, i)
+}
+
+// Push is supposed to be called only by heap.Push.
+// Developers shouldn't call this method directly.
+func (r *reverse) Push(val interface{}) {
+	r.Interface.(*PriorityQueue).Push(val)
+}
+
+// Pop is supposed to be called only by heap.Pop.
+// Developers shouldn't call this method directly.
+func (r *reverse) Pop() interface{} {
+	return r.Interface.(*PriorityQueue).Pop()
+}
+
+func (r *reverse) Add(val interface{}) {
+	heap.Push(r, val)
+}
+
+func (r *reverse) Poll() interface{} {
+	if r.Interface.Len() > 0 {
+		return heap.Pop(r)
+	}
+	return nil
+}
+
+func (r *reverse) Remove(val interface{}) bool {
+	if r.Interface.Len() == 0 {
+		return false
+	}
+
+	i := r.Interface.(*PriorityQueue).indexOf(val)
+	if i < 0 {
+		return false
+	}
+
+	heap.Remove(r, i)
+	return true
+}

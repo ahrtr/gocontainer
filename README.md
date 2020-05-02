@@ -163,6 +163,11 @@ type Interface interface {
 
 The elements of a PriorityQueue are ordered according to their natural ordering, or by a Comparator provided at PriorityQueue construction time. Please see [Sort](#sort) to get more detailed info.
 
+If the reverse order for the elements is expected, then makes use of the priorityqueue.Reverse function, 
+```
+pq := priorityqueue.Reverse(priorityqueue.New())
+```
+
 ## Others
 More containers will be added soon. Please also kindly let me know if you need any other kinds of containers. Feel free to raise issues. 
 

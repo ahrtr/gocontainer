@@ -37,6 +37,34 @@ func priorityqueueExample1() {
 func priorityqueueExample2() {
 	printFuncName()
 
+	pq := priorityqueue.Reverse(priorityqueue.New())
+
+	values := []string{"benjamin", "alice", "john", "tom", "bill"}
+
+	for _, v := range values {
+		pq.Add(v)
+	}
+
+	for _, v := range values {
+		fmt.Printf("pq.Contains(%v) = %t\n", v, pq.Contains(v))
+	}
+
+	fmt.Printf("pq.Remove(john) = %t\n", pq.Remove("john"))
+
+	for {
+		if pq.Peek() == nil {
+			break
+		}
+
+		fmt.Printf("pq.Peek() = %v\n", pq.Peek())
+		fmt.Printf("pq.Poll() = %v\n", pq.Poll())
+	}
+}
+
+// priorityqueueExample3 demos how to reverse order for the build-in data types using a comparator.
+func priorityqueueExample3() {
+	printFuncName()
+
 	pq := priorityqueue.NewWithComparator(&reverseString{})
 
 	values := []string{"benjamin", "alice", "john", "tom", "bill"}
@@ -62,7 +90,7 @@ func priorityqueueExample2() {
 }
 
 // priorityqueueExample3 demos how to order the customized data types (struct).
-func priorityqueueExample3() {
+func priorityqueueExample4() {
 	printFuncName()
 
 	pq := priorityqueue.NewWithComparator(&student{})

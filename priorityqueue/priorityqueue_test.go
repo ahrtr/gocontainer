@@ -102,7 +102,17 @@ func TestPQValue(t *testing.T) {
 
 func TestPQReverseSort(t *testing.T) {
 	// create priority queue
+	pq := Reverse(New())
+	reverseSort(t, pq)
+}
+
+func TestPQReverseSortWithComparator(t *testing.T) {
+	// create priority queue
 	pq := NewWithComparator(&myInt{})
+	reverseSort(t, pq)
+}
+
+func reverseSort(t *testing.T, pq Interface) {
 	pq.Add(15)
 	pq.Add(19)
 	pq.Add(12)
