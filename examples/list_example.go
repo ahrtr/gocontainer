@@ -74,14 +74,14 @@ func listBasicOperation(h list.Interface) {
 	v3, _ := h.Remove(3)
 	fmt.Printf("h.Remove(3) = %v\n", v3)
 
-	// Iterator all the elements (method 1)
+	// Iterate all the elements (method 1)
 	fmt.Println("Iterate (method 1): ")
 	for i := 0; i < h.Len(); i++ {
 		v, _ := h.Get(i)
 		fmt.Printf("    Index: %d, value: %v\n", i, v)
 	}
 
-	// Iterator all the elements (method 2)
+	// Iterate all the elements (method 2)
 	fmt.Println("Iterate (method 2): ")
 	it, hasNext := h.Iterator()
 	var v interface{}
@@ -90,7 +90,7 @@ func listBasicOperation(h list.Interface) {
 		fmt.Printf("    Value: %v\n", v)
 	}
 
-	// Iterator all the elements (method 3: reverse iterator)
+	// Iterate all the elements (method 3: reverse iterator)
 	fmt.Println("Reverse iterate (method 2): ")
 	it, hasPrev := h.ReverseIterator()
 	for hasPrev {
@@ -108,14 +108,14 @@ func listSortData(h list.Interface) {
 	fmt.Println("Sorting the data...")
 	sort.Sort(h)
 
-	// Iterator all the elements (method 1)
+	// Iterate all the elements (method 1)
 	fmt.Println("Iterate (method 1): ")
 	for i := 0; i < h.Len(); i++ {
 		v, _ := h.Get(i)
 		fmt.Printf("    Index: %d, value: %v\n", i, v)
 	}
 
-	// Iterator all the elements (method 2)
+	// Iterate all the elements (method 2)
 	fmt.Println("Iterate (method 2): ")
 	it, hasNext := h.Iterator()
 	var v interface{}
@@ -124,7 +124,7 @@ func listSortData(h list.Interface) {
 		fmt.Printf("    Value: %v\n", v)
 	}
 
-	// Iterator all the elements (method 3: reverse iterator)
+	// Iterate all the elements (method 3: reverse iterator)
 	fmt.Println("Reverse iterate (method 2): ")
 	it, hasPrev := h.ReverseIterator()
 	for hasPrev {
@@ -142,14 +142,14 @@ func listReverseSortData(h list.Interface) {
 	fmt.Println("Reverse sorting the data...")
 	sort.Sort(sort.Reverse(h))
 
-	// Iterator all the elements (method 1)
+	// Iterate all the elements (method 1)
 	fmt.Println("Iterate (method 1): ")
 	for i := 0; i < h.Len(); i++ {
 		v, _ := h.Get(i)
 		fmt.Printf("    Index: %d, value: %v\n", i, v)
 	}
 
-	// Iterator all the elements (method 2)
+	// Iterate all the elements (method 2)
 	fmt.Println("Iterate (method 2): ")
 	it, hasNext := h.Iterator()
 	var v interface{}
@@ -158,7 +158,7 @@ func listReverseSortData(h list.Interface) {
 		fmt.Printf("    Value: %v\n", v)
 	}
 
-	// Iterator all the elements (method 3: reverse iterator)
+	// Iterate all the elements (method 3: reverse iterator)
 	fmt.Println("Reverse iterate (method 2): ")
 	it, hasPrev := h.ReverseIterator()
 	for hasPrev {
@@ -183,14 +183,14 @@ func listCustomizedData(h list.Interface) {
 	fmt.Println("Sorting the data...")
 	sort.Sort(h)
 
-	// Iterator all the elements (method 1)
+	// Iterate all the elements (method 1)
 	fmt.Println("Iterate (method 1): ")
 	for i := 0; i < h.Len(); i++ {
 		v, _ := h.Get(i)
 		fmt.Printf("    Index: %d, value: %v\n", i, v)
 	}
 
-	// Iterator all the elements (method 2)
+	// Iterate all the elements (method 2)
 	fmt.Println("Iterate (method 2): ")
 	it, hasNext := h.Iterator()
 	var v interface{}
@@ -199,7 +199,7 @@ func listCustomizedData(h list.Interface) {
 		fmt.Printf("    Value: %v\n", v)
 	}
 
-	// Iterator all the elements (method 3: reverse iterator)
+	// Iterate all the elements (method 3: reverse iterator)
 	fmt.Println("Reverse iterate (method 2): ")
 	it, hasPrev := h.ReverseIterator()
 	for hasPrev {

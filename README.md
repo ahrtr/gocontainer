@@ -4,6 +4,7 @@ gocontainer implements some containers which exist in Java, but are missing in g
 
 # Table of Contents
 
+- **[How to use this repo](#how-to-use-this-repo)**
 - **[Common Interface](#Common-Interface)**
 - **[Containers](#Containers)**
   - [Stack](#stack)
@@ -16,6 +17,34 @@ gocontainer implements some containers which exist in Java, but are missing in g
 - **[Contribute to this repo](#contribute-to-this-repo)**
 - **[Support](#support)**
 
+# How to use this repo
+It's very straightforward, just imports the containers you need and then use them directly. The following is an example for ArrayList, 
+```
+package main
+
+import (
+	"fmt"
+
+	"github.com/ahrtr/gocontainer/list"
+)
+
+func main() {
+	al := list.NewArrayList()
+
+	al.Add(5)
+	al.Add(6)
+	al.Add(7)
+
+	// Iterate all the elements 
+	fmt.Println("Iterate (method 1): ")
+	for i := 0; i < al.Len(); i++ {
+		v, _ := al.Get(i)
+		fmt.Printf("    Index: %d, value: %v\n", i, v)
+	}
+}
+```
+
+Please find more examples **[here](examples)**. 
 
 # Common Interface
 All containers in this repository implement interface **collection.Interface**,
@@ -198,7 +227,7 @@ func (c *MyComparator) Compare(v1, v2 interface{}) (int, error) {
 ```
 
 # Contribute to this repo
-Anyone is welcome to contribute to this repo. Feel free to fork this repo, and submit pull requests.
+Anyone is welcome to contribute to this repo. Please raise an issue firstly, then fork this repo and submit a pull request.
 
 Currently this repo is under heavily development, any helps are appreciated! 
 

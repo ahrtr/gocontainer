@@ -1,4 +1,4 @@
-.PHONY: all test
+.PHONY: all test examples
 
 all: test
 
@@ -12,3 +12,5 @@ unitTest:
 	go test ${TEST_OPTS} github.com/ahrtr/gocontainer/priorityqueue
 	go test ${TEST_OPTS} github.com/ahrtr/gocontainer/sort
 	
+examples:
+	go run examples/*.go
