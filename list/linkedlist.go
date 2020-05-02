@@ -24,7 +24,7 @@ package list
 import (
 	"fmt"
 
-	"github.com/ahrtr/gocontainer/sort"
+	gsort "github.com/ahrtr/gocontainer/sort"
 )
 
 type element struct {
@@ -39,7 +39,7 @@ type LinkedList struct {
 	head   *element
 	tail   *element
 	length int
-	cmp    sort.Comparator
+	cmp    gsort.Comparator
 }
 
 // NewLinkedList initializes and returns an LinkedList.
@@ -53,7 +53,7 @@ func NewLinkedList() Interface {
 }
 
 // NewLinkedListWithComparator initializes and returns an LinkedList with a comparator.
-func NewLinkedListWithComparator(c sort.Comparator) Interface {
+func NewLinkedListWithComparator(c gsort.Comparator) Interface {
 	return &LinkedList{
 		head:   nil,
 		tail:   nil,
@@ -74,7 +74,7 @@ func (ll *LinkedList) Less(i, j int) bool {
 	if nil != ll.cmp {
 		cmpRet, err = ll.cmp.Compare(v1, v2)
 	} else {
-		cmpRet, err = sort.Compare(v1, v2)
+		cmpRet, err = gsort.Compare(v1, v2)
 	}
 	if err != nil {
 		panic(err)

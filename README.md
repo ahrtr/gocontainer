@@ -87,6 +87,11 @@ type Interface interface {
 }
 ```
 
+Call stack.New() to create a stack,
+```
+New() Interface
+```
+
 ## Queue
 Queue is a FIFO(first-in-first-out) container. It implements the following interface. Click **[here](examples/queue_example.go)** to find examples on how to use a queue.
 ```
@@ -103,6 +108,11 @@ type Interface interface {
 	// Poll retrieves and removes the head of the this queue.
 	Poll() interface{}
 }
+```
+
+Call queue.New() to create a queue,
+```
+New() Interface
 ```
 
 ## Set
@@ -125,6 +135,11 @@ type Interface interface {
 	// Iterate iterates all the elements in this set.
 	Iterate(cb IterateCallback)
 }
+```
+
+Call set.New() to create a set,
+```
+New() Interface
 ```
 
 Applications are supposed to define a callback function (see below) when iterating a set. Please see the example on how to iterate a set. 
@@ -166,7 +181,18 @@ type Interface interface {
 }
 ```
 
-The list.Interface has a nested sort.Interface, so a list can be sorted into ascending order, according to the natural ordering of its elements for some golang build-in data types, or sorted into a customized order, according to the comparator provided by applications. Please see [Sort](#sort) to get more detailed info.
+Call list.NewArrayList() and list.NewLinkedList() to create a ArrayList and a LinkedList respectively, 
+```
+NewArrayList() Interface
+NewLinkedList() Interface
+```
+A sort.Comparator instance can be provided when constructing a list (ArrayList or LinkedList), please get more detailed info in **[Sort](#sort)**.
+```
+NewArrayListWithComparator(c gsort.Comparator) Interface 
+NewLinkedListWithComparator(c gsort.Comparator) Interface
+```
+
+The list.Interface has a nested sort.Interface, so a list can be sorted into ascending order, according to the natural ordering of its elements for some golang build-in data types, or sorted into a customized order, according to the comparator provided by applications. 
 
 ## PriorityQueue
 PriorityQueue is an unbounded priority queue based on a priority heap. It implements the following interface. Click **[here](examples/priorityqueue_example.go)** to find examples on how to use a priority queue.
@@ -183,7 +209,16 @@ type Interface interface {
 }
 ```
 
-The elements of a PriorityQueue are ordered according to their natural ordering, or by a Comparator provided at PriorityQueue construction time. Please see [Sort](#sort) to get more detailed info.
+Call priorityqueue.New() to create a PriorityQueue,
+```
+New() Interface
+```
+A sort.Comparator instance can be provided when constructing a PriorityQueue, please get more detailed info in **[Sort](#sort)**.
+```
+NewWithComparator(c gsort.Comparator) Interface
+```
+
+The elements of a PriorityQueue are ordered according to their natural ordering, or by a Comparator provided at PriorityQueue construction time. 
 
 If the reverse order for the elements is expected, then makes use of the priorityqueue.Reverse function, 
 ```
@@ -210,7 +245,18 @@ Some containers implement interface **sort.Interface**, such as ArrayList, Linke
 - float64
 - string
 
-Applications can also provide a sort.Comparator instance when constructing a container which implements sort.Interface. The rough logic should be something like below. Please find more examples in **[List](examples/list_example.go)** and **[PriorityQueue](examples/priorityqueue_example.go)**.
+Applications can also provide a sort.Comparator instance when constructing a container which implements sort.Interface.
+```
+// Comparator imposes a total ordering on some collection of objects.
+// Comparators can be passed to the construction function of a container(such as ArrayList, LinkedList or PriorityQueue) to allow precise control over the sort order.
+type Comparator interface {
+	// Compare compares its two arguments for order.
+	// It returns a negative integer, zero, or a positive integer as the first argument is less than, equal to, or greater than the second.
+	Compare(v1 interface{}, v2 interface{}) (int, error)
+}
+```
+
+The rough logic should be something like below. Please find more examples in **[List](examples/list_example.go)** and **[PriorityQueue](examples/priorityqueue_example.go)**.
 ```
 type MyComparator struct{}
 

@@ -7,7 +7,7 @@ import (
 )
 
 // Comparator imposes a total ordering on some collection of objects.
-// Comparators can be passed to the construction function of a container(such as ArrayList or LinkedList) to allow precise control over the sort order.
+// Comparators can be passed to the construction function of a container(such as ArrayList, LinkedList or PriorityQueue) to allow precise control over the sort order.
 type Comparator interface {
 	// Compare compares its two arguments for order.
 	// It returns a negative integer, zero, or a positive integer as the first argument is less than, equal to, or greater than the second.
