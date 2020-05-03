@@ -1,3 +1,6 @@
+// Copyright (c) 2019, Benjamin Wang (benjamin_wang@aliyun.com). All rights reserved.
+// Licensed under the MIT license that can be found in the LICENSE file.
+
 package main
 
 import (
@@ -27,6 +30,10 @@ func main() {
 		listLinkedListExample2,
 		listLinkedListExample3,
 		listLinkedListExample4,
+
+		linkedmapExample1,
+		linkedmapExample2,
+		linkedmapExample3,
 	}
 
 	cnt := 0

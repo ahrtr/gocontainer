@@ -12,6 +12,7 @@ gocontainer implements some containers which exist in Java, but are missing in g
   - [Set](#set)
   - [List](#list)
   - [PriorityQueue](#priorityqueue)
+  - [LinkedMap](#linkedMap)
   - [Others](#others)
 - **[Sort](#sort)**
 - **[Contribute to this repo](#contribute-to-this-repo)**
@@ -70,6 +71,7 @@ Currently this library implements the following containers:
 - Set
 - List (ArrayList, LinkedList)
 - PriorityQueue
+- LinkedMap
 
 ## Stack
 Stack is a LIFO(last-in-first-out) container. It implements the following interface. Click **[here](examples/stack_example.go)** to find examples on how to use a stack. 
@@ -225,11 +227,59 @@ If the reverse order for the elements is expected, then makes use of the priorit
 pq := priorityqueue.Reverse(priorityqueue.New())
 ```
 
+## LinkedMap
+LinkedMap is based on a map and a doubly linked list. The iteration ordering is normally the order in which keys were inserted into the map, or the order in which the keys were accessed if the accessOrder flag is set. It implements the following interface. Click **[here](examples/linkedmap_example.go)** to find examples on how to use a linked map.
+```
+// Interface is a type of linked map, and linkedMap implements this interface.
+type Interface interface {
+	collection.Interface
+
+	// Len returns the number of elements in the linkedMap.
+	Len() int
+	// Put associates the specified value with the specified key in this map. If the map previously contained a mapping for the key,
+	// the old value is replaced by the specified value.
+	// It returns the previous value associated with the specified key, or nil if there was no mapping for the key.
+	// A nil return can also indicate that the map previously associated nil with the specified key.
+	Put(k, v interface{}) interface{}
+	// WithAccessOrder configures the iteration ordering for this linked map,
+	// true for access-order, and false for insertion-order.
+	WithAccessOrder(accessOrder bool) Interface
+	// Get returns the value to which the specified key is mapped, or nil if this map contains no mapping for the key.
+	Get(k interface{}) interface{}
+	// GetOrDefault returns the value to which the specified key is mapped, or the defaultValue if this map contains no mapping for the key.
+	GetOrDefault(k, defaultValue interface{}) interface{}
+	// ContainsKey returns true if this map contains a mapping for the specified key.
+	ContainsKey(k interface{}) bool
+	// ContainsValue returns true if this map maps one or more keys to the specified value.
+	ContainsValue(v interface{}) bool
+	// Remove removes the mapping for a key from this map if it is present.
+	// It returns the value to which this map previously associated the key, and true,
+	// or nil and false if the map contained no mapping for the key.
+	Remove(k interface{}) (interface{}, bool)
+	// RemoveFirstElement removes the first element from this map, which is the head of the list.
+	// It returns the (key, value, true) if the map isn't empty, or (nil, nil, false) if the map is empty.
+	RemoveFirstElement() (interface{}, interface{}, bool)
+	// RemoveLastElement removes the last element from this map, which is the tail of the list.
+	// It returns the (key, value, true) if the map isn't empty, or (nil, nil, false) if the map is empty.
+	RemoveLastElement() (interface{}, interface{}, bool)
+
+	// Iterator returns an iterator over the elements in this map in proper sequence.
+	Iterator() (func() (interface{}, interface{}, bool), bool)
+	// ReverseIterator returns an iterator over the elements in this map in reverse sequence as Iterator.
+	ReverseIterator() (func() (interface{}, interface{}, bool), bool)
+}
+```
+
+Call linkedmap.New() to create a linked map,
+```
+New() Interface
+```
+
 ## Others
 More containers will be added soon. Please also kindly let me know if you need any other kinds of containers. Feel free to raise issues. 
 
 # Sort
-Some containers implement interface **sort.Interface**, such as ArrayList, LinkedList and PriorityQueue. For the following golang build-in data types, the elements can be ordered into ascending order according to their natural ordering. Note that for **bool**, a false is regarded as less than a true. 
+Some containers implement interface **sort.Interface**, such as ArrayList and LinkedList, which means that they can be sorted directly by sort.Sort(h). For the following golang build-in data types, the elements can be ordered into ascending order according to their natural ordering. Note that for **bool**, a false is regarded as less than a true. 
 - bool
 - int
 - int8
