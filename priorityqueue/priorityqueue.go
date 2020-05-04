@@ -13,7 +13,7 @@ import (
 	gsort "github.com/ahrtr/gocontainer/sort"
 )
 
-// Interface is a type of priority queue, and PriorityQueue implement this interface.
+// Interface is a type of priority queue, and priorityQueue implement this interface.
 type Interface interface {
 	queue.Interface
 
@@ -24,36 +24,36 @@ type Interface interface {
 	Remove(val interface{}) bool
 }
 
-// PriorityQueue represents an unbounded priority queue based on a priority heap.
+// priorityQueue represents an unbounded priority queue based on a priority heap.
 // It implements heap.Interface.
-type PriorityQueue struct {
+type priorityQueue struct {
 	items []interface{}
 	cmp   gsort.Comparator
 }
 
-// New initializes and returns an PriorityQueue.
+// New initializes and returns an priorityQueue.
 func New() Interface {
-	return &PriorityQueue{
+	return &priorityQueue{
 		items: []interface{}{},
 		cmp:   nil,
 	}
 }
 
-// NewWithComparator initializes and returns an PriorityQueue with a comparator.
+// NewWithComparator initializes and returns an priorityQueue with a comparator.
 func NewWithComparator(c gsort.Comparator) Interface {
-	return &PriorityQueue{
+	return &priorityQueue{
 		items: []interface{}{},
 		cmp:   c,
 	}
 }
 
 // Len returns the length of this priority queue.
-func (pq *PriorityQueue) Len() int { return len(pq.items) }
+func (pq *priorityQueue) Len() int { return len(pq.items) }
 
 // Less reports whether the element with index i should sort before the element with index j.
 // Less is supposed to be called only by the functions in package container/heap.
 // Applications shouldn't call this method directly.
-func (pq *PriorityQueue) Less(i, j int) bool {
+func (pq *priorityQueue) Less(i, j int) bool {
 	var cmpRet int
 	var err error
 	if nil != pq.cmp {
@@ -70,24 +70,24 @@ func (pq *PriorityQueue) Less(i, j int) bool {
 // Swap swaps the elements with indexes i and j.
 // Swap is supposed to be called only by the functions in package container/heap.
 // Applications shouldn't call this method directly.
-func (pq *PriorityQueue) Swap(i, j int) {
+func (pq *priorityQueue) Swap(i, j int) {
 	pq.items[i], pq.items[j] = pq.items[j], pq.items[i]
 }
 
 // IsEmpty returns true if this list contains no elements.
-func (pq *PriorityQueue) IsEmpty() bool {
+func (pq *priorityQueue) IsEmpty() bool {
 	return pq.Len() == 0
 }
 
 // Push is supposed to be called only by heap.Push.
 // Applications shouldn't call this method directly.
-func (pq *PriorityQueue) Push(val interface{}) {
+func (pq *priorityQueue) Push(val interface{}) {
 	pq.items = append(pq.items, val)
 }
 
 // Pop is supposed to be called only by heap.Pop.
 // Applications shouldn't call this method directly.
-func (pq *PriorityQueue) Pop() interface{} {
+func (pq *priorityQueue) Pop() interface{} {
 	size := pq.Len()
 
 	if size > 0 {
@@ -99,7 +99,7 @@ func (pq *PriorityQueue) Pop() interface{} {
 }
 
 // Clear removes all of the elements from this priority queue.
-func (pq *PriorityQueue) Clear() {
+func (pq *priorityQueue) Clear() {
 	for i := 0; i < len(pq.items); i++ {
 		pq.items[i] = nil
 	}
@@ -107,12 +107,12 @@ func (pq *PriorityQueue) Clear() {
 }
 
 // Add inserts the specified element into this priority queue.
-func (pq *PriorityQueue) Add(val interface{}) {
+func (pq *priorityQueue) Add(val interface{}) {
 	heap.Push(pq, val)
 }
 
 // Peek retrieves, but does not remove, the head of this queue, or return nil if this queue is empty.
-func (pq *PriorityQueue) Peek() interface{} {
+func (pq *priorityQueue) Peek() interface{} {
 	if pq.Len() > 0 {
 		return pq.items[0]
 	}
@@ -120,18 +120,18 @@ func (pq *PriorityQueue) Peek() interface{} {
 }
 
 // Poll retrieves and removes the head of the this queue, or return nil if this queue is empty.
-func (pq *PriorityQueue) Poll() interface{} {
+func (pq *priorityQueue) Poll() interface{} {
 	if pq.Len() > 0 {
 		return heap.Pop(pq)
 	}
 	return nil
 }
 
-func (pq *PriorityQueue) Contains(val interface{}) bool {
+func (pq *priorityQueue) Contains(val interface{}) bool {
 	return pq.indexOf(val) >= 0
 }
 
-func (pq *PriorityQueue) Remove(val interface{}) bool {
+func (pq *priorityQueue) Remove(val interface{}) bool {
 	if pq.Len() == 0 {
 		return false
 	}
@@ -145,7 +145,7 @@ func (pq *PriorityQueue) Remove(val interface{}) bool {
 	return true
 }
 
-func (pq *PriorityQueue) indexOf(val interface{}) int {
+func (pq *priorityQueue) indexOf(val interface{}) int {
 	if nil != val {
 		for i := 0; i < len(pq.items); i++ {
 			if val == pq.items[i] {
@@ -182,31 +182,31 @@ type reverse struct {
 
 // Reverse returns the reverse order for data.
 func Reverse(data Interface) Interface {
-	if _, ok := data.(*PriorityQueue); !ok {
-		panic("The parameter must be a pointer to PriorityQueue")
+	if _, ok := data.(*priorityQueue); !ok {
+		panic("The parameter must be a pointer to priorityQueue")
 	}
 	return &reverse{data}
 }
 
 // Less returns the opposite of the embedded implementation's Less method.
 func (r *reverse) Less(i, j int) bool {
-	return r.Interface.(*PriorityQueue).Less(j, i)
+	return r.Interface.(*priorityQueue).Less(j, i)
 }
 
 func (r *reverse) Swap(i, j int) {
-	r.Interface.(*PriorityQueue).Swap(i, j)
+	r.Interface.(*priorityQueue).Swap(i, j)
 }
 
 // Push is supposed to be called only by heap.Push.
 // Developers shouldn't call this method directly.
 func (r *reverse) Push(val interface{}) {
-	r.Interface.(*PriorityQueue).Push(val)
+	r.Interface.(*priorityQueue).Push(val)
 }
 
 // Pop is supposed to be called only by heap.Pop.
 // Developers shouldn't call this method directly.
 func (r *reverse) Pop() interface{} {
-	return r.Interface.(*PriorityQueue).Pop()
+	return r.Interface.(*priorityQueue).Pop()
 }
 
 func (r *reverse) Add(val interface{}) {
@@ -225,7 +225,7 @@ func (r *reverse) Remove(val interface{}) bool {
 		return false
 	}
 
-	i := r.Interface.(*PriorityQueue).indexOf(val)
+	i := r.Interface.(*priorityQueue).indexOf(val)
 	if i < 0 {
 		return false
 	}

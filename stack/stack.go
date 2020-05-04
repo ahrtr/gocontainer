@@ -20,32 +20,32 @@ type Interface interface {
 	Pop() interface{}
 }
 
-// Stack represents a stack.
-type Stack struct {
+// stack is LIFO.
+type stack struct {
 	items []interface{}
 }
 
 // New creates a stack.
 func New() Interface {
-	return &Stack{
+	return &stack{
 		items: []interface{}{},
 	}
 }
 
-func (s *Stack) Len() int {
+func (s *stack) Len() int {
 	return len(s.items)
 }
 
 // IsEmpty returns true if this stack contains no elements.
-func (s *Stack) IsEmpty() bool {
+func (s *stack) IsEmpty() bool {
 	return s.Len() == 0
 }
 
-func (s *Stack) Push(val interface{}) {
+func (s *stack) Push(val interface{}) {
 	s.items = append(s.items, val)
 }
 
-func (s *Stack) Pop() interface{} {
+func (s *stack) Pop() interface{} {
 	if len(s.items) > 0 {
 		val := s.items[len(s.items)-1]
 		s.items = s.items[:len(s.items)-1]
@@ -56,7 +56,7 @@ func (s *Stack) Pop() interface{} {
 }
 
 // Clear removes all the elements from this stack.
-func (s *Stack) Clear() {
+func (s *stack) Clear() {
 	for i := 0; i < len(s.items); i++ {
 		s.items[i] = nil
 	}

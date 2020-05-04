@@ -3,7 +3,7 @@
 
 // Package set implements a set, which contains no duplicate elements.
 //
-// To iterate over a set (where s is a *Set):
+// To iterate over a set (where s is a *set):
 //   s.Iterate(func(v interface{}) bool {
 //       // do something with v
 //	     return true
@@ -38,28 +38,28 @@ type Interface interface {
 // If the callback function returns false, then the Iterate breaks.
 type IterateCallback func(interface{}) bool
 
-// Set is the definition of a set data structure, which contains no duplicate elements.
-type Set struct {
+// set is the definition of a set data structure, which contains no duplicate elements.
+type set struct {
 	items map[interface{}]struct{}
 }
 
 // New creates a set.
 func New() Interface {
-	return &Set{
+	return &set{
 		items: map[interface{}]struct{}{},
 	}
 }
 
-func (s *Set) Len() int {
+func (s *set) Len() int {
 	return len(s.items)
 }
 
 // IsEmpty returns true if this set contains no elements.
-func (s *Set) IsEmpty() bool {
+func (s *set) IsEmpty() bool {
 	return s.Len() == 0
 }
 
-func (s *Set) Add(val interface{}) bool {
+func (s *set) Add(val interface{}) bool {
 	if _, ok := s.items[val]; !ok {
 		s.items[val] = struct{}{}
 		return true
@@ -67,14 +67,14 @@ func (s *Set) Add(val interface{}) bool {
 	return false
 }
 
-func (s *Set) Contains(val interface{}) bool {
+func (s *set) Contains(val interface{}) bool {
 	if _, ok := s.items[val]; ok {
 		return true
 	}
 	return false
 }
 
-func (s *Set) Remove(val interface{}) bool {
+func (s *set) Remove(val interface{}) bool {
 	if _, ok := s.items[val]; ok {
 		delete(s.items, val)
 		return true
@@ -83,11 +83,11 @@ func (s *Set) Remove(val interface{}) bool {
 }
 
 // Clear removes all the elements from this set.
-func (s *Set) Clear() {
+func (s *set) Clear() {
 	s.items = map[interface{}]struct{}{}
 }
 
-func (s *Set) Iterate(cb IterateCallback) {
+func (s *set) Iterate(cb IterateCallback) {
 	for k, _ := range s.items {
 		if !cb(k) {
 			break

@@ -1,9 +1,9 @@
 // Copyright (c) 2019, Benjamin Wang (benjamin_wang@aliyun.com). All rights reserved.
 // Licensed under the MIT license that can be found in the LICENSE file.
 
-// Package list implements both an ArrayList and a LinkedList.
+// Package list implements both an arrayList and a linkedList.
 //
-// To iterate over an LinkedList (where ll is a *LinkedList):
+// To iterate over an linkedList (where ll is a *linkedList):
 //	it, hasNext := ll.Iterator()
 //  var v interface{}
 //	for hasNext {
@@ -11,7 +11,7 @@
 //		// do something with v
 //	}
 //
-// To iterate over an LinkedList in reverse order (where ll is a *LinkedList):
+// To iterate over an linkedList in reverse order (where ll is a *linkedList):
 //	it, hasPrev := ll.ReverseIterator()
 //  var v interface{}
 //	for hasPrev {
@@ -33,9 +33,9 @@ type element struct {
 	value interface{}
 }
 
-// LinkedList represents a doubly linked list.
+// linkedList represents a doubly linked list.
 // It implements the interface list.Interface.
-type LinkedList struct {
+type linkedList struct {
 	head   *element
 	tail   *element
 	length int
@@ -44,7 +44,7 @@ type LinkedList struct {
 
 // NewLinkedList initializes and returns an LinkedList.
 func NewLinkedList() Interface {
-	return &LinkedList{
+	return &linkedList{
 		head:   nil,
 		tail:   nil,
 		length: 0,
@@ -54,7 +54,7 @@ func NewLinkedList() Interface {
 
 // NewLinkedListWithComparator initializes and returns an LinkedList with a comparator.
 func NewLinkedListWithComparator(c gsort.Comparator) Interface {
-	return &LinkedList{
+	return &linkedList{
 		head:   nil,
 		tail:   nil,
 		length: 0,
@@ -62,11 +62,11 @@ func NewLinkedListWithComparator(c gsort.Comparator) Interface {
 	}
 }
 
-func (ll *LinkedList) Len() int {
+func (ll *linkedList) Len() int {
 	return ll.length
 }
 
-func (ll *LinkedList) Less(i, j int) bool {
+func (ll *linkedList) Less(i, j int) bool {
 	v1, v2 := ll.getElement(i).value, ll.getElement(j).value
 
 	var cmpRet int
@@ -83,7 +83,7 @@ func (ll *LinkedList) Less(i, j int) bool {
 	return cmpRet < 0
 }
 
-func (ll *LinkedList) Swap(i, j int) {
+func (ll *linkedList) Swap(i, j int) {
 	if i == j {
 		return
 	}
@@ -93,16 +93,16 @@ func (ll *LinkedList) Swap(i, j int) {
 	e1.value, e2.value = e2.value, e1.value
 }
 
-func (ll *LinkedList) IsEmpty() bool {
+func (ll *linkedList) IsEmpty() bool {
 	return ll.Len() == 0
 }
 
-func (ll *LinkedList) Add(val interface{}) {
+func (ll *linkedList) Add(val interface{}) {
 	ll.linkLast(val)
 }
 
 // linkLast links val as last element.
-func (ll *LinkedList) linkLast(val interface{}) {
+func (ll *linkedList) linkLast(val interface{}) {
 	e := element{
 		prev:  ll.tail,
 		next:  nil,
@@ -118,7 +118,7 @@ func (ll *LinkedList) linkLast(val interface{}) {
 	ll.length++
 }
 
-func (ll *LinkedList) AddTo(index int, val interface{}) error {
+func (ll *linkedList) AddTo(index int, val interface{}) error {
 	size := ll.Len()
 	if index < 0 || index > size {
 		return fmt.Errorf("Index out of range, index:%d, len:%d", index, size)
@@ -134,7 +134,7 @@ func (ll *LinkedList) AddTo(index int, val interface{}) error {
 }
 
 // linkBefore inserts val before non-null element e.
-func (ll *LinkedList) linkBefore(val interface{}, e *element) {
+func (ll *linkedList) linkBefore(val interface{}, e *element) {
 	newElement := element{
 		prev:  nil,
 		next:  e,
@@ -157,7 +157,7 @@ func (ll *LinkedList) linkBefore(val interface{}, e *element) {
 }
 
 // getElement returns the element at the specified positon.
-func (ll *LinkedList) getElement(index int) *element {
+func (ll *linkedList) getElement(index int) *element {
 	size := ll.Len()
 	var e *element
 	if index < (size >> 1) {
@@ -174,13 +174,13 @@ func (ll *LinkedList) getElement(index int) *element {
 	return e
 }
 
-func (ll *LinkedList) Contains(val interface{}) bool {
+func (ll *linkedList) Contains(val interface{}) bool {
 	return ll.indexOf(val) >= 0
 }
 
 // indexOf returns the index of the first occurence of the specified element
 // in this list, or -1 if this list does not contain the element.
-func (ll *LinkedList) indexOf(val interface{}) int {
+func (ll *linkedList) indexOf(val interface{}) int {
 	index := 0
 
 	for e := ll.head; e != nil; e = e.next {
@@ -193,7 +193,7 @@ func (ll *LinkedList) indexOf(val interface{}) int {
 	return -1
 }
 
-func (ll *LinkedList) Get(index int) (interface{}, error) {
+func (ll *linkedList) Get(index int) (interface{}, error) {
 	size := ll.Len()
 	if index < 0 || index >= size {
 		return nil, fmt.Errorf("Index out of range, index:%d, len:%d", index, size)
@@ -202,7 +202,7 @@ func (ll *LinkedList) Get(index int) (interface{}, error) {
 	return ll.getElement(index).value, nil
 }
 
-func (ll *LinkedList) Remove(index int) (interface{}, error) {
+func (ll *linkedList) Remove(index int) (interface{}, error) {
 	size := ll.Len()
 	if index < 0 || index >= size {
 		return nil, fmt.Errorf("Index out of range, index:%d, len:%d", index, size)
@@ -212,7 +212,7 @@ func (ll *LinkedList) Remove(index int) (interface{}, error) {
 }
 
 // unlink removes the specified element e in this list.
-func (ll *LinkedList) unlink(e *element) interface{} {
+func (ll *linkedList) unlink(e *element) interface{} {
 	if nil == e {
 		return nil
 	}
@@ -237,7 +237,7 @@ func (ll *LinkedList) unlink(e *element) interface{} {
 	return retValue
 }
 
-func (ll *LinkedList) RemoveByValue(val interface{}) bool {
+func (ll *linkedList) RemoveByValue(val interface{}) bool {
 	if ll.Len() == 0 {
 		return false
 	}
@@ -252,7 +252,7 @@ func (ll *LinkedList) RemoveByValue(val interface{}) bool {
 	return false
 }
 
-func (ll *LinkedList) Clear() {
+func (ll *linkedList) Clear() {
 	for e := ll.head; e != nil; {
 		next := e.next
 		e.prev, e.next, e.value = nil, nil, nil
@@ -262,7 +262,7 @@ func (ll *LinkedList) Clear() {
 	ll.head, ll.tail, ll.length = nil, nil, 0
 }
 
-func (ll *LinkedList) Iterator() (func() (interface{}, bool), bool) {
+func (ll *linkedList) Iterator() (func() (interface{}, bool), bool) {
 	e := ll.head
 
 	return func() (interface{}, bool) {
@@ -277,7 +277,7 @@ func (ll *LinkedList) Iterator() (func() (interface{}, bool), bool) {
 	}, e != nil
 }
 
-func (ll *LinkedList) ReverseIterator() (func() (interface{}, bool), bool) {
+func (ll *linkedList) ReverseIterator() (func() (interface{}, bool), bool) {
 	e := ll.tail
 
 	return func() (interface{}, bool) {

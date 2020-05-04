@@ -28,8 +28,8 @@ type element struct {
 	value interface{}
 }
 
-// Queue represents a singly linked list.
-type Queue struct {
+// queue represents a singly linked list.
+type queue struct {
 	head   *element
 	tail   *element
 	length int
@@ -37,24 +37,24 @@ type Queue struct {
 
 // New creates a queue.
 func New() Interface {
-	return &Queue{
+	return &queue{
 		head:   nil,
 		tail:   nil,
 		length: 0,
 	}
 }
 
-func (q *Queue) Len() int {
+func (q *queue) Len() int {
 	return q.length
 }
 
 // IsEmpty returns true if this queue contains no elements.
-func (q *Queue) IsEmpty() bool {
+func (q *queue) IsEmpty() bool {
 	return q.Len() == 0
 }
 
 // Add (todo): add a capacity for the queue, and return an error when this queue is full.
-func (q *Queue) Add(val interface{}) {
+func (q *queue) Add(val interface{}) {
 	e := element{
 		next:  nil,
 		value: val,
@@ -70,14 +70,14 @@ func (q *Queue) Add(val interface{}) {
 	q.length++
 }
 
-func (q *Queue) Peek() interface{} {
+func (q *queue) Peek() interface{} {
 	if q.head != nil {
 		return q.head.value
 	}
 	return nil
 }
 
-func (q *Queue) Poll() interface{} {
+func (q *queue) Poll() interface{} {
 	if q.head != nil {
 		val := q.head.value
 
@@ -94,7 +94,7 @@ func (q *Queue) Poll() interface{} {
 }
 
 // Clear removes all the elements from this queue.
-func (q *Queue) Clear() {
+func (q *queue) Clear() {
 	for e := q.head; e != nil; {
 		next := e.next
 		e.next, e.value = nil, nil
