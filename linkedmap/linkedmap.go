@@ -6,7 +6,7 @@
 // If a linkedMap is configured as access-order, then the first element in the list is the eldest element, which means it's the least recently inserted
 // or accessed element; while the last element is the newest element, which means it's the most recently inserted or accessed element.
 //
-// To iterate over an linkedMap (where lm is an instance of linkedMap.Interface):
+// To iterate over an linkedMap (where lm is an instance of linkedmap.Interface):
 //	it, hasNext := lm.Iterator()
 //  var k, v interface{}
 //	for hasNext {
@@ -14,7 +14,7 @@
 //		// do something with k & v
 //	}
 //
-// To iterate over an linkedMap in reverse order (where lm is an instance of linkedMap.Interface):
+// To iterate over an linkedMap in reverse order (where lm is an instance of linkedmap.Interface):
 //	it, hasPrev := lm.ReverseIterator()
 //  var k, v interface{}
 //	for hasPrev {

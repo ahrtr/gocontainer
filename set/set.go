@@ -1,7 +1,10 @@
 // Copyright (c) 2019, Benjamin Wang (benjamin_wang@aliyun.com). All rights reserved.
 // Licensed under the MIT license that can be found in the LICENSE file.
 
-// Package set implements a set, which contains no duplicate elements.
+// Package set implements a set, which contains no duplicate elements. The values contained in a set may be any type that is comparable.
+// The language spec defines this precisely, but in short, comparable types are boolean, numeric, string, pointer, channel,
+// and interface types, and structs or arrays that contains only those types. Notably absent from the list are slices, maps, and functions;
+// these types cannot be compared using ==, and may not be contained in a set.
 //
 // To iterate over a set (where s is a *set):
 //   s.Iterate(func(v interface{}) bool {
@@ -35,7 +38,7 @@ type Interface interface {
 }
 
 // IterateCallback is the signature of the callback function called by Iterate.
-// If the callback function returns false, then the Iterate breaks.
+// If the callback function returns false, then the iteration breaks.
 type IterateCallback func(interface{}) bool
 
 // set is the definition of a set data structure, which contains no duplicate elements.

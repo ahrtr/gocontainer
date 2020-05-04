@@ -20,7 +20,7 @@ gocontainer implements some containers which exist in Java, but are missing in g
 
 # How to use this repo
 It's very straightforward, just imports the containers you need and then use them directly. The following is an example for ArrayList, 
-```
+```go
 package main
 
 import (
@@ -49,7 +49,7 @@ Please find more examples **[here](examples)**.
 
 # Common Interface
 All containers in this repository implement interface **collection.Interface**,
-```
+```go
 // Interface is a type of collection, all containers should implement this interface.
 type Interface interface {
 	// IsEmpty returns true if this container contains no elements.
@@ -75,7 +75,7 @@ Currently this library implements the following containers:
 
 ## Stack
 Stack is a LIFO(last-in-first-out) container. It implements the following interface. Click **[here](examples/stack_example.go)** to find examples on how to use a stack. 
-```
+```go
 // Interface is a stack, which is LIFO (last-in-first-out).
 type Interface interface {
 	collection.Interface
@@ -89,14 +89,21 @@ type Interface interface {
 }
 ```
 
-Call stack.New() to create a stack,
+Please import the following package in order to use stack,
+```go
+import (
+	"github.com/ahrtr/gocontainer/stack"
+)
 ```
+
+Call stack.New() to create a stack,
+```go
 New() Interface
 ```
 
 ## Queue
 Queue is a FIFO(first-in-first-out) container. It implements the following interface. Click **[here](examples/queue_example.go)** to find examples on how to use a queue.
-```
+```go
 // Interface is a type of queue, which is FIFO(first-in-first-out).
 type Interface interface {
 	collection.Interface
@@ -112,14 +119,23 @@ type Interface interface {
 }
 ```
 
-Call queue.New() to create a queue,
+Please import the following package in order to use queue,
+```go
+import (
+	"github.com/ahrtr/gocontainer/queue"
+)
 ```
+
+Call queue.New() to create a queue,
+```go
 New() Interface
 ```
 
 ## Set
-A set contains no duplicate elements. It implements the following interface. Click **[here](examples/set_example.go)** to find examples on how to use a set. 
-```
+A set contains no duplicate elements. The values contained in a set may be any type that is comparable, please refer to the golang [language spec](https://golang.org/ref/spec#Comparison_operators) to get more detailed info on comparison operators. 
+
+A set implements the following interface. Click **[here](examples/set_example.go)** to find examples on how to use a set. 
+```go
 // Interface is a type of set, which contains no duplicate elements.
 type Interface interface {
 	collection.Interface
@@ -139,21 +155,39 @@ type Interface interface {
 }
 ```
 
-Call set.New() to create a set,
+Please import the following package in order to use set,
+```go
+import (
+	"github.com/ahrtr/gocontainer/set"
+)
 ```
+
+Call set.New() to create a set,
+```go
 New() Interface
 ```
 
-Applications are supposed to define a callback function (see below) when iterating a set. Please see the example on how to iterate a set. 
-```
+Applications are supposed to define a callback function (see below) when iterating a set. 
+```go
 // IterateCallback is the signature of the callback function called by Iterate.
-// If the callback function returns false, then the Iterate breaks.
+// If the callback function returns false, then the iteration breaks.
 type IterateCallback func(interface{}) bool
+```
+
+The following snip shows how to iterate a set. Please see the **[example](examples/set_example.go)** to get more detailed info.
+```go
+// To iterate over a set (where s is an instance of set.Interface):
+s.Iterate(func(v interface{}) bool {
+	// Do something with v
+
+	// If you want to break the iteration, then return a false
+	return true
+})
 ```
 
 ## List
 This library implements two kinds of list, which are **ArrayList** and **LinkedList**, both of which implement the following interface. Click **[here](examples/list_example.go)** to find examples on how to use a list.
-```
+```go
 // Interface is a type of list, both ArrayList and LinkedList implement this interface.
 type Interface interface {
 	collection.Interface
@@ -163,6 +197,10 @@ type Interface interface {
 	Add(val interface{})
 	// AddTo inserts the specified element at the specified position in this list.
 	AddTo(index int, val interface{}) error
+
+	// WithComparator sets a gsort.Comparator instance for the list.
+	// It's used to imposes a total ordering on the elements in the list.
+	WithComparator(c gsort.Comparator) Interface
 
 	// Contains returns true if this list contains the specified element.
 	Contains(val interface{}) bool
@@ -183,24 +221,72 @@ type Interface interface {
 }
 ```
 
-Call list.NewArrayList() and list.NewLinkedList() to create a ArrayList and a LinkedList respectively, 
+Please import the following package in order to use list (arrayList or linkedList),
+```go
+import (
+	"github.com/ahrtr/gocontainer/list"
+)
 ```
+
+Call list.NewArrayList() and list.NewLinkedList() to create a ArrayList and a LinkedList respectively, 
+```go
 NewArrayList() Interface
 NewLinkedList() Interface
 ```
 A sort.Comparator instance can be provided for a list (ArrayList or LinkedList), please get more detailed info in **[Sort](#sort)**.
-```
+```go
 WithComparator(c gsort.Comparator) Interface 
 ```
 
 The list.Interface has a nested sort.Interface, so a list can be sorted into ascending order, according to the natural ordering of its elements for some golang build-in data types, or sorted into a customized order, according to the comparator provided by applications. 
 
+There are multiple ways to iterate a list. The following snips show how to iterate a list (arrayList or linkedList),
+```go
+// To iterate over a list (where l is an instance of list.Interface):
+it, hasNext := l.Iterator()
+var v interface{}
+for hasNext {
+	v, hasNext = it()
+	// do something with v
+}
+```
+
+```go
+// To iterate over a list (where l is an instance of list.Interface):
+for i:=0; i<l.Len(); i++ {
+	v, _ := l.Get(i)
+	// Do something with v
+}
+```
+
+```go
+// To iterate over a list in reverse order (where l is an instance of list.Interface):
+it, hasPrev := l.ReverseIterator()
+var v interface{}
+for hasPrev {
+	v, hasPrev = it()
+	// do something with v
+}
+```
+
+```go
+// To iterate over a list in reverse order (where l is an instance of list.Interface):
+for i:=l.Len()-1; i>=0; i-- {
+	v, _ := l.Get(i)
+	// Do something with v
+}
+```
+
 ## PriorityQueue
 PriorityQueue is an unbounded priority queue based on a priority heap. It implements the following interface. Click **[here](examples/priorityqueue_example.go)** to find examples on how to use a priority queue.
-```
-// Interface is a type of priority queue, and PriorityQueue implement this interface.
+```go
+// Interface is a type of priority queue, and priorityQueue implement this interface.
 type Interface interface {
 	queue.Interface
+
+	// WithComparator sets a gsort.Comparator instance for the queue.
+	// It's used to imposes a total ordering on the elements in the queue.
+	WithComparator(c gsort.Comparator) Interface
 
 	// Contains returns true if this queue contains the specified element.
 	Contains(val interface{}) bool
@@ -210,25 +296,32 @@ type Interface interface {
 }
 ```
 
-Call priorityqueue.New() to create a PriorityQueue,
+Please import the following package in order to use priorityQueue,
+```go
+import (
+	"github.com/ahrtr/gocontainer/priorityqueue"
+)
 ```
+
+Call priorityqueue.New() to create a PriorityQueue,
+```go
 New() Interface 
 ```
 A sort.Comparator instance can be provided for a PriorityQueue, please get more detailed info in **[Sort](#sort)**.
-```
+```go
 WithComparator(c gsort.Comparator) Interface
 ```
 
 The elements of a PriorityQueue are ordered according to their natural ordering, or by a Comparator provided at PriorityQueue construction time. 
 
 If the reverse order for the elements is expected, then makes use of the priorityqueue.Reverse function, 
-```
+```go
 pq := priorityqueue.Reverse(priorityqueue.New())
 ```
 
 ## LinkedMap
 LinkedMap is based on a map and a doubly linked list. The iteration ordering is normally the order in which keys were inserted into the map, or the order in which the keys were accessed if the accessOrder flag is set. It implements the following interface. Click **[here](examples/linkedmap_example.go)** to find examples on how to use a linked map.
-```
+```go
 // Interface is a type of linked map, and linkedMap implements this interface.
 type Interface interface {
 	collection.Interface
@@ -269,16 +362,44 @@ type Interface interface {
 }
 ```
 
-Call linkedmap.New() to create a linked map,
+Please import the following package in order to use linkedMap,
+```go
+import (
+	"github.com/ahrtr/gocontainer/linkedmap"
+)
 ```
+
+Call linkedmap.New() to create a linked map,
+```go
 New() Interface
 ```
 
 If the order in which the keys were accessed is expected for the iteration ordering, then the accessOrder flag should be set, 
-```
+```go
 // WithAccessOrder configures the iteration ordering for this linked map,
 // true for access-order, and false for insertion-order.
 WithAccessOrder(accessOrder bool) Interface
+```
+
+The following snips show how to interate a linkedMap,
+```go
+// To iterate over an linkedMap (where lm is an instance of linkedmap.Interface):
+it, hasNext := lm.Iterator()
+var k, v interface{}
+for hasNext {
+	k, v, hasNext = it()
+	// do something with k & v
+}
+```
+
+```go
+// To iterate over an linkedMap in reverse order (where lm is an instance of linkedmap.Interface):
+it, hasPrev := lm.ReverseIterator()
+var k, v interface{}
+for hasPrev {
+	k, v, hasPrev = it()
+	// do something with k & v
+}
 ```
 
 ## Others
@@ -302,7 +423,7 @@ Some containers implement interface **sort.Interface**, such as ArrayList and Li
 - string
 
 Applications can also provide a sort.Comparator instance when constructing a container which implements sort.Interface.
-```
+```go
 // Comparator imposes a total ordering on some collection of objects.
 // Comparators can be passed to the construction function of a container(such as ArrayList, LinkedList or PriorityQueue) to allow precise control over the sort order.
 type Comparator interface {
@@ -313,7 +434,7 @@ type Comparator interface {
 ```
 
 The rough logic should be something like below. Please find more examples in **[List](examples/list_example.go)** and **[PriorityQueue](examples/priorityqueue_example.go)**.
-```
+```go
 type MyComparator struct{}
 
 func (c *MyComparator) Compare(v1, v2 interface{}) (int, error) {
