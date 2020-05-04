@@ -34,22 +34,27 @@ type Interface interface {
 
 	// Len returns the number of elements in the linkedMap.
 	Len() int
+
 	// Put associates the specified value with the specified key in this map. If the map previously contained a mapping for the key,
 	// the old value is replaced by the specified value.
 	// It returns the previous value associated with the specified key, or nil if there was no mapping for the key.
 	// A nil return can also indicate that the map previously associated nil with the specified key.
 	Put(k, v interface{}) interface{}
+
 	// WithAccessOrder configures the iteration ordering for this linked map,
 	// true for access-order, and false for insertion-order.
 	WithAccessOrder(accessOrder bool) Interface
+
 	// Get returns the value to which the specified key is mapped, or nil if this map contains no mapping for the key.
 	Get(k interface{}) interface{}
 	// GetOrDefault returns the value to which the specified key is mapped, or the defaultValue if this map contains no mapping for the key.
 	GetOrDefault(k, defaultValue interface{}) interface{}
+
 	// ContainsKey returns true if this map contains a mapping for the specified key.
 	ContainsKey(k interface{}) bool
 	// ContainsValue returns true if this map maps one or more keys to the specified value.
 	ContainsValue(v interface{}) bool
+
 	// Remove removes the mapping for a key from this map if it is present.
 	// It returns the value to which this map previously associated the key, and true,
 	// or nil and false if the map contained no mapping for the key.

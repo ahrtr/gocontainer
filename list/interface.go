@@ -7,6 +7,7 @@ import (
 	"sort"
 
 	"github.com/ahrtr/gocontainer/collection"
+	gsort "github.com/ahrtr/gocontainer/sort"
 )
 
 // Interface is a type of list, both ArrayList and LinkedList implement this interface.
@@ -18,6 +19,10 @@ type Interface interface {
 	Add(val interface{})
 	// AddTo inserts the specified element at the specified position in this list.
 	AddTo(index int, val interface{}) error
+
+	// WithComparator sets a gsort.Comparator instance for the list.
+	// It's used to imposes a total ordering on the elements in the list.
+	WithComparator(c gsort.Comparator) Interface
 
 	// Contains returns true if this list contains the specified element.
 	Contains(val interface{}) bool

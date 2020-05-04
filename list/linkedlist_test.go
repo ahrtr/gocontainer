@@ -267,7 +267,7 @@ func TestLinkedListSort(t *testing.T) {
 }
 
 func TestLinkdedListComparatorSort(t *testing.T) {
-	ll := NewLinkedListWithComparator(&linkedListNode{})
+	ll := NewLinkedList().WithComparator(&linkedListNode{})
 	ll.Add(&linkedListNode{age: 32})
 	ll.Add(&linkedListNode{age: 20})
 	ll.Add(&linkedListNode{age: 27})

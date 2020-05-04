@@ -17,6 +17,10 @@ import (
 type Interface interface {
 	queue.Interface
 
+	// WithComparator sets a gsort.Comparator instance for the queue.
+	// It's used to imposes a total ordering on the elements in the queue.
+	WithComparator(c gsort.Comparator) Interface
+
 	// Contains returns true if this queue contains the specified element.
 	Contains(val interface{}) bool
 	// Remove a single instance of the specified element from this queue, if it is present.
@@ -39,12 +43,9 @@ func New() Interface {
 	}
 }
 
-// NewWithComparator initializes and returns an priorityQueue with a comparator.
-func NewWithComparator(c gsort.Comparator) Interface {
-	return &priorityQueue{
-		items: []interface{}{},
-		cmp:   c,
-	}
+func (pq *priorityQueue) WithComparator(c gsort.Comparator) Interface {
+	pq.cmp = c
+	return pq
 }
 
 // Len returns the length of this priority queue.

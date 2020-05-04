@@ -188,10 +188,9 @@ Call list.NewArrayList() and list.NewLinkedList() to create a ArrayList and a Li
 NewArrayList() Interface
 NewLinkedList() Interface
 ```
-A sort.Comparator instance can be provided when constructing a list (ArrayList or LinkedList), please get more detailed info in **[Sort](#sort)**.
+A sort.Comparator instance can be provided for a list (ArrayList or LinkedList), please get more detailed info in **[Sort](#sort)**.
 ```
-NewArrayListWithComparator(c gsort.Comparator) Interface 
-NewLinkedListWithComparator(c gsort.Comparator) Interface
+WithComparator(c gsort.Comparator) Interface 
 ```
 
 The list.Interface has a nested sort.Interface, so a list can be sorted into ascending order, according to the natural ordering of its elements for some golang build-in data types, or sorted into a customized order, according to the comparator provided by applications. 
@@ -213,11 +212,11 @@ type Interface interface {
 
 Call priorityqueue.New() to create a PriorityQueue,
 ```
-New() Interface
+New() Interface 
 ```
-A sort.Comparator instance can be provided when constructing a PriorityQueue, please get more detailed info in **[Sort](#sort)**.
+A sort.Comparator instance can be provided for a PriorityQueue, please get more detailed info in **[Sort](#sort)**.
 ```
-NewWithComparator(c gsort.Comparator) Interface
+WithComparator(c gsort.Comparator) Interface
 ```
 
 The elements of a PriorityQueue are ordered according to their natural ordering, or by a Comparator provided at PriorityQueue construction time. 
@@ -273,6 +272,13 @@ type Interface interface {
 Call linkedmap.New() to create a linked map,
 ```
 New() Interface
+```
+
+If the order in which the keys were accessed is expected for the iteration ordering, then the accessOrder flag should be set, 
+```
+// WithAccessOrder configures the iteration ordering for this linked map,
+// true for access-order, and false for insertion-order.
+WithAccessOrder(accessOrder bool) Interface
 ```
 
 ## Others

@@ -33,7 +33,7 @@ func listArrayListExample3() {
 
 func listArrayListExample4() {
 	printFuncName()
-	al := list.NewArrayListWithComparator(&student{})
+	al := list.NewArrayList().WithComparator(&student{})
 	listCustomizedData(al)
 }
 
@@ -60,7 +60,7 @@ func listLinkedListExample3() {
 
 func listLinkedListExample4() {
 	printFuncName()
-	al := list.NewLinkedListWithComparator(&student{})
+	al := list.NewLinkedList().WithComparator(&student{})
 	listCustomizedData(al)
 }
 

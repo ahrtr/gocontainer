@@ -52,14 +52,9 @@ func NewLinkedList() Interface {
 	}
 }
 
-// NewLinkedListWithComparator initializes and returns an LinkedList with a comparator.
-func NewLinkedListWithComparator(c gsort.Comparator) Interface {
-	return &linkedList{
-		head:   nil,
-		tail:   nil,
-		length: 0,
-		cmp:    c,
-	}
+func (ll *linkedList) WithComparator(c gsort.Comparator) Interface {
+	ll.cmp = c
+	return ll
 }
 
 func (ll *linkedList) Len() int {

@@ -42,12 +42,9 @@ func NewArrayList() Interface {
 	}
 }
 
-// NewArrayListWithComparator initializes and returns an ArrayList with a comparator.
-func NewArrayListWithComparator(c gsort.Comparator) Interface {
-	return &arrayList{
-		items: []interface{}{},
-		cmp:   c,
-	}
+func (al *arrayList) WithComparator(c gsort.Comparator) Interface {
+	al.cmp = c
+	return al
 }
 
 func (al *arrayList) Len() int {

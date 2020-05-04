@@ -108,7 +108,7 @@ func TestPQReverseSort(t *testing.T) {
 
 func TestPQReverseSortWithComparator(t *testing.T) {
 	// create priority queue
-	pq := NewWithComparator(&myInt{})
+	pq := New().WithComparator(&myInt{})
 	reverseSort(t, pq)
 }
 
@@ -187,7 +187,7 @@ func (i myInt) Compare(v1, v2 interface{}) (int, error) {
 }
 
 func TestPQComparator(t *testing.T) {
-	pq := NewWithComparator(&student{})
+	pq := New().WithComparator(&student{})
 
 	pq.Add(&student{name: "benjamin", age: 34})
 	pq.Add(&student{name: "alice", age: 21})

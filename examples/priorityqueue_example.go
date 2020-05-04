@@ -68,7 +68,7 @@ func priorityqueueExample2() {
 func priorityqueueExample3() {
 	printFuncName()
 
-	pq := priorityqueue.NewWithComparator(&reverseString{})
+	pq := priorityqueue.New().WithComparator(&reverseString{})
 
 	values := []string{"benjamin", "alice", "john", "tom", "bill"}
 
@@ -96,7 +96,7 @@ func priorityqueueExample3() {
 func priorityqueueExample4() {
 	printFuncName()
 
-	pq := priorityqueue.NewWithComparator(&student{})
+	pq := priorityqueue.New().WithComparator(&student{})
 
 	values := []student{
 		{name: "benjamin", age: 28},

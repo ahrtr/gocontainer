@@ -243,7 +243,7 @@ func TestArrayListSort(t *testing.T) {
 }
 
 func TestArrayListComparatorSort(t *testing.T) {
-	al := NewArrayListWithComparator(&arrayListNode{})
+	al := NewArrayList().WithComparator(&arrayListNode{})
 	al.Add(&arrayListNode{age: 32})
 	al.Add(&arrayListNode{age: 20})
 	al.Add(&arrayListNode{age: 27})
