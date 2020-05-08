@@ -1,25 +1,25 @@
-gocontainer ([中文版](README_cn.md))
+gocontainer
 ======
-gocontainer implements some containers which exist in Java, but are missing in golang. This library is **zero dependency**, which means it does NOT depend on any 3rd party packages. Currently the containers are not thread-safe. 
+gocontainer实现了一些Java中存在，而Golang中没有的容器。这个开源容器库不依赖于任何其它第三方软件包，可以说是**零依赖**。目前该项目中实现的容器不是线程安全的。
 
-# Table of Contents
+# 目录
 
-- **[How to use this repo](#how-to-use-this-repo)**
-- **[Common Interface](#Common-Interface)**
-- **[Containers](#Containers)**
+- **[如何使用这个项目中的容器](#如何使用这个项目中的容器)**
+- **[公共接口](#公共接口)**
+- **[容器](#容器)**
   - [Stack](#stack)
   - [Queue](#queue)
   - [Set](#set)
   - [List](#list)
   - [PriorityQueue](#priorityqueue)
   - [LinkedMap](#linkedMap)
-  - [Others](#others)
-- **[Sort](#sort)**
-- **[Contribute to this repo](#contribute-to-this-repo)**
-- **[Support](#support)**
+  - [其它容器](#其它容器)
+- **[关于排序](#关于排序)**
+- **[为该项目提供帮助](#为该项目提供帮助)**
+- **[技术支持](#技术支持)**
 
-# How to use this repo
-It's very straightforward, just imports the containers you need and then use them directly. The following is an example for ArrayList, 
+# 如何使用这个项目中的容器
+使用方法非常简单直接，只需要imports您所需要的容器所在的package，然后直接使用即可。下面是一个完整的使用ArrayList的例子，
 ```go
 package main
 
@@ -45,10 +45,10 @@ func main() {
 }
 ```
 
-Please find more examples **[here](examples)**. 
+您可以在 **[这里](examples)** 找到更多的示例。
 
-# Common Interface
-All containers in this repository implement interface **collection.Interface**,
+# 公共接口
+这个项目中的所有容器都实现了接口**collection.Interface**,
 ```go
 // Interface is a type of collection, all containers should implement this interface.
 type Interface interface {
@@ -64,8 +64,8 @@ type Interface interface {
 }
 ```
 
-# Containers
-Currently this library implements the following containers:
+# 容器
+目前这个项目实现了下面这些容器：
 - Stack
 - Queue
 - Set
@@ -74,7 +74,7 @@ Currently this library implements the following containers:
 - LinkedMap
 
 ## Stack
-Stack is a LIFO(last-in-first-out) container. It implements the following interface. Click **[here](examples/stack_example.go)** to find examples on how to use a stack. 
+Stack(栈)是一种后进先出(LIFO:last-in-first-out)的容器. 它实现了下面的接口。点击 **[这里](examples/stack_example.go)** 查看关于stack的示例。
 ```go
 // Interface is a stack, which is LIFO (last-in-first-out).
 type Interface interface {
@@ -89,20 +89,20 @@ type Interface interface {
 }
 ```
 
-Please import the following package in order to use stack,
+为了使用stack，必须import下面这个package，
 ```go
 import (
 	"github.com/ahrtr/gocontainer/stack"
 )
 ```
 
-Call stack.New() to create a stack,
+调用stack.New()可以创建要一个stack，
 ```go
 New() Interface
 ```
 
 ## Queue
-Queue is a FIFO(first-in-first-out) container. It implements the following interface. Click **[here](examples/queue_example.go)** to find examples on how to use a queue.
+Queue（队列）是一种先进先出(FIFO: first-in-first-out)的容器。它实现了下面的接口。点击 **[这里](examples/queue_example.go)** 查看关于queue的示例。
 ```go
 // Interface is a type of queue, which is FIFO(first-in-first-out).
 type Interface interface {
@@ -119,22 +119,22 @@ type Interface interface {
 }
 ```
 
-Please import the following package in order to use queue,
+为了使用queue，必须import下面这个package，
 ```go
 import (
 	"github.com/ahrtr/gocontainer/queue"
 )
 ```
 
-Call queue.New() to create a queue,
+调用queue.New()可以创建一个queue，
 ```go
 New() Interface
 ```
 
 ## Set
-A set contains no duplicate elements. The values contained in a set may be any type that is comparable, please refer to the golang [language spec](https://golang.org/ref/spec#Comparison_operators) to get more detailed info on comparison operators. 
+一个set（集合）内不允许包含重复的元素。保存在set中的值必须是可比较(comparable)的，请参考Golang的[语言规范](https://golang.org/ref/spec#Comparison_operators)获取关于比较操作符的详细信息。
 
-Set implements the following interface. Click **[here](examples/set_example.go)** to find examples on how to use a set. 
+set（集合）实现了下面的接口。点击 **[这里](examples/set_example.go)** 查看关于set的示例。
 ```go
 // Interface is a type of set, which contains no duplicate elements.
 type Interface interface {
@@ -155,26 +155,27 @@ type Interface interface {
 }
 ```
 
-Please import the following package in order to use set,
+为了使用set，必须import下面这个package，
 ```go
 import (
 	"github.com/ahrtr/gocontainer/set"
 )
 ```
 
-Call set.New() to create a set,
+调用set.New()可以创建一个set,
 ```go
 New() Interface
 ```
 
-Applications are supposed to define a callback function (see below) when iterating a set. 
+上层应用程序在遍历一个set时，需要定义一个回调函数（如下），
 ```go
 // IterateCallback is the signature of the callback function called by Iterate.
 // If the callback function returns false, then the iteration breaks.
 type IterateCallback func(interface{}) bool
 ```
 
-The following snip shows how to iterate a set. Please see the **[example](examples/set_example.go)** to get more detailed info.
+下面的代码片段演示了如何遍历一个set. 请查看 **[example](examples/set_example.go)** 获取更详细的信息。
+
 ```go
 // To iterate over a set (where s is an instance of set.Interface):
 s.Iterate(func(v interface{}) bool {
@@ -186,7 +187,7 @@ s.Iterate(func(v interface{}) bool {
 ```
 
 ## List
-This library implements two kinds of list, which are **ArrayList** and **LinkedList**, both of which implement the following interface. Click **[here](examples/list_example.go)** to find examples on how to use a list.
+这个容器库中实现了两种类型的list(列表)，分别是 **ArrayList** 和 **LinkedList**, 他们都实现了下面的接口。点击 **[这里](examples/list_example.go)** 查看关于list的示例。
 ```go
 // Interface is a type of list, both ArrayList and LinkedList implement this interface.
 type Interface interface {
@@ -221,26 +222,26 @@ type Interface interface {
 }
 ```
 
-Please import the following package in order to use list (arrayList or linkedList),
+为了使用list(arrayList或linkedList)，必须import下面这个package，
 ```go
 import (
 	"github.com/ahrtr/gocontainer/list"
 )
 ```
 
-Call list.NewArrayList() and list.NewLinkedList() to create a ArrayList and a LinkedList respectively, 
+调用list.NewArrayList()和list.NewLinkedList()可以分别创建一个ArrayList和LinkedList,
 ```go
 NewArrayList() Interface
 NewLinkedList() Interface
 ```
-A sort.Comparator instance can be provided for a list (ArrayList or LinkedList) by method WithComparator, please get more detailed info in **[Sort](#sort)**.
+可以通过方法WithComparator为一个list设置一个sort.Comparator实例，具体请参考 **[关于排序](#关于排序)**.
 ```go
 WithComparator(c gsort.Comparator) Interface 
 ```
 
-The list.Interface has a nested sort.Interface, so a list can be sorted using sort.Sort(data) into ascending order, according to the natural ordering of its elements for some golang build-in data types, or sorted into a customized order, according to the comparator provided by applications. 
+因为接口list.Interface"继承"（内嵌）了接口sort.Interface，因此可以用sort.Sort(data)直接对一个list进行排序；要么根据元素的自然顺序按升序排序，要么根据上层应用提供的sort.Comparator实例进行排序。
 
-There are multiple ways to iterate a list. The following snips show how to iterate a list (arrayList or linkedList),
+有多种方法可以遍历一个list，下面的代码片段演示了如何遍历一个list(arrayList或linkedList),
 ```go
 // To iterate over a list (where l is an instance of list.Interface):
 it, hasNext := l.Iterator()
@@ -278,7 +279,7 @@ for i:=l.Len()-1; i>=0; i-- {
 ```
 
 ## PriorityQueue
-PriorityQueue is an unbounded priority queue based on a priority heap. It implements the following interface. Click **[here](examples/priorityqueue_example.go)** to find examples on how to use a priority queue.
+PriorityQueue (优先级队列)是一种基于优先级堆实现的队列。 它实现了下面的接口。点击 **[这里](examples/priorityqueue_example.go)** 查看关于PriorityQueue的示例。
 ```go
 // Interface is a type of priority queue, and priorityQueue implement this interface.
 type Interface interface {
@@ -296,31 +297,31 @@ type Interface interface {
 }
 ```
 
-Please import the following package in order to use priorityQueue,
+为了使用priorityQueue，必须import下面这个package，
 ```go
 import (
 	"github.com/ahrtr/gocontainer/priorityqueue"
 )
 ```
 
-Call priorityqueue.New() to create a PriorityQueue,
+调用priorityqueue.New()可以创建一个PriorityQueue,
 ```go
 New() Interface 
 ```
-A sort.Comparator instance can be provided for a PriorityQueue by method WithComparator, please get more detailed info in **[Sort](#sort)**.
+可以通过方法WithComparator为一个priorityQueue设置一个sort.Comparator实例，具体请参考 **[关于排序](#关于排序)**.
 ```go
 WithComparator(c gsort.Comparator) Interface
 ```
 
-The elements of a PriorityQueue are ordered according to their natural ordering, or by a sort.Comparator instance. 
+PriorityQueue中的元素根据它们的自然顺序排序，或者根据一个sort.Comparator实例来排序。
 
-If the reverse order for the elements is expected, then makes use of the priorityqueue.Reverse function, 
+如何期望是倒序，那么使用函数priorityqueue.Reverse,
 ```go
 pq := priorityqueue.Reverse(priorityqueue.New())
 ```
 
 ## LinkedMap
-LinkedMap is based on a map and a doubly linked list. The iteration ordering is normally the order in which keys were inserted into the map, or the order in which the keys were accessed if the accessOrder flag is set. It implements the following interface. Click **[here](examples/linkedmap_example.go)** to find examples on how to use a linked map.
+LinkedMap是基于一个map和一个双向链表实现的。元素的遍历顺序默认是根据插入的顺序；但是如果设置了标志accessOrder，那就是根据访问的顺序。LinkedMap实现了下面的接口。点击 **[这里](examples/linkedmap_example.go)** 查看linkedMap的示例。
 ```go
 // Interface is a type of linked map, and linkedMap implements this interface.
 type Interface interface {
@@ -362,26 +363,26 @@ type Interface interface {
 }
 ```
 
-Please import the following package in order to use linkedMap,
+为了使用linkedMap，必须import下面这个package，
 ```go
 import (
 	"github.com/ahrtr/gocontainer/linkedmap"
 )
 ```
 
-Call linkedmap.New() to create a linked map,
+调用linkedmap.New()可以创建一个linkedMap，
 ```go
 New() Interface
 ```
 
-If the order in which the keys were accessed is expected for the iteration ordering, then the accessOrder flag should be set, 
+如果设置了标志accessOrder，那么元素的访问顺序就是其遍历顺序，
 ```go
 // WithAccessOrder configures the iteration ordering for this linked map,
 // true for access-order, and false for insertion-order.
 WithAccessOrder(accessOrder bool) Interface
 ```
 
-The following snips show how to interate a linkedMap,
+下面的代码片段演示了如何遍历一个linkedMap,
 ```go
 // To iterate over an linkedMap (where lm is an instance of linkedmap.Interface):
 it, hasNext := lm.Iterator()
@@ -402,11 +403,11 @@ for hasPrev {
 }
 ```
 
-## Others
-More containers will be added soon. Please also kindly let me know if you need any other kinds of containers. Feel free to raise issues. 
+## 其它容器
+更多的容器将来可能会加入进来。如果您需要任何其它类型的容器，或者有任何建议，欢迎通过issues反馈给我。
 
-# Sort
-Some containers implement interface **sort.Interface**, such as ArrayList and LinkedList, which means that they can be sorted directly by sort.Sort(data). For the following golang build-in data types, the elements can be ordered into ascending order according to their natural ordering. Note that for **bool**, a false is regarded as less than a true. 
+# 关于排序
+一些容器实现了接口 **sort.Interface**, 比如ArrayList和LinkedList。这就意味着这些容器可以直接通过sort.Sort(data)排序。对于下面这些Golang内置的类型，默认是根据它们的自然顺序按升序排序。对于 **bool** 类型, false被认为是比true要小。 
 - bool
 - int
 - int8
@@ -422,7 +423,7 @@ Some containers implement interface **sort.Interface**, such as ArrayList and Li
 - float64
 - string
 
-Applications can also provide a sort.Comparator instance using method WithComparator for a container which implements sort.Interface.
+上层应用程序也可以通过方法WithComparator为实现了接口sort.Interface的容器提供一个sort.Comparator实例，
 ```go
 // Comparator imposes a total ordering on some collection of objects.
 // Comparators can be passed to the construction function of a container(such as ArrayList, LinkedList or PriorityQueue) to allow precise control over the sort order.
@@ -433,7 +434,7 @@ type Comparator interface {
 }
 ```
 
-The rough logic should be something like below. Please find more examples in **[List](examples/list_example.go)** and **[PriorityQueue](examples/priorityqueue_example.go)**.
+实现sort.Comparator的大致逻辑如下。请在 **[List](examples/list_example.go)** 和 **[PriorityQueue](examples/priorityqueue_example.go)** 中分别查看更多的示例。
 ```go
 type MyComparator struct{}
 
@@ -442,13 +443,10 @@ func (c *MyComparator) Compare(v1, v2 interface{}) (int, error) {
 }
 ```
 
-# Contribute to this repo
-Anyone is welcome to contribute to this repo. Please raise an issue firstly, then fork this repo and submit a pull request.
+# 为该项目提供帮助
+欢迎任何人为该开源项目提供任何帮助以及提出任何建议，哪怕只是指出一个拼写错误，谢谢。如果您觉得该项目对您有些用处，麻烦给个星(star)。请通过issue反馈任何问题。
 
-Currently this repo is under heavily development, any helps are appreciated! 
+# 技术支持
+如果您遇到任何问题，或需要任何支持，请直接创建一个issue，在issue里面把你遇到的问题或需要的支持说清楚。
 
-# Support
-If you need any support, please raise issues. 
-
-If you have any suggestions or proposals, please also raise issues. Thanks!
 
