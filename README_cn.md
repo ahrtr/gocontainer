@@ -300,7 +300,7 @@ type Interface interface {
 为了使用priorityQueue，必须import下面这个package，
 ```go
 import (
-	"github.com/ahrtr/gocontainer/priorityqueue"
+	"github.com/ahrtr/gocontainer/queue/priorityqueue"
 )
 ```
 

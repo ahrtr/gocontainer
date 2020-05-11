@@ -6,7 +6,7 @@ package main
 import (
 	"fmt"
 
-	"github.com/ahrtr/gocontainer/priorityqueue"
+	"github.com/ahrtr/gocontainer/queue/priorityqueue"
 )
 
 func priorityqueueExample1() {
