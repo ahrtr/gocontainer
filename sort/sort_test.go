@@ -3,7 +3,10 @@
 
 package sort
 
-import "testing"
+import (
+	"testing"
+	"time"
+)
 
 func TestCompare(t *testing.T) {
 	// bool
@@ -64,6 +67,17 @@ func TestCompare(t *testing.T) {
 		t.Errorf("Compare returns an unexpected value, expected: 1, actual: %d", ret)
 	}
 
+	// rune
+	if ret, _ := Compare(rune(1), rune(2)); ret != -1 {
+		t.Errorf("Compare returns an unexpected value, expected: -1, actual: %d", ret)
+	}
+	if ret, _ := Compare(rune(2), rune(2)); ret != 0 {
+		t.Errorf("Compare returns an unexpected value, expected: 0, actual: %d", ret)
+	}
+	if ret, _ := Compare(rune(2), rune(1)); ret != 1 {
+		t.Errorf("Compare returns an unexpected value, expected: 1, actual: %d", ret)
+	}
+
 	// int64
 	if ret, _ := Compare(int64(1), int64(2)); ret != -1 {
 		t.Errorf("Compare returns an unexpected value, expected: -1, actual: %d", ret)
@@ -94,6 +108,17 @@ func TestCompare(t *testing.T) {
 		t.Errorf("Compare returns an unexpected value, expected: 0, actual: %d", ret)
 	}
 	if ret, _ := Compare(uint8(2), uint8(1)); ret != 1 {
+		t.Errorf("Compare returns an unexpected value, expected: 1, actual: %d", ret)
+	}
+
+	// byte
+	if ret, _ := Compare(byte(1), byte(2)); ret != -1 {
+		t.Errorf("Compare returns an unexpected value, expected: -1, actual: %d", ret)
+	}
+	if ret, _ := Compare(byte(2), byte(2)); ret != 0 {
+		t.Errorf("Compare returns an unexpected value, expected: 0, actual: %d", ret)
+	}
+	if ret, _ := Compare(byte(2), byte(1)); ret != 1 {
 		t.Errorf("Compare returns an unexpected value, expected: 1, actual: %d", ret)
 	}
 
@@ -160,6 +185,18 @@ func TestCompare(t *testing.T) {
 		t.Errorf("Compare returns an unexpected value, expected: 0, actual: %d", ret)
 	}
 	if ret, _ := Compare("ade", "abc"); ret != 1 {
+		t.Errorf("Compare returns an unexpected value, expected: 1, actual: %d", ret)
+	}
+
+	// time.Time
+	t1, t2 := time.Now(), time.Now().Add(10*time.Hour)
+	if ret, _ := Compare(t1, t2); ret != -1 {
+		t.Errorf("Compare returns an unexpected value, expected: -1, actual: %d", ret)
+	}
+	if ret, _ := Compare(t1, t1); ret != 0 {
+		t.Errorf("Compare returns an unexpected value, expected: 0, actual: %d", ret)
+	}
+	if ret, _ := Compare(t2, t1); ret != 1 {
 		t.Errorf("Compare returns an unexpected value, expected: 1, actual: %d", ret)
 	}
 }

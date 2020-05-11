@@ -422,6 +422,9 @@ for hasPrev {
 - float32
 - float64
 - string
+- byte
+- rune
+- time.Time
 
 上层应用程序也可以通过方法WithComparator为实现了接口sort.Interface的容器提供一个sort.Comparator实例，
 ```go

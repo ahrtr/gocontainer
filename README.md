@@ -421,6 +421,9 @@ Some containers implement interface **sort.Interface**, such as ArrayList and Li
 - float32
 - float64
 - string
+- byte
+- rune
+- time.Time
 
 Applications can also provide a sort.Comparator instance using method WithComparator for a container which implements sort.Interface.
 ```go
