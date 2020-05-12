@@ -52,15 +52,12 @@ func main() {
 ```go
 // Interface is a type of collection, all containers should implement this interface.
 type Interface interface {
+	// Size returns the number of elements in the collection.
+	Size() int
 	// IsEmpty returns true if this container contains no elements.
 	IsEmpty() bool
 	// Clear removes all of the elements from this container.
 	Clear()
-
-	// Len is the number of elements in the container.
-	// Len() is also included in sort.Interface. Only golang 1.14 supports embedding of Interfaces with overlapping method sets,
-	// so let's add it in this interface in the future.
-	//Len() int
 }
 ```
 
@@ -80,8 +77,6 @@ Stack(栈)是一种后进先出(LIFO:last-in-first-out)的容器. 它实现了�
 type Interface interface {
 	collection.Interface
 
-	// Len returns the length of this stack.
-	Len() int
 	// Push pushes an element into this stack.
 	Push(val interface{})
 	// Pop pops the element on the top of this stack.
@@ -108,13 +103,11 @@ Queue（队列）是一种先进先出(FIFO: first-in-first-out)的容器。它�
 type Interface interface {
 	collection.Interface
 
-	// Len returns the length of this queue.
-	Len() int
 	// Add inserts an element into the tail of this queue.
 	Add(val interface{})
-	// Peek retrieves but does not remove the head of this queue.
+	// Peek retrieves, but does not remove, the head of this queue, or return nil if this queue is empty.
 	Peek() interface{}
-	// Poll retrieves and removes the head of the this queue.
+	// Poll retrieves and removes the head of the this queue, or return nil if this queue is empty.
 	Poll() interface{}
 }
 ```
@@ -140,8 +133,6 @@ set（集合）实现了下面的接口。点击 **[这里](examples/set_example
 type Interface interface {
 	collection.Interface
 
-	// Len returns the length of this set.
-	Len() int
 	// Add adds the specified element to this set if it is not already present.
 	// It returns false if the value is already present.
 	Add(val interface{}) bool
@@ -327,24 +318,26 @@ LinkedMap是基于一个map和一个双向链表实现的。元素的遍历顺�
 type Interface interface {
 	collection.Interface
 
-	// Len returns the number of elements in the linkedMap.
-	Len() int
 	// Put associates the specified value with the specified key in this map. If the map previously contained a mapping for the key,
 	// the old value is replaced by the specified value.
 	// It returns the previous value associated with the specified key, or nil if there was no mapping for the key.
 	// A nil return can also indicate that the map previously associated nil with the specified key.
 	Put(k, v interface{}) interface{}
+
 	// WithAccessOrder configures the iteration ordering for this linked map,
 	// true for access-order, and false for insertion-order.
 	WithAccessOrder(accessOrder bool) Interface
+
 	// Get returns the value to which the specified key is mapped, or nil if this map contains no mapping for the key.
 	Get(k interface{}) interface{}
 	// GetOrDefault returns the value to which the specified key is mapped, or the defaultValue if this map contains no mapping for the key.
 	GetOrDefault(k, defaultValue interface{}) interface{}
+
 	// ContainsKey returns true if this map contains a mapping for the specified key.
 	ContainsKey(k interface{}) bool
 	// ContainsValue returns true if this map maps one or more keys to the specified value.
 	ContainsValue(v interface{}) bool
+
 	// Remove removes the mapping for a key from this map if it is present.
 	// It returns the value to which this map previously associated the key, and true,
 	// or nil and false if the map contained no mapping for the key.

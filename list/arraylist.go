@@ -47,8 +47,12 @@ func (al *arrayList) WithComparator(c gsort.Comparator) Interface {
 	return al
 }
 
-func (al *arrayList) Len() int {
+func (al *arrayList) Size() int {
 	return len(al.items)
+}
+
+func (al *arrayList) Len() int {
+	return al.Size()
 }
 
 func (al *arrayList) Less(i, j int) bool {

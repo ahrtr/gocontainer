@@ -12,8 +12,6 @@ import (
 type Interface interface {
 	collection.Interface
 
-	// Len returns the length of this stack.
-	Len() int
 	// Push pushes an element into this stack.
 	Push(val interface{})
 	// Pop pops the element on the top of this stack.
@@ -32,13 +30,13 @@ func New() Interface {
 	}
 }
 
-func (s *stack) Len() int {
+func (s *stack) Size() int {
 	return len(s.items)
 }
 
 // IsEmpty returns true if this stack contains no elements.
 func (s *stack) IsEmpty() bool {
-	return s.Len() == 0
+	return s.Size() == 0
 }
 
 func (s *stack) Push(val interface{}) {

@@ -7,14 +7,14 @@ import (
 	"testing"
 )
 
-func TestSetLen(t *testing.T) {
+func TestSetSize(t *testing.T) {
 	s := New()
 
 	s.Add(5)
 	s.Add(6)
 
-	if s.Len() != 2 {
-		t.Errorf("The length isn't expected, expect: 2, actual: %d", s.Len())
+	if s.Size() != 2 {
+		t.Errorf("The length isn't expected, expect: 2, actual: %d", s.Size())
 	}
 	if s.IsEmpty() {
 		t.Errorf("The set shouldn't be empty\n")

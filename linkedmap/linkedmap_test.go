@@ -5,24 +5,24 @@ package linkedmap
 
 import "testing"
 
-func TestLinkedMapLen(t *testing.T) {
+func TestLinkedMapSize(t *testing.T) {
 	lm := New()
 	lm.Put(24, "benjamin")
 	lm.Put(43, "alice")
 	lm.Put(18, "john")
 
-	if lm.Len() != 3 {
-		t.Errorf("The length isn't expected, expect: 3, actual: %d\n", lm.Len())
+	if lm.Size() != 3 {
+		t.Errorf("The length isn't expected, expect: 3, actual: %d\n", lm.Size())
 	}
 
 	lm.Remove(43)
-	if lm.Len() != 2 {
-		t.Errorf("The length isn't expected, expect: 2, actual: %d\n", lm.Len())
+	if lm.Size() != 2 {
+		t.Errorf("The length isn't expected, expect: 2, actual: %d\n", lm.Size())
 	}
 
 	lm.Clear()
-	if lm.Len() != 0 {
-		t.Errorf("The length isn't expected, expect: 0, actual: %d\n", lm.Len())
+	if lm.Size() != 0 {
+		t.Errorf("The length isn't expected, expect: 0, actual: %d\n", lm.Size())
 	}
 	if !lm.IsEmpty() {
 		t.Error("The container should be empty")
@@ -79,8 +79,8 @@ func TestLinkedMapValue(t *testing.T) {
 		t.Errorf("Failed to remove the last element, key: %v, value: %v, success: %t\n", k, v, ok)
 	}
 
-	if lm.Len() != 2 {
-		t.Errorf("The length isn't expected, expect: 2, actual: %d\n", lm.Len())
+	if lm.Size() != 2 {
+		t.Errorf("The length isn't expected, expect: 2, actual: %d\n", lm.Size())
 	}
 }
 

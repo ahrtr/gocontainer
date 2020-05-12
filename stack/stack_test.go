@@ -8,14 +8,14 @@ import (
 	"testing"
 )
 
-func TestStackLen(t *testing.T) {
+func TestStackSize(t *testing.T) {
 	s := New()
 
 	s.Push(5)
 	s.Push(6)
 
-	if s.Len() != 2 {
-		t.Errorf("The length isn't expected, expect: 2, actual: %d", s.Len())
+	if s.Size() != 2 {
+		t.Errorf("The length isn't expected, expect: 2, actual: %d", s.Size())
 	}
 }
 
@@ -67,7 +67,7 @@ func TestStackClear(t *testing.T) {
 	s.Push(6)
 	s.Clear()
 
-	if s.Len() != 0 {
-		t.Errorf("The length isn't expected, expect: 0, actual: %d", s.Len())
+	if s.Size() != 0 {
+		t.Errorf("The length isn't expected, expect: 0, actual: %d", s.Size())
 	}
 }

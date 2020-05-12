@@ -8,15 +8,15 @@ import (
 	"testing"
 )
 
-func TestPQLen(t *testing.T) {
+func TestPQSize(t *testing.T) {
 	pq := New()
 
 	// add 3 elements
 	pq.Add(5)
 	pq.Add(6)
 	pq.Add(7)
-	if pq.Len() != 3 {
-		t.Errorf("The length isn't expected, expect: 3, actual: %d\n", pq.Len())
+	if pq.Size() != 3 {
+		t.Errorf("The length isn't expected, expect: 3, actual: %d\n", pq.Size())
 	}
 	if pq.IsEmpty() {
 		t.Error("The queue shouldn't be empty")
@@ -26,14 +26,14 @@ func TestPQLen(t *testing.T) {
 	if !pq.Remove(6) {
 		t.Error("Failed to remove element 6")
 	}
-	if pq.Len() != 2 {
-		t.Errorf("The length isn't expected, expect: 2, actual: %d\n", pq.Len())
+	if pq.Size() != 2 {
+		t.Errorf("The length isn't expected, expect: 2, actual: %d\n", pq.Size())
 	}
 
 	// Clear all elements
 	pq.Clear()
-	if pq.Len() != 0 {
-		t.Errorf("The length isn't expected, expect: 0, actual: %d\n", pq.Len())
+	if pq.Size() != 0 {
+		t.Errorf("The length isn't expected, expect: 0, actual: %d\n", pq.Size())
 	}
 	if !pq.IsEmpty() {
 		t.Error("The queue should be empty")
@@ -48,8 +48,8 @@ func TestPQValue(t *testing.T) {
 	pq.Add(12)
 	pq.Add(8)
 	pq.Add(13)
-	if pq.Len() != 5 {
-		t.Errorf("The length isn't expected, expect: 5, actual: %d\n", pq.Len())
+	if pq.Size() != 5 {
+		t.Errorf("The length isn't expected, expect: 5, actual: %d\n", pq.Size())
 	}
 
 	// Peek
@@ -57,8 +57,8 @@ func TestPQValue(t *testing.T) {
 	if v1 != 8 {
 		t.Errorf("The head element isn't expected, expect: 8, actual: %v\n", v1)
 	}
-	if pq.Len() != 5 {
-		t.Errorf("The length isn't expected, expect: 5, actual: %d\n", pq.Len())
+	if pq.Size() != 5 {
+		t.Errorf("The length isn't expected, expect: 5, actual: %d\n", pq.Size())
 	}
 
 	// Contains
@@ -71,16 +71,16 @@ func TestPQValue(t *testing.T) {
 	if v1 != 8 {
 		t.Errorf("The head element isn't expected, expect: 8, actual: %v\n", v1)
 	}
-	if pq.Len() != 4 {
-		t.Errorf("The length isn't expected, expect: 4, actual: %d\n", pq.Len())
+	if pq.Size() != 4 {
+		t.Errorf("The length isn't expected, expect: 4, actual: %d\n", pq.Size())
 	}
 
 	v1 = pq.Poll()
 	if v1 != 12 {
 		t.Errorf("The head element isn't expected, expect: 12, actual: %v\n", v1)
 	}
-	if pq.Len() != 3 {
-		t.Errorf("The length isn't expected, expect: 3, actual: %d\n", pq.Len())
+	if pq.Size() != 3 {
+		t.Errorf("The length isn't expected, expect: 3, actual: %d\n", pq.Size())
 	}
 
 	// Contains (again)
@@ -118,8 +118,8 @@ func reverseSort(t *testing.T, pq Interface) {
 	pq.Add(12)
 	pq.Add(8)
 	pq.Add(13)
-	if pq.Len() != 5 {
-		t.Errorf("The length isn't expected, expect: 5, actual: %d\n", pq.Len())
+	if pq.Size() != 5 {
+		t.Errorf("The length isn't expected, expect: 5, actual: %d\n", pq.Size())
 	}
 
 	// Peek
@@ -127,8 +127,8 @@ func reverseSort(t *testing.T, pq Interface) {
 	if v1 != 19 {
 		t.Errorf("The head element isn't expected, expect: 19, actual: %v\n", v1)
 	}
-	if pq.Len() != 5 {
-		t.Errorf("The length isn't expected, expect: 5, actual: %d\n", pq.Len())
+	if pq.Size() != 5 {
+		t.Errorf("The length isn't expected, expect: 5, actual: %d\n", pq.Size())
 	}
 
 	// Contains
@@ -141,16 +141,16 @@ func reverseSort(t *testing.T, pq Interface) {
 	if v1 != 19 {
 		t.Errorf("The head element isn't expected, expect: 19, actual: %v\n", v1)
 	}
-	if pq.Len() != 4 {
-		t.Errorf("The length isn't expected, expect: 4, actual: %d\n", pq.Len())
+	if pq.Size() != 4 {
+		t.Errorf("The length isn't expected, expect: 4, actual: %d\n", pq.Size())
 	}
 
 	v1 = pq.Poll()
 	if v1 != 15 {
 		t.Errorf("The head element isn't expected, expect: 15, actual: %v\n", v1)
 	}
-	if pq.Len() != 3 {
-		t.Errorf("The length isn't expected, expect: 3, actual: %d\n", pq.Len())
+	if pq.Size() != 3 {
+		t.Errorf("The length isn't expected, expect: 3, actual: %d\n", pq.Size())
 	}
 
 	// Contains (again)
@@ -195,8 +195,8 @@ func TestPQComparator(t *testing.T) {
 	pq.Add(&student{name: "roy", age: 28})
 	pq.Add(&student{name: "moss", age: 25})
 
-	if pq.Len() != 5 {
-		t.Errorf("The length isn't expected, expect: 5, actual: %d\n", pq.Len())
+	if pq.Size() != 5 {
+		t.Errorf("The length isn't expected, expect: 5, actual: %d\n", pq.Size())
 	}
 
 	// Peek
@@ -250,8 +250,8 @@ func TestPQComparator(t *testing.T) {
 	}
 
 	// The queue should be empty now
-	if pq.Len() != 0 {
-		t.Errorf("The length isn't expected, expect: 0, actual: %d\n", pq.Len())
+	if pq.Size() != 0 {
+		t.Errorf("The length isn't expected, expect: 0, actual: %d\n", pq.Size())
 	}
 	last := pq.Poll()
 	if last != nil {

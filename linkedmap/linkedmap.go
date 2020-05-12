@@ -32,9 +32,6 @@ import (
 type Interface interface {
 	collection.Interface
 
-	// Len returns the number of elements in the linkedMap.
-	Len() int
-
 	// Put associates the specified value with the specified key in this map. If the map previously contained a mapping for the key,
 	// the old value is replaced by the specified value.
 	// It returns the previous value associated with the specified key, or nil if there was no mapping for the key.
@@ -104,12 +101,12 @@ func (lm *linkedMap) WithAccessOrder(accessOrder bool) Interface {
 	return lm
 }
 
-func (lm *linkedMap) Len() int {
+func (lm *linkedMap) Size() int {
 	return lm.length
 }
 
 func (lm *linkedMap) IsEmpty() bool {
-	return lm.Len() == 0
+	return lm.Size() == 0
 }
 
 func (lm *linkedMap) Put(k, v interface{}) interface{} {

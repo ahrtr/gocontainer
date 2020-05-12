@@ -57,8 +57,12 @@ func (ll *linkedList) WithComparator(c gsort.Comparator) Interface {
 	return ll
 }
 
-func (ll *linkedList) Len() int {
+func (ll *linkedList) Size() int {
 	return ll.length
+}
+
+func (ll *linkedList) Len() int {
+	return ll.Size()
 }
 
 func (ll *linkedList) Less(i, j int) bool {

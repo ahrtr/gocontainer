@@ -48,8 +48,13 @@ func (pq *priorityQueue) WithComparator(c gsort.Comparator) Interface {
 	return pq
 }
 
+// Size returns the length of this priority queue.
+func (pq *priorityQueue) Size() int { return len(pq.items) }
+
 // Len returns the length of this priority queue.
-func (pq *priorityQueue) Len() int { return len(pq.items) }
+// Len is supposed to be called only by the functions in package container/heap.
+// It isn't recommended for applications  call this method directly.
+func (pq *priorityQueue) Len() int { return pq.Size() }
 
 // Less reports whether the element with index i should sort before the element with index j.
 // Less is supposed to be called only by the functions in package container/heap.
@@ -189,6 +194,8 @@ func Reverse(data Interface) Interface {
 	return &reverse{data}
 }
 
+func (r *reverse) Len() int { return r.Interface.Size() }
+
 // Less returns the opposite of the embedded implementation's Less method.
 func (r *reverse) Less(i, j int) bool {
 	return r.Interface.(*priorityQueue).Less(j, i)
@@ -215,14 +222,14 @@ func (r *reverse) Add(val interface{}) {
 }
 
 func (r *reverse) Poll() interface{} {
-	if r.Interface.Len() > 0 {
+	if r.Interface.Size() > 0 {
 		return heap.Pop(r)
 	}
 	return nil
 }
 
 func (r *reverse) Remove(val interface{}) bool {
-	if r.Interface.Len() == 0 {
+	if r.Interface.Size() == 0 {
 		return false
 	}
 

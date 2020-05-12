@@ -23,8 +23,6 @@ import (
 type Interface interface {
 	collection.Interface
 
-	// Len returns the length of this set.
-	Len() int
 	// Add adds the specified element to this set if it is not already present.
 	// It returns false if the value is already present.
 	Add(val interface{}) bool
@@ -53,13 +51,13 @@ func New() Interface {
 	}
 }
 
-func (s *set) Len() int {
+func (s *set) Size() int {
 	return len(s.items)
 }
 
 // IsEmpty returns true if this set contains no elements.
 func (s *set) IsEmpty() bool {
-	return s.Len() == 0
+	return s.Size() == 0
 }
 
 func (s *set) Add(val interface{}) bool {
@@ -91,7 +89,7 @@ func (s *set) Clear() {
 }
 
 func (s *set) Iterate(cb IterateCallback) {
-	for k, _ := range s.items {
+	for k := range s.items {
 		if !cb(k) {
 			break
 		}

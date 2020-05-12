@@ -12,8 +12,6 @@ import (
 type Interface interface {
 	collection.Interface
 
-	// Len returns the length of this queue.
-	Len() int
 	// Add inserts an element into the tail of this queue.
 	Add(val interface{})
 	// Peek retrieves, but does not remove, the head of this queue, or return nil if this queue is empty.
@@ -44,13 +42,13 @@ func New() Interface {
 	}
 }
 
-func (q *queue) Len() int {
+func (q *queue) Size() int {
 	return q.length
 }
 
 // IsEmpty returns true if this queue contains no elements.
 func (q *queue) IsEmpty() bool {
-	return q.Len() == 0
+	return q.Size() == 0
 }
 
 // Add (todo): add a capacity for the queue, and return an error when this queue is full.

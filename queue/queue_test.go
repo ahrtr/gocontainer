@@ -8,14 +8,14 @@ import (
 	"testing"
 )
 
-func TestQueueLen(t *testing.T) {
+func TestQueueSize(t *testing.T) {
 	q := New()
 
 	q.Add(5)
 	q.Add(6)
 
-	if q.Len() != 2 {
-		t.Errorf("The length isn't expected, expect: 2, actual: %d", q.Len())
+	if q.Size() != 2 {
+		t.Errorf("The length isn't expected, expect: 2, actual: %d", q.Size())
 	}
 }
 
@@ -92,7 +92,7 @@ func TestQueueClear(t *testing.T) {
 	q.Add(6)
 	q.Clear()
 
-	if q.Len() != 0 {
-		t.Errorf("The length isn't expected, expect: 0, actual: %d\n", q.Len())
+	if q.Size() != 0 {
+		t.Errorf("The length isn't expected, expect: 0, actual: %d\n", q.Size())
 	}
 }

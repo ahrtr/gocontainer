@@ -18,7 +18,7 @@ func stackExample1() {
 		s.Push(v)
 	}
 
-	for s.Len() > 0 {
+	for s.Size() > 0 {
 		fmt.Printf("s.Pop() = %v\n", s.Pop())
 	}
 }

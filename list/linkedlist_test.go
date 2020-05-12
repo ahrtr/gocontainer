@@ -8,15 +8,15 @@ import (
 	"testing"
 )
 
-func TestLinkedListLen(t *testing.T) {
+func TestLinkedListSize(t *testing.T) {
 	ll := NewLinkedList()
 
 	ll.Add(5)
 	ll.Add(6)
 	ll.Add(7)
 
-	if ll.Len() != 3 {
-		t.Errorf("The length isn't expected, expect: 3, actull: %d\n", ll.Len())
+	if ll.Size() != 3 {
+		t.Errorf("The length isn't expected, expect: 3, actull: %d\n", ll.Size())
 	}
 
 	length := getLinkedListLength(ll)
@@ -34,8 +34,8 @@ func TestLinkedListLen(t *testing.T) {
 		t.Errorf("The removed element isn't expected, expect: 6, actull: %v\n", v)
 	}
 
-	if ll.Len() != 2 {
-		t.Errorf("The length isn't expected, expect: 2, actull: %d\n", ll.Len())
+	if ll.Size() != 2 {
+		t.Errorf("The length isn't expected, expect: 2, actull: %d\n", ll.Size())
 	}
 	length = getLinkedListLength(ll)
 	if length != 2 {
@@ -43,20 +43,20 @@ func TestLinkedListLen(t *testing.T) {
 	}
 
 	if ll.IsEmpty() {
-		t.Errorf("The Linkedlist shouldn't be empty, actull length: %d\n", ll.Len())
+		t.Errorf("The Linkedlist shouldn't be empty, actull length: %d\n", ll.Size())
 	}
 
 	// clear ll the elements
 	ll.Clear()
-	if ll.Len() != 0 {
-		t.Errorf("The length isn't expected, expect: 0, actull: %d\n", ll.Len())
+	if ll.Size() != 0 {
+		t.Errorf("The length isn't expected, expect: 0, actull: %d\n", ll.Size())
 	}
 	length = getLinkedListLength(ll)
 	if length != 0 {
 		t.Errorf("The length of LinkedList isn't expected, expect: 0, actull: %d\n", length)
 	}
 	if !ll.IsEmpty() {
-		t.Errorf("The Linkedlist should be empty, actull length: %d\n", ll.Len())
+		t.Errorf("The Linkedlist should be empty, actull length: %d\n", ll.Size())
 	}
 }
 
@@ -116,8 +116,8 @@ func TestLinkedListValue(t *testing.T) {
 	}
 
 	// check length at last
-	if ll.Len() != 3 {
-		t.Errorf("The length isn't expected, expect: 3, actull: %d\n", ll.Len())
+	if ll.Size() != 3 {
+		t.Errorf("The length isn't expected, expect: 3, actull: %d\n", ll.Size())
 	}
 }
 
@@ -227,8 +227,8 @@ func TestLinkedListSort(t *testing.T) {
 	sort.Sort(ll)
 
 	// check length after sorting
-	if ll.Len() != 4 {
-		t.Errorf("The length isn't expected, expect: 4, actual: %d\n", ll.Len())
+	if ll.Size() != 4 {
+		t.Errorf("The length isn't expected, expect: 4, actual: %d\n", ll.Size())
 	}
 
 	// check values after sorting
@@ -247,8 +247,8 @@ func TestLinkedListSort(t *testing.T) {
 
 	// reverse sorting
 	sort.Sort(sort.Reverse(ll))
-	if ll.Len() != 4 {
-		t.Errorf("The length isn't expected, expect: 4, actual: %d\n", ll.Len())
+	if ll.Size() != 4 {
+		t.Errorf("The length isn't expected, expect: 4, actual: %d\n", ll.Size())
 	}
 
 	// check values after reverse sorting
@@ -275,8 +275,8 @@ func TestLinkdedListComparatorSort(t *testing.T) {
 
 	sort.Sort(ll)
 	// check length after sorting
-	if ll.Len() != 4 {
-		t.Errorf("The length isn't expected, expect: 4, actual: %d\n", ll.Len())
+	if ll.Size() != 4 {
+		t.Errorf("The length isn't expected, expect: 4, actual: %d\n", ll.Size())
 	}
 
 	// check values after sorting
@@ -295,8 +295,8 @@ func TestLinkdedListComparatorSort(t *testing.T) {
 
 	// reverse sorting
 	sort.Sort(sort.Reverse(ll))
-	if ll.Len() != 4 {
-		t.Errorf("The length isn't expected, expect: 4, actual: %d\n", ll.Len())
+	if ll.Size() != 4 {
+		t.Errorf("The length isn't expected, expect: 4, actual: %d\n", ll.Size())
 	}
 
 	// check values after reverse sorting

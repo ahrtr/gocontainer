@@ -8,15 +8,15 @@ import (
 	"testing"
 )
 
-func TestArrayListLen(t *testing.T) {
+func TestArrayListSize(t *testing.T) {
 	al := NewArrayList()
 
 	al.Add(5)
 	al.Add(6)
 	al.Add(7)
 
-	if al.Len() != 3 {
-		t.Errorf("The length isn't expected, expect: 3, actual: %d\n", al.Len())
+	if al.Size() != 3 {
+		t.Errorf("The length isn't expected, expect: 3, actual: %d\n", al.Size())
 	}
 
 	// remove the element at the position 1
@@ -29,21 +29,21 @@ func TestArrayListLen(t *testing.T) {
 		t.Errorf("The removed element isn't expected, expect: 6, actual: %v\n", v)
 	}
 
-	if al.Len() != 2 {
-		t.Errorf("The length isn't expected, expect: 2, actual: %d\n", al.Len())
+	if al.Size() != 2 {
+		t.Errorf("The length isn't expected, expect: 2, actual: %d\n", al.Size())
 	}
 
 	if al.IsEmpty() {
-		t.Errorf("The arraylist shouldn't be empty, actual length: %d\n", al.Len())
+		t.Errorf("The arraylist shouldn't be empty, actual length: %d\n", al.Size())
 	}
 
 	// clear al the elements
 	al.Clear()
-	if al.Len() != 0 {
-		t.Errorf("The length isn't expected, expect: 0, actual: %d\n", al.Len())
+	if al.Size() != 0 {
+		t.Errorf("The length isn't expected, expect: 0, actual: %d\n", al.Size())
 	}
 	if !al.IsEmpty() {
-		t.Errorf("The arraylist should be empty, actual length: %d\n", al.Len())
+		t.Errorf("The arraylist should be empty, actual length: %d\n", al.Size())
 	}
 }
 
@@ -92,8 +92,8 @@ func TestArrayListValue(t *testing.T) {
 	}
 
 	// check length at last
-	if al.Len() != 3 {
-		t.Errorf("The length isn't expected, expect: 3, actual: %d\n", al.Len())
+	if al.Size() != 3 {
+		t.Errorf("The length isn't expected, expect: 3, actual: %d\n", al.Size())
 	}
 }
 
@@ -203,8 +203,8 @@ func TestArrayListSort(t *testing.T) {
 	sort.Sort(al)
 
 	// check length after sorting
-	if al.Len() != 4 {
-		t.Errorf("The length isn't expected, expect: 4, actual: %d\n", al.Len())
+	if al.Size() != 4 {
+		t.Errorf("The length isn't expected, expect: 4, actual: %d\n", al.Size())
 	}
 
 	// check values after sorting
@@ -223,8 +223,8 @@ func TestArrayListSort(t *testing.T) {
 
 	// reverse sorting
 	sort.Sort(sort.Reverse(al))
-	if al.Len() != 4 {
-		t.Errorf("The length isn't expected, expect: 4, actual: %d\n", al.Len())
+	if al.Size() != 4 {
+		t.Errorf("The length isn't expected, expect: 4, actual: %d\n", al.Size())
 	}
 
 	// check values after reverse sorting
@@ -251,8 +251,8 @@ func TestArrayListComparatorSort(t *testing.T) {
 
 	sort.Sort(al)
 	// check length after sorting
-	if al.Len() != 4 {
-		t.Errorf("The length isn't expected, expect: 4, actual: %d\n", al.Len())
+	if al.Size() != 4 {
+		t.Errorf("The length isn't expected, expect: 4, actual: %d\n", al.Size())
 	}
 
 	// check values after sorting
@@ -271,8 +271,8 @@ func TestArrayListComparatorSort(t *testing.T) {
 
 	// reverse sorting
 	sort.Sort(sort.Reverse(al))
-	if al.Len() != 4 {
-		t.Errorf("The length isn't expected, expect: 4, actual: %d\n", al.Len())
+	if al.Size() != 4 {
+		t.Errorf("The length isn't expected, expect: 4, actual: %d\n", al.Size())
 	}
 
 	// check values after reverse sorting
