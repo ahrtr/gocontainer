@@ -161,18 +161,18 @@ func (al *arrayList) Iterator() (func() (interface{}, bool), bool) {
 
 	return func() (interface{}, bool) {
 		var element interface{}
-		if index < al.Len() {
+		if index < al.Size() {
 			element = al.items[index]
 			index++
 		} else {
 			element = nil
 		}
-		return element, index < al.Len()
-	}, index < al.Len()
+		return element, index < al.Size()
+	}, index < al.Size()
 }
 
 func (al *arrayList) ReverseIterator() (func() (interface{}, bool), bool) {
-	index := al.Len() - 1
+	index := al.Size() - 1
 
 	return func() (interface{}, bool) {
 		var element interface{}

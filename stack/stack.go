@@ -48,9 +48,8 @@ func (s *stack) Pop() interface{} {
 		val := s.items[len(s.items)-1]
 		s.items = s.items[:len(s.items)-1]
 		return val
-	} else {
-		return nil
 	}
+	return nil
 }
 
 // Clear removes all the elements from this stack.
