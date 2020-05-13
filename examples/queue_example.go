@@ -19,10 +19,7 @@ func queueExample1() {
 		q.Add(v)
 	}
 
-	for {
-		if q.Peek() == nil {
-			break
-		}
+	for q.Peek() != nil {
 		fmt.Printf("q.Peek() = %v\n", q.Peek())
 		fmt.Printf("q.Poll() = %v\n", q.Poll())
 	}

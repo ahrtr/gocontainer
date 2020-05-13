@@ -42,26 +42,26 @@ func listArrayListExample4() {
 */
 func listLinkedListExample1() {
 	printFuncName()
-	al := list.NewLinkedList()
-	listBasicOperation(al)
+	ll := list.NewLinkedList()
+	listBasicOperation(ll)
 }
 
 func listLinkedListExample2() {
 	printFuncName()
-	al := list.NewLinkedList()
-	listSortData(al)
+	ll := list.NewLinkedList()
+	listSortData(ll)
 }
 
 func listLinkedListExample3() {
 	printFuncName()
-	al := list.NewLinkedList()
-	listReverseSortData(al)
+	ll := list.NewLinkedList()
+	listReverseSortData(ll)
 }
 
 func listLinkedListExample4() {
 	printFuncName()
-	al := list.NewLinkedList().WithComparator(&student{})
-	listCustomizedData(al)
+	ll := list.NewLinkedList().WithComparator(&student{})
+	listCustomizedData(ll)
 }
 
 /*
@@ -79,7 +79,7 @@ func listBasicOperation(h list.Interface) {
 
 	// Iterate all the elements (method 1)
 	fmt.Println("Iterate (method 1): ")
-	for i := 0; i < h.Len(); i++ {
+	for i := 0; i < h.Size(); i++ {
 		v, _ := h.Get(i)
 		fmt.Printf("    Index: %d, value: %v\n", i, v)
 	}
@@ -113,7 +113,7 @@ func listSortData(h list.Interface) {
 
 	// Iterate all the elements (method 1)
 	fmt.Println("Iterate (method 1): ")
-	for i := 0; i < h.Len(); i++ {
+	for i := 0; i < h.Size(); i++ {
 		v, _ := h.Get(i)
 		fmt.Printf("    Index: %d, value: %v\n", i, v)
 	}
@@ -147,7 +147,7 @@ func listReverseSortData(h list.Interface) {
 
 	// Iterate all the elements (method 1)
 	fmt.Println("Iterate (method 1): ")
-	for i := 0; i < h.Len(); i++ {
+	for i := 0; i < h.Size(); i++ {
 		v, _ := h.Get(i)
 		fmt.Printf("    Index: %d, value: %v\n", i, v)
 	}
@@ -188,7 +188,7 @@ func listCustomizedData(h list.Interface) {
 
 	// Iterate all the elements (method 1)
 	fmt.Println("Iterate (method 1): ")
-	for i := 0; i < h.Len(); i++ {
+	for i := 0; i < h.Size(); i++ {
 		v, _ := h.Get(i)
 		fmt.Printf("    Index: %d, value: %v\n", i, v)
 	}

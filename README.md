@@ -96,6 +96,30 @@ Call stack.New() to create a stack,
 New() Interface
 ```
 
+The following is a simple example for stack,
+```go
+package main
+
+import (
+	"fmt"
+
+	"github.com/ahrtr/gocontainer/stack"
+)
+
+func main() {
+	s := stack.New()
+
+	values := []int{5, 6, 7}
+	for _, v := range values {
+		s.Push(v)
+	}
+
+	for s.Size() > 0 {
+		fmt.Printf("s.Pop() = %v\n", s.Pop())
+	}
+}
+```
+
 ## Queue
 Queue is a FIFO(first-in-first-out) container. It implements the following interface. Click **[here](examples/queue_example.go)** to find examples on how to use a queue.
 ```go
@@ -122,6 +146,32 @@ import (
 Call queue.New() to create a queue,
 ```go
 New() Interface
+```
+
+The following is a simple example for queue,
+```go
+package main
+
+import (
+	"fmt"
+
+	"github.com/ahrtr/gocontainer/queue"
+)
+
+func main() {
+	q := queue.New()
+
+	values := []string{"benjamin", "alice", "john", "tom", "bill"}
+
+	for _, v := range values {
+		q.Add(v)
+	}
+
+	for q.Peek() != nil {
+		fmt.Printf("q.Peek() = %v\n", q.Peek())
+		fmt.Printf("q.Poll() = %v\n", q.Poll())
+	}
+}
 ```
 
 ## Set
@@ -156,6 +206,39 @@ import (
 Call set.New() to create a set,
 ```go
 New() Interface
+```
+
+The following is a simple example for set,
+```go
+package main
+
+import (
+	"fmt"
+
+	"github.com/ahrtr/gocontainer/set"
+)
+
+func main() {
+	s := set.New()
+
+	values := []int{5, 3, 9, 7, 6}
+	for _, v := range values {
+		s.Add(v)
+	}
+
+	for _, v := range values {
+		fmt.Printf("s.Contains(%v) = %t\n", v, s.Contains(v))
+	}
+
+	// iterate all the elements, the callback function's signature:
+	//   type IterateCallback func(interface{}) bool
+	s.Iterate(func(v interface{}) bool {
+		fmt.Printf("Iterate callback: %v\n", v)
+		return true
+	})
+
+	s.Remove(6)
+}
 ```
 
 Applications are supposed to define a callback function (see below) when iterating a set. 
@@ -224,6 +307,69 @@ Call list.NewArrayList() and list.NewLinkedList() to create a ArrayList and a Li
 NewArrayList() Interface
 NewLinkedList() Interface
 ```
+
+The following is a simple example for arrayList,
+```go
+package main
+
+import (
+	"fmt"
+
+	"github.com/ahrtr/gocontainer/list"
+)
+
+func main() {
+	al := list.NewArrayList()
+	values := []int{5, 7, 12, 9}
+	for _, v := range values {
+		al.Add(v)
+	}
+
+	al.AddTo(2, 18)
+	v3, _ := al.Remove(3)
+	fmt.Printf("al.Remove(3) = %v\n", v3)
+
+	// Iterate all the elements 
+	fmt.Println("Iterate: ")
+	for i := 0; i < al.Size(); i++ {
+		v, _ := al.Get(i)
+		fmt.Printf("    Index: %d, value: %v\n", i, v)
+	}
+}
+```
+
+The following is a simple example for linkedList,
+```go
+package main
+
+import (
+	"fmt"
+
+	"github.com/ahrtr/gocontainer/list"
+)
+func main() {
+	ll := list.NewLinkedList()
+	values := []int{5, 7, 12, 9}
+	for _, v := range values {
+		ll.Add(v)
+	}
+
+	ll.AddTo(2, 18)
+	v3, _ := ll.Remove(3)
+	fmt.Printf("ll.Remove(3) = %v\n", v3)
+
+
+	// Iterate all the elements
+	fmt.Println("Iterate: ")
+	it, hasNext := ll.Iterator()
+	var v interface{}
+	for hasNext {
+		v, hasNext = it()
+		fmt.Printf("    Value: %v\n", v)
+	}
+}
+```
+
 A sort.Comparator instance can be provided for a list (ArrayList or LinkedList) by method WithComparator, please get more detailed info in **[Sort](#sort)**.
 ```go
 WithComparator(c gsort.Comparator) Interface 
@@ -298,6 +444,39 @@ Call priorityqueue.New() to create a PriorityQueue,
 ```go
 New() Interface 
 ```
+
+The following is a simple example for priorityQueue,
+```go
+package main
+
+import (
+	"fmt"
+
+	"github.com/ahrtr/gocontainer/queue/priorityqueue"
+)
+
+func main() {
+	pq := priorityqueue.New()
+
+	values := []string{"benjamin", "alice", "john", "tom", "bill"}
+
+	for _, v := range values {
+		pq.Add(v)
+	}
+
+	for _, v := range values {
+		fmt.Printf("pq.Contains(%v) = %t\n", v, pq.Contains(v))
+	}
+
+	fmt.Printf("pq.Remove(john) = %t\n", pq.Remove("john"))
+
+	for pq.Peek() != nil {
+		fmt.Printf("pq.Peek() = %v\n", pq.Peek())
+		fmt.Printf("pq.Poll() = %v\n", pq.Poll())
+	}
+}
+```
+
 A sort.Comparator instance can be provided for a PriorityQueue by method WithComparator, please get more detailed info in **[Sort](#sort)**.
 ```go
 WithComparator(c gsort.Comparator) Interface
@@ -365,6 +544,40 @@ import (
 Call linkedmap.New() to create a linked map,
 ```go
 New() Interface
+```
+
+The following is a simple example for linkedMap,
+```go
+package main
+
+import (
+	"fmt"
+
+	"github.com/ahrtr/gocontainer/linkedmap"
+)
+
+func main() {
+	lm := linkedmap.New()
+
+	keys := []interface{}{24, 43, 18, 23, 35}
+	values := []interface{}{"benjamin", "alice", "john", "tom", "bill"}
+	for i := 0; i < len(keys); i++ {
+		lm.Put(keys[i], values[i])
+	}
+
+	for _, k := range keys {
+		fmt.Printf("Get(%v) = %v\n", k, lm.Get(k))
+	}
+
+	v, _ := lm.Remove(18)
+	fmt.Printf("The value associated with 18 is %v\n", v)
+
+	k, v, _ := lm.RemoveFirstElement()
+	fmt.Printf("The first element removed is (%v, %v)\n", k, v)
+
+	k, v, _ = lm.RemoveLastElement()
+	fmt.Printf("The last element removed is (%v, %v)\n", k, v)
+}
 ```
 
 If the order in which the keys were accessed is expected for the iteration ordering, then the accessOrder flag should be set, 

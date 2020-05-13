@@ -26,11 +26,7 @@ func priorityqueueExample1() {
 
 	fmt.Printf("pq.Remove(john) = %t\n", pq.Remove("john"))
 
-	for {
-		if pq.Peek() == nil {
-			break
-		}
-
+	for pq.Peek() != nil {
 		fmt.Printf("pq.Peek() = %v\n", pq.Peek())
 		fmt.Printf("pq.Poll() = %v\n", pq.Poll())
 	}
@@ -54,11 +50,7 @@ func priorityqueueExample2() {
 
 	fmt.Printf("pq.Remove(john) = %t\n", pq.Remove("john"))
 
-	for {
-		if pq.Peek() == nil {
-			break
-		}
-
+	for pq.Peek() != nil {
 		fmt.Printf("pq.Peek() = %v\n", pq.Peek())
 		fmt.Printf("pq.Poll() = %v\n", pq.Poll())
 	}
@@ -82,11 +74,7 @@ func priorityqueueExample3() {
 
 	fmt.Printf("pq.Remove(john) = %t\n", pq.Remove("john"))
 
-	for {
-		if pq.Peek() == nil {
-			break
-		}
-
+	for pq.Peek() != nil {
 		fmt.Printf("pq.Peek() = %v\n", pq.Peek())
 		fmt.Printf("pq.Poll() = %v\n", pq.Poll())
 	}
@@ -114,11 +102,7 @@ func priorityqueueExample4() {
 		fmt.Printf("pq.Contains(%v) = %t\n", v, pq.Contains(v))
 	}
 
-	for {
-		if pq.Peek() == nil {
-			break
-		}
-
+	for pq.Peek() != nil {
 		fmt.Printf("pq.Peek() = %v\n", pq.Peek())
 		fmt.Printf("pq.Poll() = %v\n", pq.Poll())
 	}
