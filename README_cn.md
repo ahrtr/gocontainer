@@ -538,7 +538,7 @@ type Interface interface {
 为了使用linkedMap，必须import下面这个package，
 ```go
 import (
-	"github.com/ahrtr/gocontainer/linkedmap"
+	"github.com/ahrtr/gocontainer/map/linkedmap"
 )
 ```
 
@@ -554,7 +554,7 @@ package main
 import (
 	"fmt"
 
-	"github.com/ahrtr/gocontainer/linkedmap"
+	"github.com/ahrtr/gocontainer/map/linkedmap"
 )
 
 func main() {

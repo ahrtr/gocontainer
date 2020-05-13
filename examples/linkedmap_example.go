@@ -6,7 +6,7 @@ package main
 import (
 	"fmt"
 
-	"github.com/ahrtr/gocontainer/linkedmap"
+	"github.com/ahrtr/gocontainer/map/linkedmap"
 )
 
 func linkedmapExample1() {
