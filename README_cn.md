@@ -31,11 +31,8 @@ import (
 
 func main() {
 	al := list.NewArrayList()
-
-	al.Add(5)
-	al.Add(6)
-	al.Add(7)
-
+	al.Add(5, 6, 7)
+	
 	// Iterate all the elements 
 	fmt.Println("Iterate (method 1): ")
 	for i := 0; i < al.Len(); i++ {
@@ -128,7 +125,7 @@ type Interface interface {
 	collection.Interface
 
 	// Add inserts an element into the tail of this queue.
-	Add(val interface{})
+	Add(vals ...interface{})
 	// Peek retrieves, but does not remove, the head of this queue, or return nil if this queue is empty.
 	Peek() interface{}
 	// Poll retrieves and removes the head of the this queue, or return nil if this queue is empty.
@@ -183,9 +180,9 @@ set（集合）实现了下面的接口。点击 **[这里](examples/set_example
 type Interface interface {
 	collection.Interface
 
-	// Add adds the specified element to this set if it is not already present.
-	// It returns false if the value is already present.
-	Add(val interface{}) bool
+	// Add adds the specified values to this set if they are not already present.
+	// It returns false if any value is already present.
+	Add(vals ...interface{}) bool
 	// Contains returns true if this set contains the specified element.
 	Contains(val interface{}) bool
 	// Remove removes the specified element from this set if it is present.
@@ -266,16 +263,11 @@ s.Iterate(func(v interface{}) bool {
 // Interface is a type of list, both ArrayList and LinkedList implement this interface.
 type Interface interface {
 	collection.Interface
-	sort.Interface
 
-	// Add appends the specified element to the end of this list.
-	Add(val interface{})
+	// Add appends the specified elements to the end of this list.
+	Add(vals ...interface{})
 	// AddTo inserts the specified element at the specified position in this list.
 	AddTo(index int, val interface{}) error
-
-	// WithComparator sets a gsort.Comparator instance for the list.
-	// It's used to imposes a total ordering on the elements in the list.
-	WithComparator(c gsort.Comparator) Interface
 
 	// Contains returns true if this list contains the specified element.
 	Contains(val interface{}) bool
@@ -288,6 +280,17 @@ type Interface interface {
 	// RemoveByValue removes the first occurence of the specified element from this list, if it is present.
 	// It returns false if the target value isn't present, otherwise returns true.
 	RemoveByValue(val interface{}) bool
+
+	// Sort sorts the element using default options below. It sorts the elements into ascending sequence according to their natural ordering.
+	//     reverse: false
+	//     comparator: nil
+	Sort()
+	// SortWithOptions sorts the elements in the list.
+	// Parameters:
+	//     reverse: whether sort the data in reverse ordering
+	//     c:       sort the data according to the provided comparator
+	// If reverse is true, and a comparator is also provided, then the result will be the reverse sequence as the comparator generates.
+	SortWithOptions(reverse bool, c utils.Comparator)
 
 	// Iterator returns an iterator over the elements in this list in proper sequence.
 	Iterator() (func() (interface{}, bool), bool)
@@ -371,12 +374,11 @@ func main() {
 }
 ```
 
-可以通过方法WithComparator为一个list设置一个sort.Comparator实例，具体请参考 **[关于排序](#关于排序)**.
+可以通过下面两个方法对一个list进行排序。第一个方法Sort()默认是根据list中元素的自然顺序按升序排序；它实际上是用默认参数直接调用第二个方法SortWithOptions(false, nil)。第二个方法  SortWithOptions根据传入的参数值对list进行排序。具体请参考 **[关于排序](#关于排序)**
 ```go
-WithComparator(c gsort.Comparator) Interface 
+Sort()
+SortWithOptions(reverse bool, c utils.Comparator)
 ```
-
-因为接口list.Interface"继承"（内嵌）了接口sort.Interface，因此可以用sort.Sort(data)直接对一个list进行排序；要么根据元素的自然顺序按升序排序，要么根据上层应用提供的sort.Comparator实例进行排序。
 
 有多种方法可以遍历一个list，下面的代码片段演示了如何遍历一个list(arrayList或linkedList),
 ```go
@@ -391,6 +393,7 @@ for hasNext {
 
 ```go
 // To iterate over a list (where l is an instance of list.Interface):
+// This approach isn't efficient for linkedList.
 for i:=0; i<l.Len(); i++ {
 	v, _ := l.Get(i)
 	// Do something with v
@@ -409,6 +412,7 @@ for hasPrev {
 
 ```go
 // To iterate over a list in reverse order (where l is an instance of list.Interface):
+// This approach isn't efficient for linkedList.
 for i:=l.Len()-1; i>=0; i-- {
 	v, _ := l.Get(i)
 	// Do something with v
@@ -422,9 +426,12 @@ PriorityQueue (优先级队列)是一种基于优先级堆实现的队列。 它
 type Interface interface {
 	queue.Interface
 
-	// WithComparator sets a gsort.Comparator instance for the queue.
+	// WithComparator sets a utils.Comparator instance for the queue.
 	// It's used to imposes a total ordering on the elements in the queue.
-	WithComparator(c gsort.Comparator) Interface
+	WithComparator(c utils.Comparator) Interface
+	// WithMinHeap configures whether or not using min-heap.
+	// If not configured, then it's min-heap by default.
+	WithMinHeap(isMinHeap bool) Interface
 
 	// Contains returns true if this queue contains the specified element.
 	Contains(val interface{}) bool
@@ -478,16 +485,14 @@ func main() {
 }
 ```
 
-可以通过方法WithComparator为一个priorityQueue设置一个sort.Comparator实例，具体请参考 **[关于排序](#关于排序)**.
+可以通过方法WithComparator为一个priorityQueue设置一个utils.Comparator实例，具体请参考 **[关于排序](#关于排序)**.
 ```go
 WithComparator(c gsort.Comparator) Interface
 ```
 
-PriorityQueue中的元素根据它们的自然顺序排序，或者根据一个sort.Comparator实例来排序。
-
-如何期望是倒序，那么使用函数priorityqueue.Reverse,
+可以通过方法WithMinHeap将一个priorityQueue设置成小顶堆或大顶堆。如果传给这个方法的参数为true，那就是小顶堆，这也是默认选项。如果为false，则是大顶堆。
 ```go
-pq := priorityqueue.Reverse(priorityqueue.New())
+WithMinHeap(isMinHeap bool) Interface
 ```
 
 ## LinkedMap
@@ -613,7 +618,7 @@ for hasPrev {
 更多的容器将来可能会加入进来。如果您需要任何其它类型的容器，或者有任何建议，欢迎通过issues反馈给我。
 
 # 关于排序
-一些容器实现了接口 **sort.Interface**, 比如ArrayList和LinkedList。这就意味着这些容器可以直接通过sort.Sort(data)排序。对于下面这些Golang内置的类型，默认是根据它们的自然顺序按升序排序。对于 **bool** 类型, false被认为是比true要小。 
+一些容器支持排序, 比如ArrayList和LinkedList。对于下面这些Golang内置的类型，默认是根据它们的自然顺序按升序排序。对于 **bool** 类型, false被认为是比true要小。 
 - bool
 - int
 - int8
@@ -632,7 +637,7 @@ for hasPrev {
 - rune
 - time.Time
 
-上层应用程序也可以通过方法WithComparator为实现了接口sort.Interface的容器提供一个sort.Comparator实例，
+上层应用程序也可以提供一个sort.Comparator实例来定制排序的顺序，
 ```go
 // Comparator imposes a total ordering on some collection of objects.
 // Comparators can be passed to the construction function of a container(such as ArrayList, LinkedList or PriorityQueue) to allow precise control over the sort order.

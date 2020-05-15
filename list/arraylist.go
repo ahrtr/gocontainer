@@ -24,74 +24,45 @@ package list
 import (
 	"fmt"
 
-	gsort "github.com/ahrtr/gocontainer/sort"
+	"github.com/ahrtr/gocontainer/utils"
 )
 
 // arrayList represents an array list.
 // It implements the interface list.Interface.
 type arrayList struct {
 	items []interface{}
-	cmp   gsort.Comparator
 }
 
 // NewArrayList initializes and returns an ArrayList.
 func NewArrayList() Interface {
 	return &arrayList{
 		items: []interface{}{},
-		cmp:   nil,
 	}
-}
-
-func (al *arrayList) WithComparator(c gsort.Comparator) Interface {
-	al.cmp = c
-	return al
 }
 
 func (al *arrayList) Size() int {
 	return len(al.items)
 }
 
-func (al *arrayList) Len() int {
-	return al.Size()
-}
-
-func (al *arrayList) Less(i, j int) bool {
-	var cmpRet int
-	var err error
-	if nil != al.cmp {
-		cmpRet, err = al.cmp.Compare(al.items[i], al.items[j])
-	} else {
-		cmpRet, err = gsort.Compare(al.items[i], al.items[j])
-	}
-	if err != nil {
-		panic(err)
-	}
-	return cmpRet < 0
-}
-
-func (al *arrayList) Swap(i, j int) {
-	if i != j {
-		al.items[i], al.items[j] = al.items[j], al.items[i]
-	}
-}
-
 func (al *arrayList) IsEmpty() bool {
-	return al.Len() == 0
+	return al.Size() == 0
 }
 
-func (al *arrayList) Add(val interface{}) {
-	al.items = append(al.items, val)
+func (al *arrayList) Add(vals ...interface{}) {
+	for _, v := range vals {
+		al.items = append(al.items, v)
+	}
 }
 
 func (al *arrayList) AddTo(index int, val interface{}) error {
 	if index < 0 || index > len(al.items) {
-		return fmt.Errorf("Index out of range, index:%d, len:%d", index, al.Len())
+		return fmt.Errorf("Index out of range, index:%d, len:%d", index, al.Size())
 	}
 
-	if index == al.Len() {
+	if index == al.Size() {
 		al.Add(val)
 	} else {
-		curLen := al.Len()
+		curLen := al.Size()
 		al.items = append(al.items, val)
 		copy(al.items[(index+1):(curLen+1)], al.items[index:curLen])
 		al.items[index] = val
@@ -116,7 +87,7 @@ func (al *arrayList) Contains(val interface{}) bool {
 
 func (al *arrayList) Get(index int) (interface{}, error) {
 	if index < 0 || index >= len(al.items) {
-		return nil, fmt.Errorf("Index out of range, index:%d, len:%d", index, al.Len())
+		return nil, fmt.Errorf("Index out of range, index:%d, len:%d", index, al.Size())
 	}
 
 	return al.items[index], nil
@@ -124,7 +95,7 @@ func (al *arrayList) Get(index int) (interface{}, error) {
 
 func (al *arrayList) Remove(index int) (interface{}, error) {
 	if index < 0 || index >= len(al.items) {
-		return nil, fmt.Errorf("Index out of range, index:%d, len:%d", index, al.Len())
+		return nil, fmt.Errorf("Index out of range, index:%d, len:%d", index, al.Size())
 	}
 
 	val := al.items[index]
@@ -135,7 +106,7 @@ func (al *arrayList) Remove(index int) (interface{}, error) {
 }
 
 func (al *arrayList) RemoveByValue(val interface{}) bool {
-	if al.Len() == 0 {
+	if al.Size() == 0 {
 		return false
 	}
 
@@ -154,6 +125,18 @@ func (al *arrayList) Clear() {
 		al.items[i] = nil
 	}
 	al.items = []interface{}{}
+}
+
+func (al *arrayList) Sort() {
+	al.SortWithOptions(false, nil)
+}
+
+func (al *arrayList) SortWithOptions(reverse bool, c utils.Comparator) {
+	if reverse {
+		utils.ReverseSort(al.items, c)
+	} else {
+		utils.Sort(al.items, c)
+	}
 }
 
 func (al *arrayList) Iterator() (func() (interface{}, bool), bool) {

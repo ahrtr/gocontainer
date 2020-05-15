@@ -4,16 +4,13 @@
 package list
 
 import (
-	"sort"
 	"testing"
 )
 
 func TestArrayListSize(t *testing.T) {
 	al := NewArrayList()
 
-	al.Add(5)
-	al.Add(6)
-	al.Add(7)
+	al.Add(5, 6, 7)
 
 	if al.Size() != 3 {
 		t.Errorf("The length isn't expected, expect: 3, actual: %d\n", al.Size())
@@ -50,9 +47,7 @@ func TestArrayListSize(t *testing.T) {
 func TestArrayListValue(t *testing.T) {
 	al := NewArrayList()
 
-	al.Add(5)
-	al.Add(6)
-	al.Add(7)
+	al.Add(5, 6, 7)
 
 	err := al.AddTo(2, 8)
 	if err != nil {
@@ -100,9 +95,7 @@ func TestArrayListValue(t *testing.T) {
 func TestArrayListIterator(t *testing.T) {
 	al := NewArrayList()
 
-	al.Add(5)
-	al.Add(6)
-	al.Add(7)
+	al.Add(5, 6, 7)
 
 	/* In production use cases, it should like this:
 	it, hasNext := al.Iterator()
@@ -148,9 +141,7 @@ func TestArrayListIterator(t *testing.T) {
 func TestArrayListReverseIterator(t *testing.T) {
 	al := NewArrayList()
 
-	al.Add(5)
-	al.Add(6)
-	al.Add(7)
+	al.Add(5, 6, 7)
 
 	/* In production use cases, it should like this:
 	it, hasPrev := al.ReverseIterator()
@@ -195,12 +186,9 @@ func TestArrayListReverseIterator(t *testing.T) {
 
 func TestArrayListSort(t *testing.T) {
 	al := NewArrayList()
-	al.Add(15)
-	al.Add(6)
-	al.Add(7)
-	al.Add(4)
+	al.Add(15, 6, 7, 4)
 
-	sort.Sort(al)
+	al.Sort()
 
 	// check length after sorting
 	if al.Size() != 4 {
@@ -222,7 +210,7 @@ func TestArrayListSort(t *testing.T) {
 	}
 
 	// reverse sorting
-	sort.Sort(sort.Reverse(al))
+	al.SortWithOptions(true, nil)
 	if al.Size() != 4 {
 		t.Errorf("The length isn't expected, expect: 4, actual: %d\n", al.Size())
 	}
@@ -243,13 +231,13 @@ func TestArrayListSort(t *testing.T) {
 }
 
 func TestArrayListComparatorSort(t *testing.T) {
-	al := NewArrayList().WithComparator(&arrayListNode{})
+	al := NewArrayList()
 	al.Add(&arrayListNode{age: 32})
 	al.Add(&arrayListNode{age: 20})
 	al.Add(&arrayListNode{age: 27})
 	al.Add(&arrayListNode{age: 25})
 
-	sort.Sort(al)
+	al.SortWithOptions(false, &arrayListNode{})
 	// check length after sorting
 	if al.Size() != 4 {
 		t.Errorf("The length isn't expected, expect: 4, actual: %d\n", al.Size())
@@ -270,7 +258,7 @@ func TestArrayListComparatorSort(t *testing.T) {
 	}
 
 	// reverse sorting
-	sort.Sort(sort.Reverse(al))
+	al.SortWithOptions(true, &arrayListNode{})
 	if al.Size() != 4 {
 		t.Errorf("The length isn't expected, expect: 4, actual: %d\n", al.Size())
 	}

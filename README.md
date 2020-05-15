@@ -31,10 +31,7 @@ import (
 
 func main() {
 	al := list.NewArrayList()
-
-	al.Add(5)
-	al.Add(6)
-	al.Add(7)
+	al.Add(5, 6, 7)
 
 	// Iterate all the elements 
 	fmt.Println("Iterate (method 1): ")
@@ -128,7 +125,7 @@ type Interface interface {
 	collection.Interface
 
 	// Add inserts an element into the tail of this queue.
-	Add(val interface{})
+	Add(vals ...interface{})
 	// Peek retrieves, but does not remove, the head of this queue, or return nil if this queue is empty.
 	Peek() interface{}
 	// Poll retrieves and removes the head of the this queue, or return nil if this queue is empty.
@@ -183,9 +180,9 @@ Set implements the following interface. Click **[here](examples/set_example.go)*
 type Interface interface {
 	collection.Interface
 
-	// Add adds the specified element to this set if it is not already present.
-	// It returns false if the value is already present.
-	Add(val interface{}) bool
+	// Add adds the specified values to this set if they are not already present.
+	// It returns false if any value is already present.
+	Add(vals ...interface{}) bool
 	// Contains returns true if this set contains the specified element.
 	Contains(val interface{}) bool
 	// Remove removes the specified element from this set if it is present.
@@ -265,16 +262,11 @@ This library implements two kinds of list, which are **ArrayList** and **LinkedL
 // Interface is a type of list, both ArrayList and LinkedList implement this interface.
 type Interface interface {
 	collection.Interface
-	sort.Interface
 
-	// Add appends the specified element to the end of this list.
-	Add(val interface{})
+	// Add appends the specified elements to the end of this list.
+	Add(vals ...interface{})
 	// AddTo inserts the specified element at the specified position in this list.
 	AddTo(index int, val interface{}) error
-
-	// WithComparator sets a gsort.Comparator instance for the list.
-	// It's used to imposes a total ordering on the elements in the list.
-	WithComparator(c gsort.Comparator) Interface
 
 	// Contains returns true if this list contains the specified element.
 	Contains(val interface{}) bool
@@ -287,6 +279,17 @@ type Interface interface {
 	// RemoveByValue removes the first occurence of the specified element from this list, if it is present.
 	// It returns false if the target value isn't present, otherwise returns true.
 	RemoveByValue(val interface{}) bool
+
+	// Sort sorts the element using default options below. It sorts the elements into ascending sequence according to their natural ordering.
+	//     reverse: false
+	//     comparator: nil
+	Sort()
+	// SortWithOptions sorts the elements in the list.
+	// Parameters:
+	//     reverse: whether sort the data in reverse ordering
+	//     c:       sort the data according to the provided comparator
+	// If reverse is true, and a comparator is also provided, then the result will be the reverse sequence as the comparator generates.
+	SortWithOptions(reverse bool, c utils.Comparator)
 
 	// Iterator returns an iterator over the elements in this list in proper sequence.
 	Iterator() (func() (interface{}, bool), bool)
@@ -370,12 +373,11 @@ func main() {
 }
 ```
 
-A sort.Comparator instance can be provided for a list (ArrayList or LinkedList) by method WithComparator, please get more detailed info in **[Sort](#sort)**.
+A list can be sorted using one of the following two methods. The first method Sort() sorts the list into ascending sequence according to the natural ordering of its elements by default; actually it just calls the second method SortWithOptions(false, nil) using the default parameters. SortWithOptions sorts the list according to the provided parameters. Please get more detailed info in **[Sort](#sort)**
 ```go
-WithComparator(c gsort.Comparator) Interface 
+Sort()
+SortWithOptions(reverse bool, c utils.Comparator)
 ```
-
-The list.Interface has a nested sort.Interface, so a list can be sorted using sort.Sort(data) into ascending order, according to the natural ordering of its elements for some golang build-in data types, or sorted into a customized order, according to the comparator provided by applications. 
 
 There are multiple ways to iterate a list. The following snips show how to iterate a list (arrayList or linkedList),
 ```go
@@ -390,6 +392,7 @@ for hasNext {
 
 ```go
 // To iterate over a list (where l is an instance of list.Interface):
+// This approach isn't efficient for linkedList.
 for i:=0; i<l.Len(); i++ {
 	v, _ := l.Get(i)
 	// Do something with v
@@ -408,6 +411,7 @@ for hasPrev {
 
 ```go
 // To iterate over a list in reverse order (where l is an instance of list.Interface):
+// This approach isn't efficient for linkedList.
 for i:=l.Len()-1; i>=0; i-- {
 	v, _ := l.Get(i)
 	// Do something with v
@@ -421,9 +425,12 @@ PriorityQueue is an unbounded priority queue based on a priority heap. It implem
 type Interface interface {
 	queue.Interface
 
-	// WithComparator sets a gsort.Comparator instance for the queue.
+	// WithComparator sets a utils.Comparator instance for the queue.
 	// It's used to imposes a total ordering on the elements in the queue.
-	WithComparator(c gsort.Comparator) Interface
+	WithComparator(c utils.Comparator) Interface
+	// WithMinHeap configures whether or not using min-heap.
+	// If not configured, then it's min-heap by default.
+	WithMinHeap(isMinHeap bool) Interface
 
 	// Contains returns true if this queue contains the specified element.
 	Contains(val interface{}) bool
@@ -477,16 +484,14 @@ func main() {
 }
 ```
 
-A sort.Comparator instance can be provided for a PriorityQueue by method WithComparator, please get more detailed info in **[Sort](#sort)**.
+A utils.Comparator instance can be provided for a priorityQueue by method WithComparator, please get more detailed info in **[Sort](#sort)**.
 ```go
 WithComparator(c gsort.Comparator) Interface
 ```
 
-The elements of a PriorityQueue are ordered according to their natural ordering, or by a sort.Comparator instance. 
-
-If the reverse order for the elements is expected, then makes use of the priorityqueue.Reverse function, 
+A priorityQueue can be configured to use min-heap or max-heap using method WithMinHeap. If the parameter is true, then it's a min-heap, which is the default option as well; otherwise, it's a max-heap.
 ```go
-pq := priorityqueue.Reverse(priorityqueue.New())
+WithMinHeap(isMinHeap bool) Interface
 ```
 
 ## LinkedMap
@@ -612,7 +617,7 @@ for hasPrev {
 More containers will be added soon. Please also kindly let me know if you need any other kinds of containers. Feel free to raise issues. 
 
 # Sort
-Some containers implement interface **sort.Interface**, such as ArrayList and LinkedList, which means that they can be sorted directly by sort.Sort(data). For the following golang build-in data types, the elements can be ordered into ascending order according to their natural ordering. Note that for **bool**, a false is regarded as less than a true. 
+Some containers support sorting, such as ArrayList and LinkedList. For the following golang build-in data types, the elements can be ordered into ascending order according to their natural ordering. Note that for **bool**, a false is regarded as less than a true. 
 - bool
 - int
 - int8
@@ -631,7 +636,7 @@ Some containers implement interface **sort.Interface**, such as ArrayList and Li
 - rune
 - time.Time
 
-Applications can also provide a sort.Comparator instance using method WithComparator for a container which implements sort.Interface.
+Applications can also provide a sort.Comparator instance to customize the ordering, 
 ```go
 // Comparator imposes a total ordering on some collection of objects.
 // Comparators can be passed to the construction function of a container(such as ArrayList, LinkedList or PriorityQueue) to allow precise control over the sort order.

@@ -5,9 +5,9 @@ package main
 
 import (
 	"fmt"
-	"sort"
 
 	"github.com/ahrtr/gocontainer/list"
+	"github.com/ahrtr/gocontainer/utils"
 )
 
 /*
@@ -33,8 +33,8 @@ func listArrayListExample3() {
 
 func listArrayListExample4() {
 	printFuncName()
-	al := list.NewArrayList().WithComparator(&student{})
-	listCustomizedData(al)
+	al := list.NewArrayList()
+	listCustomizedData(al, &student{})
 }
 
 /*
@@ -60,8 +60,8 @@ func listLinkedListExample3() {
 
 func listLinkedListExample4() {
 	printFuncName()
-	ll := list.NewLinkedList().WithComparator(&student{})
-	listCustomizedData(ll)
+	ll := list.NewLinkedList()
+	listCustomizedData(ll, &student{})
 }
 
 /*
@@ -109,7 +109,7 @@ func listSortData(h list.Interface) {
 	}
 
 	fmt.Println("Sorting the data...")
-	sort.Sort(h)
+	h.Sort()
 
 	// Iterate all the elements (method 1)
 	fmt.Println("Iterate (method 1): ")
@@ -143,7 +143,7 @@ func listReverseSortData(h list.Interface) {
 	}
 
 	fmt.Println("Reverse sorting the data...")
-	sort.Sort(sort.Reverse(h))
+	h.SortWithOptions(true, nil)
 
 	// Iterate all the elements (method 1)
 	fmt.Println("Iterate (method 1): ")
@@ -170,7 +170,7 @@ func listReverseSortData(h list.Interface) {
 	}
 }
 
-func listCustomizedData(h list.Interface) {
+func listCustomizedData(h list.Interface, cmp utils.Comparator) {
 	values := []student{
 		{name: "benjamin", age: 28},
 		{name: "alice", age: 42},
@@ -184,7 +184,7 @@ func listCustomizedData(h list.Interface) {
 	}
 
 	fmt.Println("Sorting the data...")
-	sort.Sort(h)
+	h.SortWithOptions(false, cmp)
 
 	// Iterate all the elements (method 1)
 	fmt.Println("Iterate (method 1): ")

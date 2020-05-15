@@ -23,9 +23,9 @@ import (
 type Interface interface {
 	collection.Interface
 
-	// Add adds the specified element to this set if it is not already present.
-	// It returns false if the value is already present.
-	Add(val interface{}) bool
+	// Add adds the specified values to this set if they are not already present.
+	// It returns false if any value is already present.
+	Add(vals ...interface{}) bool
 	// Contains returns true if this set contains the specified element.
 	Contains(val interface{}) bool
 	// Remove removes the specified element from this set if it is present.
@@ -60,12 +60,17 @@ func (s *set) IsEmpty() bool {
 	return s.Size() == 0
 }
 
-func (s *set) Add(val interface{}) bool {
-	if _, ok := s.items[val]; !ok {
-		s.items[val] = struct{}{}
-		return true
+func (s *set) Add(vals ...interface{}) bool {
+	ret := true
+
+	for _, v := range vals {
+		if _, ok := s.items[v]; !ok {
+			s.items[v] = struct{}{}
+		} else {
+			ret = false
+		}
 	}
-	return false
+	return ret
 }
 
 func (s *set) Contains(val interface{}) bool {

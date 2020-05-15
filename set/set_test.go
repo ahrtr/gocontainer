@@ -10,8 +10,7 @@ import (
 func TestSetSize(t *testing.T) {
 	s := New()
 
-	s.Add(5)
-	s.Add(6)
+	s.Add(5, 6)
 
 	if s.Size() != 2 {
 		t.Errorf("The length isn't expected, expect: 2, actual: %d", s.Size())
@@ -29,8 +28,7 @@ func TestSetSize(t *testing.T) {
 func TestSetValue(t *testing.T) {
 	s := New()
 
-	s.Add(5)
-	s.Add("hello")
+	s.Add(5, "hello")
 
 	if !s.Contains(5) {
 		t.Error("The value 5 isn't found in this set")
@@ -66,8 +64,7 @@ func TestSetValue(t *testing.T) {
 func TestSetIterate(t *testing.T) {
 	s := New()
 
-	s.Add(5)
-	s.Add("hello")
+	s.Add(5, "hello")
 
 	s.Iterate(func(v interface{}) bool {
 		switch tt := v.(type) {

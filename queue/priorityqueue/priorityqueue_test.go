@@ -12,9 +12,7 @@ func TestPQSize(t *testing.T) {
 	pq := New()
 
 	// add 3 elements
-	pq.Add(5)
-	pq.Add(6)
-	pq.Add(7)
+	pq.Add(5, 6, 7)
 	if pq.Size() != 3 {
 		t.Errorf("The length isn't expected, expect: 3, actual: %d\n", pq.Size())
 	}
@@ -43,11 +41,7 @@ func TestPQSize(t *testing.T) {
 func TestPQValue(t *testing.T) {
 	// create priority queue
 	pq := New()
-	pq.Add(15)
-	pq.Add(19)
-	pq.Add(12)
-	pq.Add(8)
-	pq.Add(13)
+	pq.Add(15, 19, 12, 8, 13)
 	if pq.Size() != 5 {
 		t.Errorf("The length isn't expected, expect: 5, actual: %d\n", pq.Size())
 	}
@@ -100,73 +94,95 @@ func TestPQValue(t *testing.T) {
 	}
 }
 
-func TestPQReverseSort(t *testing.T) {
-	// create priority queue
-	pq := Reverse(New())
-	reverseSort(t, pq)
+/*-----------------------------------------------------------------------------
+// Test: Add, Poll, Contains
+-----------------------------------------------------------------------------*/
+func TestPQMinHeap(t *testing.T) {
+	pq := New()
+	pqTestPQSortImpl(t, pq, []interface{}{15, 19, 12, 8, 13}, []interface{}{8, 12, 13, 15, 19})
 }
 
-func TestPQReverseSortWithComparator(t *testing.T) {
-	// create priority queue
+func TestPQMinHeapWithComparator(t *testing.T) {
 	pq := New().WithComparator(&myInt{})
-	reverseSort(t, pq)
+	pqTestPQSortImpl(t, pq, []interface{}{15, 19, 12, 8, 13}, []interface{}{19, 15, 13, 12, 8})
 }
 
-func reverseSort(t *testing.T, pq Interface) {
-	pq.Add(15)
-	pq.Add(19)
-	pq.Add(12)
-	pq.Add(8)
-	pq.Add(13)
-	if pq.Size() != 5 {
-		t.Errorf("The length isn't expected, expect: 5, actual: %d\n", pq.Size())
+func TestPQMaxHeap(t *testing.T) {
+	pq := New().WithMinHeap(false)
+	pqTestPQSortImpl(t, pq, []interface{}{15, 19, 12, 8, 13}, []interface{}{19, 15, 13, 12, 8})
+}
+
+func TestPQMaxHeapWithComparator(t *testing.T) {
+	pq := New().WithComparator(&myInt{}).WithMinHeap(false)
+	pqTestPQSortImpl(t, pq, []interface{}{15, 19, 12, 8, 13}, []interface{}{8, 12, 13, 15, 19})
+}
+
+func pqTestPQSortImpl(t *testing.T, pq Interface, input, expected []interface{}) {
+	pq.Add(input...)
+
+	if pq.Size() != len(input) {
+		t.Errorf("The length isn't expected, expect: %d, actual: %d\n", len(input), pq.Size())
 	}
 
-	// Peek
-	v1 := pq.Peek()
-	if v1 != 19 {
-		t.Errorf("The head element isn't expected, expect: 19, actual: %v\n", v1)
-	}
-	if pq.Size() != 5 {
-		t.Errorf("The length isn't expected, expect: 5, actual: %d\n", pq.Size())
+	for i := 0; i < len(expected); i++ {
+		v := pq.Poll()
+		if v != expected[i] {
+			t.Errorf("pq.Poll() returned an unexpected value, expected: %v, actual: %v\n", expected[i], v)
+		}
 	}
 
-	// Contains
-	if !pq.Contains(12) {
-		t.Error("The queue should contain 12")
+	if pq.Size() != 0 {
+		t.Errorf("The length isn't expected, expect: 0, actual: %d\n", pq.Size())
+	}
+}
+
+/*-----------------------------------------------------------------------------
+// Test: Add, Remove, Contains, Poll
+-----------------------------------------------------------------------------*/
+func TestPQDeleteMinHeap(t *testing.T) {
+	pq := New()
+	pqTestPQDeleteImpl(t, pq, []interface{}{15, 19, 12, 8, 13}, []interface{}{8, 12, 13, 15}, 19)
+}
+
+func TestPQDeleteMinHeapWithComparator(t *testing.T) {
+	pq := New().WithComparator(&myInt{})
+	pqTestPQDeleteImpl(t, pq, []interface{}{15, 19, 12, 8, 13}, []interface{}{19, 13, 12, 8}, 15)
+}
+
+func TestPQDeleteMaxHeap(t *testing.T) {
+	pq := New().WithMinHeap(false)
+	pqTestPQDeleteImpl(t, pq, []interface{}{15, 19, 12, 8, 13}, []interface{}{19, 15, 13, 8}, 12)
+}
+
+func TestPQDeleteMaxHeapWithComparator(t *testing.T) {
+	pq := New().WithComparator(&myInt{}).WithMinHeap(false)
+	pqTestPQDeleteImpl(t, pq, []interface{}{15, 19, 12, 8, 13}, []interface{}{12, 13, 15, 19}, 8)
+}
+
+func pqTestPQDeleteImpl(t *testing.T, pq Interface, input, expected []interface{}, val interface{}) {
+	pq.Add(input...)
+
+	if !pq.Remove(val) {
+		t.Errorf("Failed to remove value: %v\n", val)
 	}
 
-	// Poll
-	v1 = pq.Poll()
-	if v1 != 19 {
-		t.Errorf("The head element isn't expected, expect: 19, actual: %v\n", v1)
-	}
-	if pq.Size() != 4 {
-		t.Errorf("The length isn't expected, expect: 4, actual: %d\n", pq.Size())
+	if pq.Size() != len(input)-1 {
+		t.Errorf("The length isn't expected, expect: %d, actual: %d\n", len(input)-1, pq.Size())
 	}
 
-	v1 = pq.Poll()
-	if v1 != 15 {
-		t.Errorf("The head element isn't expected, expect: 15, actual: %v\n", v1)
-	}
-	if pq.Size() != 3 {
-		t.Errorf("The length isn't expected, expect: 3, actual: %d\n", pq.Size())
+	if pq.Contains(val) {
+		t.Errorf("The PQ shouldn't contain value: %v\n", val)
 	}
 
-	// Contains (again)
-	if pq.Contains(15) {
-		t.Error("The queue shouldn't contain 15")
+	for i := 0; i < len(expected); i++ {
+		v := pq.Poll()
+		if v != expected[i] {
+			t.Errorf("pq.Poll() returned an unexpected value, expected[%d]: %v, actual: %v\n", i, expected[i], v)
+		}
 	}
 
-	// Remove
-	if !pq.Contains(12) {
-		t.Error("The queue should contain 12")
-	}
-	if !pq.Remove(12) {
-		t.Error("Failed to remove element 12")
-	}
-	if pq.Contains(12) {
-		t.Error("The queue shouldn't contain 12")
+	if pq.Size() != 0 {
+		t.Errorf("The length isn't expected, expect: 0, actual: %d\n", pq.Size())
 	}
 }
 

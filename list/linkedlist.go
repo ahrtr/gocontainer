@@ -24,7 +24,7 @@ package list
 import (
 	"fmt"
 
-	gsort "github.com/ahrtr/gocontainer/sort"
+	"github.com/ahrtr/gocontainer/utils"
 )
 
 type element struct {
@@ -39,7 +39,6 @@ type linkedList struct {
 	head   *element
 	tail   *element
 	length int
-	cmp    gsort.Comparator
 }
 
 // NewLinkedList initializes and returns an LinkedList.
@@ -48,56 +47,21 @@ func NewLinkedList() Interface {
 		head:   nil,
 		tail:   nil,
 		length: 0,
-		cmp:    nil,
 	}
-}
-
-func (ll *linkedList) WithComparator(c gsort.Comparator) Interface {
-	ll.cmp = c
-	return ll
 }
 
 func (ll *linkedList) Size() int {
 	return ll.length
 }
 
-func (ll *linkedList) Len() int {
-	return ll.Size()
-}
-
-func (ll *linkedList) Less(i, j int) bool {
-	v1, v2 := ll.getElement(i).value, ll.getElement(j).value
-
-	var cmpRet int
-	var err error
-	if nil != ll.cmp {
-		cmpRet, err = ll.cmp.Compare(v1, v2)
-	} else {
-		cmpRet, err = gsort.Compare(v1, v2)
-	}
-	if err != nil {
-		panic(err)
-	}
-
-	return cmpRet < 0
-}
-
-func (ll *linkedList) Swap(i, j int) {
-	if i == j {
-		return
-	}
-
-	// For simplicity, just swap the values directly.
-	e1, e2 := ll.getElement(i), ll.getElement(j)
-	e1.value, e2.value = e2.value, e1.value
-}
-
 func (ll *linkedList) IsEmpty() bool {
-	return ll.Len() == 0
+	return ll.Size() == 0
 }
 
-func (ll *linkedList) Add(val interface{}) {
-	ll.linkLast(val)
+func (ll *linkedList) Add(vals ...interface{}) {
+	for _, v := range vals {
+		ll.linkLast(v)
+	}
 }
 
 // linkLast links val as last element.
@@ -118,7 +82,7 @@ func (ll *linkedList) linkLast(val interface{}) {
 }
 
 func (ll *linkedList) AddTo(index int, val interface{}) error {
-	size := ll.Len()
+	size := ll.Size()
 	if index < 0 || index > size {
 		return fmt.Errorf("Index out of range, index:%d, len:%d", index, size)
 	}
@@ -157,7 +121,7 @@ func (ll *linkedList) linkBefore(val interface{}, e *element) {
 
 // getElement returns the element at the specified positon.
 func (ll *linkedList) getElement(index int) *element {
-	size := ll.Len()
+	size := ll.Size()
 	var e *element
 	if index < (size >> 1) {
 		e = ll.head
@@ -193,7 +157,7 @@ func (ll *linkedList) indexOf(val interface{}) int {
 }
 
 func (ll *linkedList) Get(index int) (interface{}, error) {
-	size := ll.Len()
+	size := ll.Size()
 	if index < 0 || index >= size {
 		return nil, fmt.Errorf("Index out of range, index:%d, len:%d", index, size)
 	}
@@ -202,7 +166,7 @@ func (ll *linkedList) Get(index int) (interface{}, error) {
 }
 
 func (ll *linkedList) Remove(index int) (interface{}, error) {
-	size := ll.Len()
+	size := ll.Size()
 	if index < 0 || index >= size {
 		return nil, fmt.Errorf("Index out of range, index:%d, len:%d", index, size)
 	}
@@ -237,7 +201,7 @@ func (ll *linkedList) unlink(e *element) interface{} {
 }
 
 func (ll *linkedList) RemoveByValue(val interface{}) bool {
-	if ll.Len() == 0 {
+	if ll.Size() == 0 {
 		return false
 	}
 
@@ -259,6 +223,51 @@ func (ll *linkedList) Clear() {
 	}
 
 	ll.head, ll.tail, ll.length = nil, nil, 0
+}
+
+func (ll *linkedList) Sort() {
+	ll.SortWithOptions(false, nil)
+}
+
+func (ll *linkedList) SortWithOptions(reverse bool, c utils.Comparator) {
+	if ll.Size() < 2 {
+		return
+	}
+
+	// get all the values
+	vals := ll.values()
+
+	// sort the data
+	if reverse {
+		utils.ReverseSort(vals, c)
+	} else {
+		utils.Sort(vals, c)
+	}
+
+	// clear the linked list
+	ll.Clear()
+
+	// add the sorted values into the list again
+	ll.Add(vals...)
+}
+
+func (ll *linkedList) values() []interface{} {
+	if ll.Size() == 0 {
+		return []interface{}{}
+	}
+
+	values := make([]interface{}, ll.Size(), ll.Size())
+
+	it, hasNext := ll.Iterator()
+	var v interface{}
+	index := 0
+	for hasNext {
+		v, hasNext = it()
+		values[index] = v
+		index++
+	}
+
+	return values
 }
 
 func (ll *linkedList) Iterator() (func() (interface{}, bool), bool) {

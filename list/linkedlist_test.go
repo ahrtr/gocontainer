@@ -4,7 +4,6 @@
 package list
 
 import (
-	"sort"
 	"testing"
 )
 
@@ -224,7 +223,7 @@ func TestLinkedListSort(t *testing.T) {
 	ll.Add(7)
 	ll.Add(4)
 
-	sort.Sort(ll)
+	ll.Sort()
 
 	// check length after sorting
 	if ll.Size() != 4 {
@@ -246,7 +245,7 @@ func TestLinkedListSort(t *testing.T) {
 	}
 
 	// reverse sorting
-	sort.Sort(sort.Reverse(ll))
+	ll.SortWithOptions(true, nil)
 	if ll.Size() != 4 {
 		t.Errorf("The length isn't expected, expect: 4, actual: %d\n", ll.Size())
 	}
@@ -267,13 +266,13 @@ func TestLinkedListSort(t *testing.T) {
 }
 
 func TestLinkdedListComparatorSort(t *testing.T) {
-	ll := NewLinkedList().WithComparator(&linkedListNode{})
+	ll := NewLinkedList()
 	ll.Add(&linkedListNode{age: 32})
 	ll.Add(&linkedListNode{age: 20})
 	ll.Add(&linkedListNode{age: 27})
 	ll.Add(&linkedListNode{age: 25})
 
-	sort.Sort(ll)
+	ll.SortWithOptions(false, &linkedListNode{})
 	// check length after sorting
 	if ll.Size() != 4 {
 		t.Errorf("The length isn't expected, expect: 4, actual: %d\n", ll.Size())
@@ -294,7 +293,7 @@ func TestLinkdedListComparatorSort(t *testing.T) {
 	}
 
 	// reverse sorting
-	sort.Sort(sort.Reverse(ll))
+	ll.SortWithOptions(true, &linkedListNode{})
 	if ll.Size() != 4 {
 		t.Errorf("The length isn't expected, expect: 4, actual: %d\n", ll.Size())
 	}

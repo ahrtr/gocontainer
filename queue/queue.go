@@ -13,7 +13,7 @@ type Interface interface {
 	collection.Interface
 
 	// Add inserts an element into the tail of this queue.
-	Add(val interface{})
+	Add(vals ...interface{})
 	// Peek retrieves, but does not remove, the head of this queue, or return nil if this queue is empty.
 	Peek() interface{}
 	// Poll retrieves and removes the head of the this queue, or return nil if this queue is empty.
@@ -52,20 +52,22 @@ func (q *queue) IsEmpty() bool {
 }
 
 // Add (todo): add a capacity for the queue, and return an error when this queue is full.
-func (q *queue) Add(val interface{}) {
-	e := element{
-		next:  nil,
-		value: val,
-	}
+func (q *queue) Add(vals ...interface{}) {
+	for _, v := range vals {
+		e := element{
+			next:  nil,
+			value: v,
+		}
 
-	if nil == q.tail {
-		q.head, q.tail = &e, &e
-	} else {
-		q.tail.next = &e
-		q.tail = &e
-	}
+		if nil == q.tail {
+			q.head, q.tail = &e, &e
+		} else {
+			q.tail.next = &e
+			q.tail = &e
+		}
 
-	q.length++
+		q.length++
+	}
 }
 
 func (q *queue) Peek() interface{} {

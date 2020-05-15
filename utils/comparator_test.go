@@ -1,7 +1,7 @@
 // Copyright (c) 2019, Benjamin Wang (benjamin_wang@aliyun.com). All rights reserved.
 // Licensed under the MIT license that can be found in the LICENSE file.
 
-package sort
+package utils
 
 import (
 	"testing"

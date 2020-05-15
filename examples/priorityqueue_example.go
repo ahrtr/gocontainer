@@ -36,7 +36,7 @@ func priorityqueueExample1() {
 func priorityqueueExample2() {
 	printFuncName()
 
-	pq := priorityqueue.Reverse(priorityqueue.New())
+	pq := priorityqueue.New().WithMinHeap(false)
 
 	values := []string{"benjamin", "alice", "john", "tom", "bill"}
 

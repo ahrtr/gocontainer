@@ -11,8 +11,7 @@ import (
 func TestQueueSize(t *testing.T) {
 	q := New()
 
-	q.Add(5)
-	q.Add(6)
+	q.Add(5, 6)
 
 	if q.Size() != 2 {
 		t.Errorf("The length isn't expected, expect: 2, actual: %d", q.Size())
@@ -22,8 +21,7 @@ func TestQueueSize(t *testing.T) {
 func TestQueuePeek(t *testing.T) {
 	q := New()
 
-	q.Add(5)
-	q.Add("hello")
+	q.Add(5, "hello")
 
 	val1, ok := q.Peek().(int)
 	if !ok {
@@ -47,8 +45,7 @@ func TestQueuePeek(t *testing.T) {
 func TestQueuePoll(t *testing.T) {
 	q := New()
 
-	q.Add(5)
-	q.Add("hello")
+	q.Add(5, "hello")
 
 	val1, ok := q.Poll().(int)
 	if !ok {
@@ -72,8 +69,7 @@ func TestQueuePoll(t *testing.T) {
 func TestQueueIsEmpty(t *testing.T) {
 	q := New()
 
-	q.Add(5)
-	q.Add(6)
+	q.Add(5, 6)
 
 	if isEmpty1 := q.IsEmpty(); isEmpty1 {
 		t.Errorf("The queue shouldn't be empty\n")
@@ -88,8 +84,7 @@ func TestQueueIsEmpty(t *testing.T) {
 func TestQueueClear(t *testing.T) {
 	q := New()
 
-	q.Add(5)
-	q.Add(6)
+	q.Add(5, 6)
 	q.Clear()
 
 	if q.Size() != 0 {

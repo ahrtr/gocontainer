@@ -4,25 +4,18 @@
 package list
 
 import (
-	"sort"
-
 	"github.com/ahrtr/gocontainer/collection"
-	gsort "github.com/ahrtr/gocontainer/sort"
+	"github.com/ahrtr/gocontainer/utils"
 )
 
 // Interface is a type of list, both ArrayList and LinkedList implement this interface.
 type Interface interface {
 	collection.Interface
-	sort.Interface
 
-	// Add appends the specified element to the end of this list.
-	Add(val interface{})
+	// Add appends the specified elements to the end of this list.
+	Add(vals ...interface{})
 	// AddTo inserts the specified element at the specified position in this list.
 	AddTo(index int, val interface{}) error
-
-	// WithComparator sets a gsort.Comparator instance for the list.
-	// It's used to imposes a total ordering on the elements in the list.
-	WithComparator(c gsort.Comparator) Interface
 
 	// Contains returns true if this list contains the specified element.
 	Contains(val interface{}) bool
@@ -35,6 +28,17 @@ type Interface interface {
 	// RemoveByValue removes the first occurence of the specified element from this list, if it is present.
 	// It returns false if the target value isn't present, otherwise returns true.
 	RemoveByValue(val interface{}) bool
+
+	// Sort sorts the element using default options below. It sorts the elements into ascending sequence according to their natural ordering.
+	//     reverse: false
+	//     comparator: nil
+	Sort()
+	// SortWithOptions sorts the elements in the list.
+	// Parameters:
+	//     reverse: whether sort the data in reverse ordering
+	//     c:       sort the data according to the provided comparator
+	// If reverse is true, and a comparator is also provided, then the result will be the reverse sequence as the comparator generates.
+	SortWithOptions(reverse bool, c utils.Comparator)
 
 	// Iterator returns an iterator over the elements in this list in proper sequence.
 	Iterator() (func() (interface{}, bool), bool)
