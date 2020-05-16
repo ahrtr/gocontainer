@@ -20,7 +20,11 @@ func Init(h Interface) {
 }
 */
 
-// HeapInit establishes the heap from scratch.
+// HeapInit establishes the heap from scratch. The operation is in-place.
+// Parameters:
+//     values:    the data source of the heap
+//     isMinHeap: true for min-hap, false for max-heap
+//     c:         an utils.Comparator instance
 func HeapInit(values []interface{}, isMinHeap bool, c Comparator) {
 	sc := constructHeapContainer(values, isMinHeap, c)
 	n := sc.Len()
@@ -39,10 +43,14 @@ func Push(h Interface, x interface{}) {
 }
 */
 
-// HeapPostPush moves the new element up until it gets to the right place.
-// Push workflow:
+// HeapPostPush moves the new element up until it gets to the right place. The operation is in-place.
+// Push workflow (this functions takes care of the second step):
 //     1.  add a new element to the end of the slice;
 //     2*. call this method to move the new element up until it gets to the right place.
+// Parameters:
+//     values:    the data source of the heap
+//     isMinHeap: true for min-hap, false for max-heap
+//     c:         an utils.Comparator instance
 func HeapPostPush(values []interface{}, isMinHeap bool, c Comparator) {
 	sc := constructHeapContainer(values, isMinHeap, c)
 	up(sc, sc.Len()-1)
@@ -61,11 +69,15 @@ func Pop(h Interface) interface{} {
 }
 */
 
-// HeapPrePop move the top element down until it gets to the right place.
-// Pop workflow:
+// HeapPrePop move the top element down until it gets to the right place. The operation is in-place.
+// Pop workflow (this function takes care of step 1 and 2):
 //    1*. swap the first and the last element;
 //    2*. move the first/top element down until it gets to the right place;
 //    3.  remove the last element, and return the removed element to users.
+// Parameters:
+//     values:    the data source of the heap
+//     isMinHeap: true for min-hap, false for max-heap
+//     c:         an utils.Comparator instance
 func HeapPrePop(values []interface{}, isMinHeap bool, c Comparator) {
 	// swap the first element (values[0]) and the last element (values[n])
 	n := len(values) - 1
@@ -91,11 +103,16 @@ func Remove(h Interface, i int) interface{} {
 }
 */
 
-// HeapPreRemove move the element with the specified index down or up until it gets to the right place.
-// Remove workflow:
+// HeapPreRemove move the element with the specified index down or up until it gets to the right place. The operation is in-place.
+// Remove workflow(this function takes care of step 1 and 2):
 //    1*. swap the element with the specifed index and the last element;
 //    2*. move the element with the specified index down or up until it gets to the right place;
 //    3.  remove the last element, and return the removed element to users.
+// Parameters:
+//     values:    the data source of the heap
+//     index:     the element at the specified index will be removed after calling this function
+//     isMinHeap: true for min-hap, false for max-heap
+//     c:         an utils.Comparator instance
 func HeapPreRemove(values []interface{}, index int, isMinHeap bool, c Comparator) {
 	n := len(values) - 1
 	if n != index {
@@ -121,7 +138,15 @@ func Fix(h Interface, i int) {
 }
 */
 
-// HeapPostUpdate re-establishes the heap ordering after the element at the specified index has changed its value.
+// HeapPostUpdate re-establishes the heap ordering after the element at the specified index has changed its value. The operation is in-place.
+// Update workflow (this function takes care of the second step):
+//    1.  update the element's value at the specified index;
+//    2*. call this function to move the updated element down or up until it gets to the right place.
+// Parameters:
+//     values:    the data source of the heap
+//     index:     the element at the specified index should have already been updated before calling this function
+//     isMinHeap: true for min-hap, false for max-heap
+//     c:         an utils.Comparator instance
 func HeapPostUpdate(values []interface{}, index int, isMinHeap bool, c Comparator) {
 	sc := constructHeapContainer(values, isMinHeap, c)
 	if !down(sc, index, sc.Len()) {

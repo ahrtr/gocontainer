@@ -14,7 +14,10 @@ gocontainer implements some containers which exist in Java, but are missing in g
   - [PriorityQueue](#priorityqueue)
   - [LinkedMap](#linkedMap)
   - [Others](#others)
-- **[Sort](#sort)**
+- **[Utilities](#Utilities)**
+  - [Comparator](#Comparator)
+  - [Sort](#sort)
+  - [Heap](#heap)
 - **[Contribute to this repo](#contribute-to-this-repo)**
 - **[Support](#support)**
 
@@ -373,7 +376,7 @@ func main() {
 }
 ```
 
-A list can be sorted using one of the following two methods. The first method Sort() sorts the list into ascending sequence according to the natural ordering of its elements by default; actually it just calls the second method SortWithOptions(false, nil) using the default parameters. SortWithOptions sorts the list according to the provided parameters. Please get more detailed info in **[Sort](#sort)**
+A list can be sorted using one of the following two methods. The first method Sort() sorts the list into ascending sequence according to the natural ordering of its elements by default; actually it just calls the second method SortWithOptions(false, nil) using the default parameters. SortWithOptions sorts the list according to the provided parameters. Please get more detailed info in **[Comparator](#comparator)**
 ```go
 Sort()
 SortWithOptions(reverse bool, c utils.Comparator)
@@ -484,7 +487,7 @@ func main() {
 }
 ```
 
-A utils.Comparator instance can be provided for a priorityQueue by method WithComparator, please get more detailed info in **[Sort](#sort)**.
+A utils.Comparator instance can be provided for a priorityQueue by method WithComparator, please get more detailed info in **[Comparator](#comparator)**.
 ```go
 WithComparator(c gsort.Comparator) Interface
 ```
@@ -616,8 +619,23 @@ for hasPrev {
 ## Others
 More containers will be added soon. Please also kindly let me know if you need any other kinds of containers. Feel free to raise issues. 
 
-# Sort
-Some containers support sorting, such as ArrayList and LinkedList. For the following golang build-in data types, the elements can be ordered into ascending order according to their natural ordering. Note that for **bool**, a false is regarded as less than a true. 
+# Utilities
+## Comparator
+The comparator utility contains a function "Compare" and an interface "Comparator", 
+```go
+// Compare compares its two arguments if they have the same type and are comparable, otherwise returns an error in the second return value.
+// It returns a negative integer, zero, or a positive integer as the first argument is less than, equal to, or greater than the second.
+func Compare(v1 interface{}, v2 interface{}) (int, error)
+
+// Comparator imposes a total ordering on some collection of objects, and it allows precise control over the sort order.
+type Comparator interface {
+	// Compare compares its two arguments for order.
+	// It returns a negative integer, zero, or a positive integer as the first argument is less than, equal to, or greater than the second.
+	Compare(v1 interface{}, v2 interface{}) (int, error)
+}
+```
+
+The function "Compare" is used to compare two values of golang build-in data types listed below. The two arguments must be the same data type, otherwise an error in the second return value will be returned. It returns a negative integer, zero, or a positive integer as the first argument is less than, equal to, or greater than the second one. Note that for **bool**, a false is regarded as less than a true.
 - bool
 - int
 - int8
@@ -636,24 +654,92 @@ Some containers support sorting, such as ArrayList and LinkedList. For the follo
 - rune
 - time.Time
 
-Applications can also provide a sort.Comparator instance to customize the ordering, 
+Applications can also provide a utils.Comparators instance to customize the comparing. The following example demonstrates how to compare two students by age.
 ```go
-// Comparator imposes a total ordering on some collection of objects.
-// Comparators can be passed to the construction function of a container(such as ArrayList, LinkedList or PriorityQueue) to allow precise control over the sort order.
-type Comparator interface {
-	// Compare compares its two arguments for order.
-	// It returns a negative integer, zero, or a positive integer as the first argument is less than, equal to, or greater than the second.
-	Compare(v1 interface{}, v2 interface{}) (int, error)
+type student struct {
+	name string
+	age int
 }
-```
 
-The rough logic should be something like below. Please find more examples in **[List](examples/list_example.go)** and **[PriorityQueue](examples/priorityqueue_example.go)**.
-```go
 type MyComparator struct{}
 
 func (c *MyComparator) Compare(v1, v2 interface{}) (int, error) {
-    //......
+	e1, e2 := v1.(*student), v2.(*student)
+	if e1.age < e2.age {
+		return -1, nil
+	}
+	if e1.age > e2.age {
+		return 1, nil
+	}
+	return 0, nil
 }
+```
+
+## Sort
+The sort utility provides the following two functions to sort the values in the provided slice.
+```go
+// Sort sorts values into ascending sequence according to their natural ordering, or according to the provided comparator.
+func Sort(values []interface{}, c Comparator)
+
+// ReverseSort sorts the values into opposite sequence to Sort
+func ReverseSort(values []interface{}, c Comparator)
+```
+
+Both of the above functions sort values in-place. The first function "Sort" sorts the values into ascending sequence according to their natural ordering, or according to the provided comparator. The second function "ReverseSort" sorts the values into opposite sequence to the first function "Sort".
+
+## Heap
+The heap utility provides the following functions. It's useful for containers like priorityQueue. Please read the comment for each function to get more detailed info.
+```go
+// HeapInit establishes the heap from scratch. The operation is in-place.
+// Parameters:
+//     values:    the data source of the heap
+//     isMinHeap: true for min-hap, false for max-heap
+//     c:         an utils.Comparator instance
+func HeapInit(values []interface{}, isMinHeap bool, c Comparator) 
+
+// HeapPostPush moves the new element up until it gets to the right place. The operation is in-place.
+// Push workflow (this functions takes care of the second step):
+//     1.  add a new element to the end of the slice;
+//     2*. call this method to move the new element up until it gets to the right place.
+// Parameters:
+//     values:    the data source of the heap
+//     isMinHeap: true for min-hap, false for max-heap
+//     c:         an utils.Comparator instance
+func HeapPostPush(values []interface{}, isMinHeap bool, c Comparator) 
+
+// HeapPrePop move the top element down until it gets to the right place. The operation is in-place.
+// Pop workflow (this function takes care of step 1 and 2):
+//    1*. swap the first and the last element;
+//    2*. move the first/top element down until it gets to the right place;
+//    3.  remove the last element, and return the removed element to users.
+// Parameters:
+//     values:    the data source of the heap
+//     isMinHeap: true for min-hap, false for max-heap
+//     c:         an utils.Comparator instance
+func HeapPrePop(values []interface{}, isMinHeap bool, c Comparator)
+
+// HeapPreRemove move the element with the specified index down or up until it gets to the right place. The operation is in-place.
+// Remove workflow(this function takes care of step 1 and 2):
+//    1*. swap the element with the specifed index and the last element;
+//    2*. move the element with the specified index down or up until it gets to the right place;
+//    3.  remove the last element, and return the removed element to users.
+// Parameters:
+//     values:    the data source of the heap
+//     index:     the element at the specified index will be removed after calling this function
+//     isMinHeap: true for min-hap, false for max-heap
+//     c:         an utils.Comparator instance
+func HeapPreRemove(values []interface{}, index int, isMinHeap bool, c Comparator) 
+
+// HeapPostUpdate re-establishes the heap ordering after the element at the specified index has changed its value. The operation is in-place.
+// Update workflow (this function takes care of the second step):
+//    1.  update the element's value at the specified index;
+//    2*. call this function to move the updated element down or up until it gets to the right place.
+// Parameters:
+//     values:    the data source of the heap
+//     index:     the element at the specified index should have already been updated before calling this function
+//     isMinHeap: true for min-hap, false for max-heap
+//     c:         an utils.Comparator instance
+func HeapPostUpdate(values []interface{}, index int, isMinHeap bool, c Comparator)
 ```
 
 # Contribute to this repo
