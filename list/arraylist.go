@@ -102,6 +102,7 @@ func (al *arrayList) Remove(index int) (interface{}, error) {
 
 	al.items = append(al.items[:index], al.items[(index+1):]...)
 
+	al.shrinkList()
 	return val, nil
 }
 
@@ -113,6 +114,7 @@ func (al *arrayList) RemoveByValue(val interface{}) bool {
 	for i, v := range al.items {
 		if v == val {
 			al.items = append(al.items[:i], al.items[(i+1):]...)
+			al.shrinkList()
 			return true
 		}
 	}
@@ -167,4 +169,19 @@ func (al *arrayList) ReverseIterator() (func() (interface{}, bool), bool) {
 		}
 		return element, index >= 0
 	}, index >= 0
+}
+
+func (al *arrayList) shrinkList() {
+	oldcap := cap(al.items)
+	if oldcap <= 1024 {
+		// no need to shrink when the capacity is less than 1024
+		return
+	}
+	oldlen := len(al.items)
+	if oldlen <= oldcap/4 { // shrink when len(list) <= cap(list)/4
+		newItems := make([]interface{}, oldlen, oldlen)
+		copy(newItems, al.items)
+		al.Clear()
+		al.items = newItems
+	}
 }
