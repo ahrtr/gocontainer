@@ -6,6 +6,7 @@ package stack
 
 import (
 	"github.com/ahrtr/gocontainer/collection"
+	"github.com/ahrtr/gocontainer/list"
 )
 
 // Interface is a stack, which is LIFO (last-in-first-out).
@@ -16,37 +17,47 @@ type Interface interface {
 	Push(val interface{})
 	// Pop pops the element on the top of this stack.
 	Pop() interface{}
+	// Peek retrieves, but does not remove, the element on the top of this stack, or return nil if this stack is empty.
+	Peek() interface{}
 }
 
 // stack is LIFO.
 type stack struct {
-	items []interface{}
+	l list.Interface
 }
 
 // New creates a stack.
 func New() Interface {
-	return &stack{
-		items: []interface{}{},
-	}
+	return &stack{list.NewArrayList()}
 }
 
 func (s *stack) Size() int {
-	return len(s.items)
+	return s.l.Size()
 }
 
 // IsEmpty returns true if this stack contains no elements.
 func (s *stack) IsEmpty() bool {
-	return s.Size() == 0
+	return s.l.Size() == 0
 }
 
 func (s *stack) Push(val interface{}) {
-	s.items = append(s.items, val)
+	s.l.Add(val)
 }
 
 func (s *stack) Pop() interface{} {
-	if len(s.items) > 0 {
-		val := s.items[len(s.items)-1]
-		s.items = s.items[:len(s.items)-1]
+	size := s.l.Size()
+	if size > 0 {
+		val, _ := s.l.Get(size - 1)
+		s.l.Remove(size - 1)
+		return val
+	}
+	return nil
+}
+
+func (s *stack) Peek() interface{} {
+	size := s.l.Size()
+	if size > 0 {
+		val, _ := s.l.Get(size - 1)
 		return val
 	}
 	return nil
@@ -54,8 +65,5 @@ func (s *stack) Pop() interface{} {
 
 // Clear removes all the elements from this stack.
 func (s *stack) Clear() {
-	for i := 0; i < len(s.items); i++ {
-		s.items[i] = nil
-	}
-	s.items = []interface{}{}
+	s.l.Clear()
 }

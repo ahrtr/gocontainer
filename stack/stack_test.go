@@ -25,22 +25,44 @@ func TestStackValue(t *testing.T) {
 	s.Push(5)
 	s.Push("hello")
 
-	val1, ok := s.Pop().(string)
+	// Peek "hello"
+	val1, ok := s.Peek().(string)
 	if !ok {
-		t.Errorf("The value type popped from stack isn't expected, expect: string, actual: %s\n", reflect.TypeOf(val1).String())
+		t.Errorf("The value type peeked from stack isn't expected, expect: string, actual: %s\n", reflect.TypeOf(val1).String())
 	}
 
 	if val1 != "hello" {
-		t.Errorf("The value popped from stack isn't expected, expect: hello, actual: %s\n", val1)
+		t.Errorf("The value peeked from stack isn't expected, expect: hello, actual: %s\n", val1)
 	}
 
-	val2, ok := s.Pop().(int)
+	// Pop "hello"
+	val2, ok := s.Pop().(string)
 	if !ok {
-		t.Errorf("The value type popped from stack isn't expected, expect: int, actual: %s\n", reflect.TypeOf(val2).String())
+		t.Errorf("The value type popped from stack isn't expected, expect: string, actual: %s\n", reflect.TypeOf(val2).String())
 	}
 
-	if val2 != 5 {
-		t.Errorf("The value popped from stack isn't expected, expect: 5, actual: %d\n", val2)
+	if val2 != "hello" {
+		t.Errorf("The value popped from stack isn't expected, expect: hello, actual: %s\n", val2)
+	}
+
+	// Peek 5
+	val3, ok := s.Peek().(int)
+	if !ok {
+		t.Errorf("The value type popped from stack isn't expected, expect: int, actual: %s\n", reflect.TypeOf(val3).String())
+	}
+
+	if val3 != 5 {
+		t.Errorf("The value popped from stack isn't expected, expect: 5, actual: %d\n", val3)
+	}
+
+	// Pop 5
+	val4, ok := s.Pop().(int)
+	if !ok {
+		t.Errorf("The value type popped from stack isn't expected, expect: int, actual: %s\n", reflect.TypeOf(val4).String())
+	}
+
+	if val4 != 5 {
+		t.Errorf("The value popped from stack isn't expected, expect: 5, actual: %d\n", val4)
 	}
 }
 

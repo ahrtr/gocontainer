@@ -81,6 +81,8 @@ type Interface interface {
 	Push(val interface{})
 	// Pop pops the element on the top of this stack.
 	Pop() interface{}
+	// Peek retrieves, but does not remove, the element on the top of this stack, or return nil if this stack is empty.
+	Peek() interface{}
 }
 ```
 
