@@ -1,9 +1,13 @@
 // Copyright (c) 2019, Benjamin Wang (benjamin_wang@aliyun.com). All rights reserved.
 // Licensed under the MIT license that can be found in the LICENSE file.
 
-package utils
+package utils_test
 
-import "testing"
+import (
+	"testing"
+
+	"github.com/ahrtr/gocontainer/utils"
+)
 
 func TestSort(t *testing.T) {
 	input1 := []interface{}{6, 4, 9, 19, 15}
@@ -45,12 +49,12 @@ func TestReverseSortWithComparator(t *testing.T) {
 	sortTestImpl(t, input2, expected2, true, reverseString{})
 }
 
-func sortTestImpl(t *testing.T, input []interface{}, expected []interface{}, reverse bool, c Comparator) {
+func sortTestImpl(t *testing.T, input []interface{}, expected []interface{}, reverse bool, c utils.Comparator) {
 	// sort
 	if reverse {
-		ReverseSort(input, c)
+		utils.ReverseSort(input, c)
 	} else {
-		Sort(input, c)
+		utils.Sort(input, c)
 	}
 
 	// check result

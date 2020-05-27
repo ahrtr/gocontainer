@@ -1,15 +1,17 @@
 // Copyright (c) 2019, Benjamin Wang (benjamin_wang@aliyun.com). All rights reserved.
 // Licensed under the MIT license that can be found in the LICENSE file.
 
-package queue
+package queue_test
 
 import (
 	"reflect"
 	"testing"
+
+	"github.com/ahrtr/gocontainer/queue"
 )
 
 func TestQueueSize(t *testing.T) {
-	q := New()
+	q := queue.New()
 
 	q.Add(5, 6)
 
@@ -19,7 +21,7 @@ func TestQueueSize(t *testing.T) {
 }
 
 func TestQueuePeek(t *testing.T) {
-	q := New()
+	q := queue.New()
 
 	q.Add(5, "hello")
 
@@ -43,7 +45,7 @@ func TestQueuePeek(t *testing.T) {
 }
 
 func TestQueuePoll(t *testing.T) {
-	q := New()
+	q := queue.New()
 
 	q.Add(5, "hello")
 
@@ -67,7 +69,7 @@ func TestQueuePoll(t *testing.T) {
 }
 
 func TestQueueIsEmpty(t *testing.T) {
-	q := New()
+	q := queue.New()
 
 	q.Add(5, 6)
 
@@ -82,7 +84,7 @@ func TestQueueIsEmpty(t *testing.T) {
 }
 
 func TestQueueClear(t *testing.T) {
-	q := New()
+	q := queue.New()
 
 	q.Add(5, 6)
 	q.Clear()

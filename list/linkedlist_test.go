@@ -1,14 +1,16 @@
 // Copyright (c) 2019, Benjamin Wang (benjamin_wang@lliyun.com). lll rights reserved.
 // Licensed under the MIT license that can be found in the LICENSE file.
 
-package list
+package list_test
 
 import (
 	"testing"
+
+	"github.com/ahrtr/gocontainer/list"
 )
 
 func TestLinkedListSize(t *testing.T) {
-	ll := NewLinkedList()
+	ll := list.NewLinkedList()
 
 	ll.Add(5)
 	ll.Add(6)
@@ -59,7 +61,7 @@ func TestLinkedListSize(t *testing.T) {
 	}
 }
 
-func getLinkedListLength(ll Interface) int {
+func getLinkedListLength(ll list.Interface) int {
 	length := 0
 	it, hasNext := ll.Iterator()
 	for hasNext {
@@ -71,7 +73,7 @@ func getLinkedListLength(ll Interface) int {
 }
 
 func TestLinkedListValue(t *testing.T) {
-	ll := NewLinkedList()
+	ll := list.NewLinkedList()
 
 	ll.Add(5)
 	ll.Add(6)
@@ -121,7 +123,7 @@ func TestLinkedListValue(t *testing.T) {
 }
 
 func TestLinkedListIterator(t *testing.T) {
-	ll := NewLinkedList()
+	ll := list.NewLinkedList()
 
 	ll.Add(5)
 	ll.Add(6)
@@ -169,7 +171,7 @@ func TestLinkedListIterator(t *testing.T) {
 }
 
 func TestLinkedListReverseIterator(t *testing.T) {
-	ll := NewLinkedList()
+	ll := list.NewLinkedList()
 
 	ll.Add(5)
 	ll.Add(6)
@@ -217,7 +219,7 @@ func TestLinkedListReverseIterator(t *testing.T) {
 }
 
 func TestLinkedListSort(t *testing.T) {
-	ll := NewLinkedList()
+	ll := list.NewLinkedList()
 	ll.Add(15)
 	ll.Add(6)
 	ll.Add(7)
@@ -266,7 +268,7 @@ func TestLinkedListSort(t *testing.T) {
 }
 
 func TestLinkdedListComparatorSort(t *testing.T) {
-	ll := NewLinkedList()
+	ll := list.NewLinkedList()
 	ll.Add(&linkedListNode{age: 32})
 	ll.Add(&linkedListNode{age: 20})
 	ll.Add(&linkedListNode{age: 27})

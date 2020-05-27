@@ -1,9 +1,13 @@
 // Copyright (c) 2019, Benjamin Wang (benjamin_wang@aliyun.com). All rights reserved.
 // Licensed under the MIT license that can be found in the LICENSE file.
 
-package utils
+package utils_test
 
-import "testing"
+import (
+	"testing"
+
+	"github.com/ahrtr/gocontainer/utils"
+)
 
 /*-----------------------------------------------------------------------------
 // Test: HeapPostPush and HeapPrePop
@@ -48,17 +52,17 @@ func TestMaxHeapWithComparator(t *testing.T) {
 	heapTestImpl(t, input2, expected2, false, reverseString{})
 }
 
-func heapTestImpl(t *testing.T, input []interface{}, expected []interface{}, isMinHeap bool, c Comparator) {
+func heapTestImpl(t *testing.T, input []interface{}, expected []interface{}, isMinHeap bool, c utils.Comparator) {
 	// construct a heap
 	heapSlice := []interface{}{}
 	for _, v := range input {
 		heapSlice = append(heapSlice, v)
-		HeapPostPush(heapSlice, isMinHeap, c)
+		utils.HeapPostPush(heapSlice, isMinHeap, c)
 	}
 
 	// Pop all elements from heap one by one
 	for i := 0; i < len(expected); i++ {
-		HeapPrePop(heapSlice, isMinHeap, c)
+		utils.HeapPrePop(heapSlice, isMinHeap, c)
 		ret := heapSlice[len(heapSlice)-1]
 		heapSlice = heapSlice[:(len(heapSlice) - 1)]
 
@@ -115,9 +119,9 @@ func TestMaxHeapRemoveWithComparator(t *testing.T) {
 	heapRemoveTestImpl(t, input2, expected2, "tom", false, reverseString{})
 }
 
-func heapRemoveTestImpl(t *testing.T, input []interface{}, expected []interface{}, val interface{}, isMinHeap bool, c Comparator) {
+func heapRemoveTestImpl(t *testing.T, input []interface{}, expected []interface{}, val interface{}, isMinHeap bool, c utils.Comparator) {
 	// establish a heap in-place
-	HeapInit(input, isMinHeap, c)
+	utils.HeapInit(input, isMinHeap, c)
 
 	// find the index of the value to be removed
 	index := 0
@@ -129,7 +133,7 @@ func heapRemoveTestImpl(t *testing.T, input []interface{}, expected []interface{
 	}
 
 	// call HeapPreRemove
-	HeapPreRemove(input, index, isMinHeap, c)
+	utils.HeapPreRemove(input, index, isMinHeap, c)
 	valRemoved := input[len(input)-1]
 	if valRemoved != val {
 		t.Errorf("The removed value isn't expected, expected: %v, actual %v\n", val, valRemoved)
@@ -138,7 +142,7 @@ func heapRemoveTestImpl(t *testing.T, input []interface{}, expected []interface{
 
 	// Pop all elements from heap one by one
 	for i := 0; i < len(expected); i++ {
-		HeapPrePop(input, isMinHeap, c)
+		utils.HeapPrePop(input, isMinHeap, c)
 		ret := input[len(input)-1]
 		input = input[:(len(input) - 1)]
 
@@ -195,9 +199,9 @@ func TestMaxHeapFixWithComparator(t *testing.T) {
 	heapFixTestImpl(t, input2, expected2, "tom", "zoo", false, reverseString{})
 }
 
-func heapFixTestImpl(t *testing.T, input []interface{}, expected []interface{}, oldVal, newVal interface{}, isMinHeap bool, c Comparator) {
+func heapFixTestImpl(t *testing.T, input []interface{}, expected []interface{}, oldVal, newVal interface{}, isMinHeap bool, c utils.Comparator) {
 	// establish a heap in-place
-	HeapInit(input, isMinHeap, c)
+	utils.HeapInit(input, isMinHeap, c)
 
 	// find the index of the value to be updated
 	index := 0
@@ -211,11 +215,11 @@ func heapFixTestImpl(t *testing.T, input []interface{}, expected []interface{}, 
 	}
 
 	// call HeapPostUpdate
-	HeapPostUpdate(input, index, isMinHeap, c)
+	utils.HeapPostUpdate(input, index, isMinHeap, c)
 
 	// Pop all elements from heap one by one
 	for i := 0; i < len(expected); i++ {
-		HeapPrePop(input, isMinHeap, c)
+		utils.HeapPrePop(input, isMinHeap, c)
 		ret := input[len(input)-1]
 		input = input[:(len(input) - 1)]
 

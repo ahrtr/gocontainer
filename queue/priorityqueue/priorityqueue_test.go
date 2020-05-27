@@ -1,15 +1,17 @@
 // Copyright (c) 2019, Benjamin Wang (benjamin_wang@aliyun.com). All rights reserved.
 // Licensed under the MIT license that can be found in the LICENSE file.
 
-package priorityqueue
+package priorityqueue_test
 
 import (
 	"reflect"
 	"testing"
+
+	"github.com/ahrtr/gocontainer/queue/priorityqueue"
 )
 
 func TestPQSize(t *testing.T) {
-	pq := New()
+	pq := priorityqueue.New()
 
 	// add 3 elements
 	pq.Add(5, 6, 7)
@@ -40,7 +42,7 @@ func TestPQSize(t *testing.T) {
 
 func TestPQValue(t *testing.T) {
 	// create priority queue
-	pq := New()
+	pq := priorityqueue.New()
 	pq.Add(15, 19, 12, 8, 13)
 	if pq.Size() != 5 {
 		t.Errorf("The length isn't expected, expect: 5, actual: %d\n", pq.Size())
@@ -98,26 +100,26 @@ func TestPQValue(t *testing.T) {
 // Test: Add, Poll, Contains
 -----------------------------------------------------------------------------*/
 func TestPQMinHeap(t *testing.T) {
-	pq := New()
+	pq := priorityqueue.New()
 	pqTestPQSortImpl(t, pq, []interface{}{15, 19, 12, 8, 13}, []interface{}{8, 12, 13, 15, 19})
 }
 
 func TestPQMinHeapWithComparator(t *testing.T) {
-	pq := New().WithComparator(&myInt{})
+	pq := priorityqueue.New().WithComparator(&myInt{})
 	pqTestPQSortImpl(t, pq, []interface{}{15, 19, 12, 8, 13}, []interface{}{19, 15, 13, 12, 8})
 }
 
 func TestPQMaxHeap(t *testing.T) {
-	pq := New().WithMinHeap(false)
+	pq := priorityqueue.New().WithMinHeap(false)
 	pqTestPQSortImpl(t, pq, []interface{}{15, 19, 12, 8, 13}, []interface{}{19, 15, 13, 12, 8})
 }
 
 func TestPQMaxHeapWithComparator(t *testing.T) {
-	pq := New().WithComparator(&myInt{}).WithMinHeap(false)
+	pq := priorityqueue.New().WithComparator(&myInt{}).WithMinHeap(false)
 	pqTestPQSortImpl(t, pq, []interface{}{15, 19, 12, 8, 13}, []interface{}{8, 12, 13, 15, 19})
 }
 
-func pqTestPQSortImpl(t *testing.T, pq Interface, input, expected []interface{}) {
+func pqTestPQSortImpl(t *testing.T, pq priorityqueue.Interface, input, expected []interface{}) {
 	pq.Add(input...)
 
 	if pq.Size() != len(input) {
@@ -140,26 +142,26 @@ func pqTestPQSortImpl(t *testing.T, pq Interface, input, expected []interface{})
 // Test: Add, Remove, Contains, Poll
 -----------------------------------------------------------------------------*/
 func TestPQDeleteMinHeap(t *testing.T) {
-	pq := New()
+	pq := priorityqueue.New()
 	pqTestPQDeleteImpl(t, pq, []interface{}{15, 19, 12, 8, 13}, []interface{}{8, 12, 13, 15}, 19)
 }
 
 func TestPQDeleteMinHeapWithComparator(t *testing.T) {
-	pq := New().WithComparator(&myInt{})
+	pq := priorityqueue.New().WithComparator(&myInt{})
 	pqTestPQDeleteImpl(t, pq, []interface{}{15, 19, 12, 8, 13}, []interface{}{19, 13, 12, 8}, 15)
 }
 
 func TestPQDeleteMaxHeap(t *testing.T) {
-	pq := New().WithMinHeap(false)
+	pq := priorityqueue.New().WithMinHeap(false)
 	pqTestPQDeleteImpl(t, pq, []interface{}{15, 19, 12, 8, 13}, []interface{}{19, 15, 13, 8}, 12)
 }
 
 func TestPQDeleteMaxHeapWithComparator(t *testing.T) {
-	pq := New().WithComparator(&myInt{}).WithMinHeap(false)
+	pq := priorityqueue.New().WithComparator(&myInt{}).WithMinHeap(false)
 	pqTestPQDeleteImpl(t, pq, []interface{}{15, 19, 12, 8, 13}, []interface{}{12, 13, 15, 19}, 8)
 }
 
-func pqTestPQDeleteImpl(t *testing.T, pq Interface, input, expected []interface{}, val interface{}) {
+func pqTestPQDeleteImpl(t *testing.T, pq priorityqueue.Interface, input, expected []interface{}, val interface{}) {
 	pq.Add(input...)
 
 	if !pq.Remove(val) {
@@ -203,7 +205,7 @@ func (i myInt) Compare(v1, v2 interface{}) (int, error) {
 }
 
 func TestPQComparator(t *testing.T) {
-	pq := New().WithComparator(&student{})
+	pq := priorityqueue.New().WithComparator(&student{})
 
 	pq.Add(&student{name: "benjamin", age: 34})
 	pq.Add(&student{name: "alice", age: 21})

@@ -1,12 +1,16 @@
 // Copyright (c) 2019, Benjamin Wang (benjamin_wang@aliyun.com). All rights reserved.
 // Licensed under the MIT license that can be found in the LICENSE file.
 
-package linkedmap
+package linkedmap_test
 
-import "testing"
+import (
+	"testing"
+
+	"github.com/ahrtr/gocontainer/map/linkedmap"
+)
 
 func TestLinkedMapSize(t *testing.T) {
-	lm := New()
+	lm := linkedmap.New()
 	lm.Put(24, "benjamin")
 	lm.Put(43, "alice")
 	lm.Put(18, "john")
@@ -30,7 +34,7 @@ func TestLinkedMapSize(t *testing.T) {
 }
 
 func TestLinkedMapValue(t *testing.T) {
-	lm := New()
+	lm := linkedmap.New()
 	keys := []int{24, 43, 18, 23, 35}
 	values := []string{"benjamin", "alice", "john", "tom", "bill"}
 	for i := 0; i < len(keys); i++ {
@@ -85,7 +89,7 @@ func TestLinkedMapValue(t *testing.T) {
 }
 
 func TestLinkedMapIterate(t *testing.T) {
-	lm := New()
+	lm := linkedmap.New()
 	keys := []interface{}{24, 43, 18, 23, 35}
 	values := []interface{}{"benjamin", "alice", "john", "tom", "bill"}
 	for i := 0; i < len(keys); i++ {
@@ -97,7 +101,7 @@ func TestLinkedMapIterate(t *testing.T) {
 }
 
 func TestLinkedMapAccessOrder(t *testing.T) {
-	lm := New().WithAccessOrder(true)
+	lm := linkedmap.New().WithAccessOrder(true)
 	keys := []int{24, 43, 18, 23, 35}
 	values := []string{"benjamin", "alice", "john", "tom", "bill"}
 	for i := 0; i < len(keys); i++ {
@@ -114,7 +118,7 @@ func TestLinkedMapAccessOrder(t *testing.T) {
 	checkReverseIterateResult(t, lm, []interface{}{43, 35, 18, 24, 23}, []interface{}{"alice", "bill", "john", "benjamin", "tom"})
 }
 
-func checkIterateResult(t *testing.T, lm Interface, expectedKey, expectedValue []interface{}) {
+func checkIterateResult(t *testing.T, lm linkedmap.Interface, expectedKey, expectedValue []interface{}) {
 	it, hasNext := lm.Iterator()
 	var k, v interface{}
 
@@ -135,7 +139,7 @@ func checkIterateResult(t *testing.T, lm Interface, expectedKey, expectedValue [
 	}
 }
 
-func checkReverseIterateResult(t *testing.T, lm Interface, expectedKey, expectedValue []interface{}) {
+func checkReverseIterateResult(t *testing.T, lm linkedmap.Interface, expectedKey, expectedValue []interface{}) {
 	it, hasPrev := lm.ReverseIterator()
 	var k, v interface{}
 

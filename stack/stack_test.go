@@ -1,15 +1,17 @@
 // Copyright (c) 2019, Benjamin Wang (benjamin_wang@aliyun.com). All rights reserved.
 // Licensed under the MIT license that can be found in the LICENSE file.
 
-package stack
+package stack_test
 
 import (
 	"reflect"
 	"testing"
+
+	"github.com/ahrtr/gocontainer/stack"
 )
 
 func TestStackSize(t *testing.T) {
-	s := New()
+	s := stack.New()
 
 	s.Push(5)
 	s.Push(6)
@@ -20,7 +22,7 @@ func TestStackSize(t *testing.T) {
 }
 
 func TestStackValue(t *testing.T) {
-	s := New()
+	s := stack.New()
 
 	s.Push(5)
 	s.Push("hello")
@@ -67,7 +69,7 @@ func TestStackValue(t *testing.T) {
 }
 
 func TestStackIsEmpty(t *testing.T) {
-	s := New()
+	s := stack.New()
 
 	s.Push(5)
 	s.Push(6)
@@ -83,7 +85,7 @@ func TestStackIsEmpty(t *testing.T) {
 }
 
 func TestStackClear(t *testing.T) {
-	s := New()
+	s := stack.New()
 
 	s.Push(5)
 	s.Push(6)

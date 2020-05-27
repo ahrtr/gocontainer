@@ -1,14 +1,16 @@
 // Copyright (c) 2019, Benjamin Wang (benjamin_wang@aliyun.com). All rights reserved.
 // Licensed under the MIT license that can be found in the LICENSE file.
 
-package set
+package set_test
 
 import (
 	"testing"
+
+	"github.com/ahrtr/gocontainer/set"
 )
 
 func TestSetSize(t *testing.T) {
-	s := New()
+	s := set.New()
 
 	s.Add(5, 6)
 
@@ -26,7 +28,7 @@ func TestSetSize(t *testing.T) {
 }
 
 func TestSetValue(t *testing.T) {
-	s := New()
+	s := set.New()
 
 	s.Add(5, "hello")
 
@@ -62,7 +64,7 @@ func TestSetValue(t *testing.T) {
 }
 
 func TestSetIterate(t *testing.T) {
-	s := New()
+	s := set.New()
 
 	s.Add(5, "hello")
 
