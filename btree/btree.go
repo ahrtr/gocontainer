@@ -49,6 +49,7 @@ package btree
 
 import (
 	"fmt"
+	"github.com/ahrtr/gocontainer/collection"
 	"io"
 	"sort"
 	"strings"
@@ -63,6 +64,33 @@ type Item interface {
 	// If !a.Less(b) && !b.Less(a), we treat this to mean a == b (i.e. we can only
 	// hold one of either a or b in the tree).
 	Less(than Item) bool
+}
+
+type Interface interface {
+	collection.Interface
+
+	Clone() Interface
+	ReplaceOrInsert(item Item) Item
+	Delete(item Item) Item
+	DeleteMin() Item
+	DeleteMax() Item
+
+	AscendRange(greaterOrEqual, lessThan Item, iterator ItemIterator)
+	AscendLessThan(pivot Item, iterator ItemIterator)
+	AscendGreaterOrEqual(pivot Item, iterator ItemIterator)
+	Ascend(iterator ItemIterator)
+
+	DescendRange(lessOrEqual, greaterThan Item, iterator ItemIterator)
+	DescendLessOrEqual(pivot Item, iterator ItemIterator)
+	DescendGreaterThan(pivot Item, iterator ItemIterator)
+	Descend(iterator ItemIterator)
+
+	Get(key Item) Item
+	Min() Item
+	Max() Item
+	Has(key Item) bool
+
+	Len() int // remove it?
 }
 
 const (
@@ -124,12 +152,12 @@ type ItemIterator func(i Item) bool
 //
 // New(2), for example, will create a 2-3-4 tree (each node contains 1-3 items
 // and 2-4 children).
-func New(degree int) *BTree {
+func New(degree int) Interface {
 	return NewWithFreeList(degree, NewFreeList(DefaultFreeListSize))
 }
 
 // NewWithFreeList creates a new B-Tree that uses the given node free list.
-func NewWithFreeList(degree int, f *FreeList) *BTree {
+func NewWithFreeList(degree int, f *FreeList) Interface {
 	if degree <= 1 {
 		panic("bad degree")
 	}
@@ -618,7 +646,7 @@ type copyOnWriteContext struct {
 // will initially experience minor slow-downs caused by additional allocs and
 // copies due to the aforementioned copy-on-write logic, but should converge to
 // the original performance characteristics of the original tree.
-func (t *BTree) Clone() (t2 *BTree) {
+func (t *BTree) Clone() (Interface) {
 	// Create two entirely new copy-on-write contexts.
 	// This operation effectively creates three trees:
 	//   the original, shared nodes (old b.cow)
@@ -842,6 +870,16 @@ func (t *BTree) Len() int {
 	return t.length
 }
 
+// Size returns the number of items currently in the tree.
+func (t *BTree) Size() int {
+	return t.Len()
+}
+
+// IsEmpty returns true if the tree doesn't have any items.
+func (t *BTree) IsEmpty() bool {
+	return t.Size() == 0
+}
+
 // Clear removes all items from the btree.  If addNodesToFreelist is true,
 // t's nodes are added to its freelist as part of this call, until the freelist
 // is full.  Otherwise, the root node is simply dereferenced and the subtree
@@ -862,10 +900,7 @@ func (t *BTree) Len() int {
 //   O(tree size):  when all nodes are owned by another tree, all nodes are
 //       iterated over looking for nodes to add to the freelist, and due to
 //       ownership, none are.
-func (t *BTree) Clear(addNodesToFreelist bool) {
-	if t.root != nil && addNodesToFreelist {
-		t.root.reset(t.cow)
-	}
+func (t *BTree) Clear() {
 	t.root, t.length = nil, 0
 }
 

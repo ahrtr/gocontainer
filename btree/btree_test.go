@@ -48,7 +48,7 @@ func rang(n int) (out []Item) {
 }
 
 // all extracts all items from a tree in order as a slice.
-func all(t *BTree) (out []Item) {
+func all(t Interface) (out []Item) {
 	t.Ascend(func(a Item) bool {
 		out = append(out, a)
 		return true
@@ -65,7 +65,7 @@ func rangrev(n int) (out []Item) {
 }
 
 // allrev extracts all items from a tree in reverse order as a slice.
-func allrev(t *BTree) (out []Item) {
+func allrev(t Interface) (out []Item) {
 	t.Descend(func(a Item) bool {
 		out = append(out, a)
 		return true
@@ -648,7 +648,7 @@ func BenchmarkDescendLessOrEqual(b *testing.B) {
 
 const cloneTestSize = 10000
 
-func cloneTest(t *testing.T, b *BTree, start int, p []Item, wg *sync.WaitGroup, trees *[]*BTree, lock *sync.Mutex) {
+func cloneTest(t *testing.T, b Interface, start int, p []Item, wg *sync.WaitGroup, trees *[]Interface, lock *sync.Mutex) {
 	t.Logf("Starting new clone at %v", start)
 	lock.Lock()
 	*trees = append(*trees, b)
@@ -665,7 +665,7 @@ func cloneTest(t *testing.T, b *BTree, start int, p []Item, wg *sync.WaitGroup, 
 
 func TestCloneConcurrentOperations(t *testing.T) {
 	b := New(*btreeDegree)
-	trees := []*BTree{}
+	trees := []Interface{}
 	p := perm(cloneTestSize)
 	var wg sync.WaitGroup
 	wg.Add(1)
@@ -764,7 +764,7 @@ func BenchmarkDeleteAndRestore(b *testing.B) {
 		b.ReportAllocs()
 		b.ResetTimer()
 		for i := 0; i < b.N; i++ {
-			tr.Clear(true)
+			tr.Clear()
 			for _, v := range items {
 				tr.ReplaceOrInsert(v)
 			}
@@ -778,7 +778,7 @@ func BenchmarkDeleteAndRestore(b *testing.B) {
 		b.ReportAllocs()
 		b.ResetTimer()
 		for i := 0; i < b.N; i++ {
-			tr.Clear(true)
+			tr.Clear()
 			for _, v := range items {
 				tr.ReplaceOrInsert(v)
 			}
