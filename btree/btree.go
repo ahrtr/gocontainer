@@ -47,6 +47,11 @@
 // support storing multiple equivalent values.
 package btree
 
+// Notes from Benjamin Wang (Sept 4, 2021):
+// This file was originally copied from github.com/google/btree,
+// but it was refactored to adapt to the interface convention in this project.
+// The related test file btree_test.go was refactored as well.
+
 import (
 	"fmt"
 	"github.com/ahrtr/gocontainer/collection"
