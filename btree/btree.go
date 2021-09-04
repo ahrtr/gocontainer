@@ -71,30 +71,63 @@ type Item interface {
 	Less(than Item) bool
 }
 
+// Interface is a type of btree, and bTree implements this interface
 type Interface interface {
 	collection.Interface
 
+	// Clone clones the btree, lazily.
 	Clone() Interface
+	// ReplaceOrInsert adds the given item to the tree.  If an item in the tree
+	// already equals the given one, it is removed from the tree and returned.
+	// Otherwise, nil is returned.
 	ReplaceOrInsert(item Item) Item
+	// Delete removes an item equal to the passed in item from the tree, returning
+	// it.  If no such item exists, returns nil.
 	Delete(item Item) Item
+	// DeleteMin removes the smallest item in the tree and returns it.
+	// If no such item exists, returns nil.
 	DeleteMin() Item
+	// DeleteMax removes the largest item in the tree and returns it.
+	// If no such item exists, returns nil.
 	DeleteMax() Item
 
+	// AscendRange calls the iterator for every value in the tree within the range
+	// [greaterOrEqual, lessThan), until iterator returns false.
 	AscendRange(greaterOrEqual, lessThan Item, iterator ItemIterator)
+	// AscendLessThan calls the iterator for every value in the tree within the range
+	// [first, pivot), until iterator returns false.
 	AscendLessThan(pivot Item, iterator ItemIterator)
+	// AscendGreaterOrEqual calls the iterator for every value in the tree within
+	// the range [pivot, last], until iterator returns false.
 	AscendGreaterOrEqual(pivot Item, iterator ItemIterator)
+	// Ascend calls the iterator for every value in the tree within the range
+	// [first, last], until iterator returns false.
 	Ascend(iterator ItemIterator)
 
+	// DescendRange calls the iterator for every value in the tree within the range
+	// [lessOrEqual, greaterThan), until iterator returns false.
 	DescendRange(lessOrEqual, greaterThan Item, iterator ItemIterator)
+	// DescendLessOrEqual calls the iterator for every value in the tree within the range
+	// [pivot, first], until iterator returns false.
 	DescendLessOrEqual(pivot Item, iterator ItemIterator)
+	// DescendGreaterThan calls the iterator for every value in the tree within
+	// the range [last, pivot), until iterator returns false.
 	DescendGreaterThan(pivot Item, iterator ItemIterator)
+	// Descend calls the iterator for every value in the tree within the range
+	// [last, first], until iterator returns false.
 	Descend(iterator ItemIterator)
 
+	// Get looks for the key item in the tree, returning it.  It returns nil if
+	// unable to find that item.
 	Get(key Item) Item
+	// Min returns the smallest item in the tree, or nil if the tree is empty.
 	Min() Item
+	// Max returns the largest item in the tree, or nil if the tree is empty.
 	Max() Item
+	// Has returns true if the given key is in the tree.
 	Has(key Item) bool
 
+	// Len returns the number of items currently in the tree.
 	Len() int // remove it?
 }
 
@@ -166,7 +199,7 @@ func NewWithFreeList(degree int, f *FreeList) Interface {
 	if degree <= 1 {
 		panic("bad degree")
 	}
-	return &BTree{
+	return &bTree{
 		degree: degree,
 		cow:    &copyOnWriteContext{freelist: f},
 	}
@@ -608,14 +641,14 @@ func (n *node) print(w io.Writer, level int) {
 	}
 }
 
-// BTree is an implementation of a B-Tree.
+// bTree is an implementation of a B-Tree.
 //
-// BTree stores Item instances in an ordered structure, allowing easy insertion,
+// bTree stores Item instances in an ordered structure, allowing easy insertion,
 // removal, and iteration.
 //
 // Write operations are not safe for concurrent mutation by multiple
 // goroutines, but Read operations are.
-type BTree struct {
+type bTree struct {
 	degree int
 	length int
 	root   *node
@@ -651,7 +684,7 @@ type copyOnWriteContext struct {
 // will initially experience minor slow-downs caused by additional allocs and
 // copies due to the aforementioned copy-on-write logic, but should converge to
 // the original performance characteristics of the original tree.
-func (t *BTree) Clone() (Interface) {
+func (t *bTree) Clone() (Interface) {
 	// Create two entirely new copy-on-write contexts.
 	// This operation effectively creates three trees:
 	//   the original, shared nodes (old b.cow)
@@ -665,13 +698,13 @@ func (t *BTree) Clone() (Interface) {
 }
 
 // maxItems returns the max number of items to allow per node.
-func (t *BTree) maxItems() int {
+func (t *bTree) maxItems() int {
 	return t.degree*2 - 1
 }
 
 // minItems returns the min number of items to allow per node (ignored for the
 // root node).
-func (t *BTree) minItems() int {
+func (t *bTree) minItems() int {
 	return t.degree - 1
 }
 
@@ -713,7 +746,7 @@ func (c *copyOnWriteContext) freeNode(n *node) freeType {
 // Otherwise, nil is returned.
 //
 // nil cannot be added to the tree (will panic).
-func (t *BTree) ReplaceOrInsert(item Item) Item {
+func (t *bTree) ReplaceOrInsert(item Item) Item {
 	if item == nil {
 		panic("nil item being added to BTree")
 	}
@@ -741,23 +774,23 @@ func (t *BTree) ReplaceOrInsert(item Item) Item {
 
 // Delete removes an item equal to the passed in item from the tree, returning
 // it.  If no such item exists, returns nil.
-func (t *BTree) Delete(item Item) Item {
+func (t *bTree) Delete(item Item) Item {
 	return t.deleteItem(item, removeItem)
 }
 
 // DeleteMin removes the smallest item in the tree and returns it.
 // If no such item exists, returns nil.
-func (t *BTree) DeleteMin() Item {
+func (t *bTree) DeleteMin() Item {
 	return t.deleteItem(nil, removeMin)
 }
 
 // DeleteMax removes the largest item in the tree and returns it.
 // If no such item exists, returns nil.
-func (t *BTree) DeleteMax() Item {
+func (t *bTree) DeleteMax() Item {
 	return t.deleteItem(nil, removeMax)
 }
 
-func (t *BTree) deleteItem(item Item, typ toRemove) Item {
+func (t *bTree) deleteItem(item Item, typ toRemove) Item {
 	if t.root == nil || len(t.root.items) == 0 {
 		return nil
 	}
@@ -776,7 +809,7 @@ func (t *BTree) deleteItem(item Item, typ toRemove) Item {
 
 // AscendRange calls the iterator for every value in the tree within the range
 // [greaterOrEqual, lessThan), until iterator returns false.
-func (t *BTree) AscendRange(greaterOrEqual, lessThan Item, iterator ItemIterator) {
+func (t *bTree) AscendRange(greaterOrEqual, lessThan Item, iterator ItemIterator) {
 	if t.root == nil {
 		return
 	}
@@ -785,7 +818,7 @@ func (t *BTree) AscendRange(greaterOrEqual, lessThan Item, iterator ItemIterator
 
 // AscendLessThan calls the iterator for every value in the tree within the range
 // [first, pivot), until iterator returns false.
-func (t *BTree) AscendLessThan(pivot Item, iterator ItemIterator) {
+func (t *bTree) AscendLessThan(pivot Item, iterator ItemIterator) {
 	if t.root == nil {
 		return
 	}
@@ -794,7 +827,7 @@ func (t *BTree) AscendLessThan(pivot Item, iterator ItemIterator) {
 
 // AscendGreaterOrEqual calls the iterator for every value in the tree within
 // the range [pivot, last], until iterator returns false.
-func (t *BTree) AscendGreaterOrEqual(pivot Item, iterator ItemIterator) {
+func (t *bTree) AscendGreaterOrEqual(pivot Item, iterator ItemIterator) {
 	if t.root == nil {
 		return
 	}
@@ -803,7 +836,7 @@ func (t *BTree) AscendGreaterOrEqual(pivot Item, iterator ItemIterator) {
 
 // Ascend calls the iterator for every value in the tree within the range
 // [first, last], until iterator returns false.
-func (t *BTree) Ascend(iterator ItemIterator) {
+func (t *bTree) Ascend(iterator ItemIterator) {
 	if t.root == nil {
 		return
 	}
@@ -812,7 +845,7 @@ func (t *BTree) Ascend(iterator ItemIterator) {
 
 // DescendRange calls the iterator for every value in the tree within the range
 // [lessOrEqual, greaterThan), until iterator returns false.
-func (t *BTree) DescendRange(lessOrEqual, greaterThan Item, iterator ItemIterator) {
+func (t *bTree) DescendRange(lessOrEqual, greaterThan Item, iterator ItemIterator) {
 	if t.root == nil {
 		return
 	}
@@ -821,7 +854,7 @@ func (t *BTree) DescendRange(lessOrEqual, greaterThan Item, iterator ItemIterato
 
 // DescendLessOrEqual calls the iterator for every value in the tree within the range
 // [pivot, first], until iterator returns false.
-func (t *BTree) DescendLessOrEqual(pivot Item, iterator ItemIterator) {
+func (t *bTree) DescendLessOrEqual(pivot Item, iterator ItemIterator) {
 	if t.root == nil {
 		return
 	}
@@ -830,7 +863,7 @@ func (t *BTree) DescendLessOrEqual(pivot Item, iterator ItemIterator) {
 
 // DescendGreaterThan calls the iterator for every value in the tree within
 // the range [last, pivot), until iterator returns false.
-func (t *BTree) DescendGreaterThan(pivot Item, iterator ItemIterator) {
+func (t *bTree) DescendGreaterThan(pivot Item, iterator ItemIterator) {
 	if t.root == nil {
 		return
 	}
@@ -839,7 +872,7 @@ func (t *BTree) DescendGreaterThan(pivot Item, iterator ItemIterator) {
 
 // Descend calls the iterator for every value in the tree within the range
 // [last, first], until iterator returns false.
-func (t *BTree) Descend(iterator ItemIterator) {
+func (t *bTree) Descend(iterator ItemIterator) {
 	if t.root == nil {
 		return
 	}
@@ -848,7 +881,7 @@ func (t *BTree) Descend(iterator ItemIterator) {
 
 // Get looks for the key item in the tree, returning it.  It returns nil if
 // unable to find that item.
-func (t *BTree) Get(key Item) Item {
+func (t *bTree) Get(key Item) Item {
 	if t.root == nil {
 		return nil
 	}
@@ -856,32 +889,32 @@ func (t *BTree) Get(key Item) Item {
 }
 
 // Min returns the smallest item in the tree, or nil if the tree is empty.
-func (t *BTree) Min() Item {
+func (t *bTree) Min() Item {
 	return min(t.root)
 }
 
 // Max returns the largest item in the tree, or nil if the tree is empty.
-func (t *BTree) Max() Item {
+func (t *bTree) Max() Item {
 	return max(t.root)
 }
 
 // Has returns true if the given key is in the tree.
-func (t *BTree) Has(key Item) bool {
+func (t *bTree) Has(key Item) bool {
 	return t.Get(key) != nil
 }
 
 // Len returns the number of items currently in the tree.
-func (t *BTree) Len() int {
+func (t *bTree) Len() int {
 	return t.length
 }
 
 // Size returns the number of items currently in the tree.
-func (t *BTree) Size() int {
+func (t *bTree) Size() int {
 	return t.Len()
 }
 
 // IsEmpty returns true if the tree doesn't have any items.
-func (t *BTree) IsEmpty() bool {
+func (t *bTree) IsEmpty() bool {
 	return t.Size() == 0
 }
 
@@ -905,7 +938,7 @@ func (t *BTree) IsEmpty() bool {
 //   O(tree size):  when all nodes are owned by another tree, all nodes are
 //       iterated over looking for nodes to add to the freelist, and due to
 //       ownership, none are.
-func (t *BTree) Clear() {
+func (t *bTree) Clear() {
 	t.root, t.length = nil, 0
 }
 
