@@ -10,7 +10,6 @@ import (
 )
 
 func linkedmapExample1() {
-	printFuncName()
 	lm := linkedmap.New()
 
 	keys := []interface{}{24, 43, 18, 23, 35}
@@ -35,7 +34,6 @@ func linkedmapExample1() {
 
 // example for accessOrder
 func linkedmapExample2() {
-	printFuncName()
 	lm := linkedmap.New().WithAccessOrder(true)
 
 	keys := []interface{}{24, 43, 18, 23, 35}
@@ -61,7 +59,6 @@ func linkedmapExample2() {
 
 // example for iterator & reverse iterator
 func linkedmapExample3() {
-	printFuncName()
 	lm := linkedmap.New()
 
 	keys := []interface{}{24, 43, 18, 23, 35}

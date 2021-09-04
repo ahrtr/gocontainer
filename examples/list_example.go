@@ -14,25 +14,21 @@ import (
 	examples for ArrayList
 */
 func listArrayListExample1() {
-	printFuncName()
 	al := list.NewArrayList()
 	listBasicOperation(al)
 }
 
 func listArrayListExample2() {
-	printFuncName()
 	al := list.NewArrayList()
 	listSortData(al)
 }
 
 func listArrayListExample3() {
-	printFuncName()
 	al := list.NewArrayList()
 	listReverseSortData(al)
 }
 
 func listArrayListExample4() {
-	printFuncName()
 	al := list.NewArrayList()
 	listCustomizedData(al, &student{})
 }
@@ -41,25 +37,21 @@ func listArrayListExample4() {
 	examples for LinkedList
 */
 func listLinkedListExample1() {
-	printFuncName()
 	ll := list.NewLinkedList()
 	listBasicOperation(ll)
 }
 
 func listLinkedListExample2() {
-	printFuncName()
 	ll := list.NewLinkedList()
 	listSortData(ll)
 }
 
 func listLinkedListExample3() {
-	printFuncName()
 	ll := list.NewLinkedList()
 	listReverseSortData(ll)
 }
 
 func listLinkedListExample4() {
-	printFuncName()
 	ll := list.NewLinkedList()
 	listCustomizedData(ll, &student{})
 }

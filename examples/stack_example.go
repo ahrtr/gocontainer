@@ -10,7 +10,6 @@ import (
 )
 
 func stackExample1() {
-	printFuncName()
 	s := stack.New()
 
 	values := []int{5, 6, 7}

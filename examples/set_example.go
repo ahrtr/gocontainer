@@ -10,7 +10,6 @@ import (
 )
 
 func setExample1() {
-	printFuncName()
 	s := set.New()
 
 	values := []int{5, 3, 9, 7, 6}

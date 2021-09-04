@@ -10,7 +10,6 @@ import (
 )
 
 func queueExample1() {
-	printFuncName()
 	q := queue.New()
 
 	values := []string{"benjamin", "alice", "john", "tom", "bill"}

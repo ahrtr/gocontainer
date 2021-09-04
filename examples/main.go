@@ -5,6 +5,7 @@ package main
 
 import (
 	"fmt"
+	"reflect"
 	"runtime"
 )
 
@@ -39,12 +40,14 @@ func main() {
 	cnt := 0
 	for _, f := range funcs {
 		cnt++
+		fmt.Printf("\n%s starting...\n", runtime.FuncForPC(reflect.ValueOf(f).Pointer()).Name())
 		f()
 	}
 	fmt.Printf("\n****** Total examples: %d\n", cnt)
 }
 
-// printFuncName prints the each example function's name
+// printFuncName prints each example function's name.
+// This function isn't needed anymore.
 func printFuncName() {
 	pc, _, _, _ := runtime.Caller(1)
 	fmt.Printf("\n%s starting...\n", runtime.FuncForPC(pc).Name())

@@ -10,8 +10,6 @@ import (
 )
 
 func priorityqueueExample1() {
-	printFuncName()
-
 	pq := priorityqueue.New()
 
 	values := []string{"benjamin", "alice", "john", "tom", "bill"}
@@ -34,8 +32,6 @@ func priorityqueueExample1() {
 
 // priorityqueueExample2 demos how to reverse order for the build-in data types.
 func priorityqueueExample2() {
-	printFuncName()
-
 	pq := priorityqueue.New().WithMinHeap(false)
 
 	values := []string{"benjamin", "alice", "john", "tom", "bill"}
@@ -58,8 +54,6 @@ func priorityqueueExample2() {
 
 // priorityqueueExample3 demos how to reverse order for the build-in data types using a comparator.
 func priorityqueueExample3() {
-	printFuncName()
-
 	pq := priorityqueue.New().WithComparator(&reverseString{})
 
 	values := []string{"benjamin", "alice", "john", "tom", "bill"}
@@ -82,8 +76,6 @@ func priorityqueueExample3() {
 
 // priorityqueueExample3 demos how to order the customized data types (struct).
 func priorityqueueExample4() {
-	printFuncName()
-
 	pq := priorityqueue.New().WithComparator(&student{})
 
 	values := []student{
