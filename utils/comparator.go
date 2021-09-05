@@ -17,9 +17,10 @@ type Comparator interface {
 	Compare(v1 interface{}, v2 interface{}) (int, error)
 }
 
-// Compare compares its two arguments if they have the same type and are comparable, otherwise returns an error in the second return value.
+// Compare compares two arguments using the given Comparator. If the Comparator isn't provided, then the two values are compared according to their natural ordering.
+// They must be the same type, otherwise returns an error in the second return value.
 // It returns a negative integer, zero, or a positive integer as the first argument is less than, equal to, or greater than the second.
-func Compare(v1 interface{}, v2 interface{}) (int, error) {
+func Compare(v1 interface{}, v2 interface{}, cmp Comparator) (int, error) {
 	if nil == v1 && nil == v2 {
 		return 0, nil
 	}
@@ -30,6 +31,11 @@ func Compare(v1 interface{}, v2 interface{}) (int, error) {
 	k1, k2 := reflect.TypeOf(v1).Kind(), reflect.TypeOf(v2).Kind()
 	if k1 != k2 {
 		return 0, fmt.Errorf("Two values of different type can't be compared, %s: %s", k1, k2)
+	}
+
+	// Compare the two values using the given customized comparator
+	if cmp != nil {
+		return cmp.Compare(v1, v2)
 	}
 
 	cmpRet := 0

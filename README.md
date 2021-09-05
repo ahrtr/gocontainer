@@ -625,9 +625,10 @@ More containers will be added soon. Please also kindly let me know if you need a
 ## Comparator
 The comparator utility contains a function "Compare" and an interface "Comparator", 
 ```go
-// Compare compares its two arguments if they have the same type and are comparable, otherwise returns an error in the second return value.
+// Compare compares two arguments using the given Comparator. If the Comparator isn't provided, then the two values are compared according to their natural ordering.
+// They must be the same type, otherwise returns an error in the second return value.
 // It returns a negative integer, zero, or a positive integer as the first argument is less than, equal to, or greater than the second.
-func Compare(v1 interface{}, v2 interface{}) (int, error)
+func Compare(v1 interface{}, v2 interface{}, cmp Comparator) (int, error)
 
 // Comparator imposes a total ordering on some collection of objects, and it allows precise control over the sort order.
 type Comparator interface {
@@ -637,7 +638,7 @@ type Comparator interface {
 }
 ```
 
-The function "Compare" is used to compare two values of golang build-in data types listed below. The two arguments must be the same data type, otherwise an error in the second return value will be returned. It returns a negative integer, zero, or a positive integer as the first argument is less than, equal to, or greater than the second one. Note that for **bool**, a false is regarded as less than a true.
+The function "Compare" is used to compare two values using the given Comparator of the third parameter. If the Comparator is nil, then they are compared according to their natural ordering of golang build-in data types listed below. The two arguments must be the same data type, otherwise an error in the second return value will be returned. It returns a negative integer, zero, or a positive integer as the first argument is less than, equal to, or greater than the second one. Note that for **bool**, a false is regarded as less than a true.
 - bool
 - int
 - int8

@@ -627,9 +627,10 @@ for hasPrev {
 ## Comparator
 Comparator包含一个函数"Compare"和一个接口"Comparator"，
 ```go
-// Compare compares its two arguments if they have the same type and are comparable, otherwise returns an error in the second return value.
+// Compare compares two arguments using the given Comparator. If the Comparator isn't provided, then the two values are compared according to their natural ordering.
+// They must be the same type, otherwise returns an error in the second return value.
 // It returns a negative integer, zero, or a positive integer as the first argument is less than, equal to, or greater than the second.
-func Compare(v1 interface{}, v2 interface{}) (int, error)
+func Compare(v1 interface{}, v2 interface{}, cmp Comparator) (int, error)
 
 // Comparator imposes a total ordering on some collection of objects, and it allows precise control over the sort order.
 type Comparator interface {
@@ -639,7 +640,7 @@ type Comparator interface {
 }
 ```
 
-函数"Compare"用于对golang内置的数据类型进行比较，支持的内置类型见下面的列表。这个函数的两个参数的数据类型必须相同，否则Compare就会返回一个错误（第二个返回参数）。在第一个参数小于、等于、大于第二个参数的情况下，第一个返回值分别是一个负整数、零、一个正整数。对于 **bool** 类型, false被认为是比true要小。
+函数"Compare"用提供的Comparator(第三个参数)比较两个值。如果Comparator为nil，则默认对golang内置的数据类型进行比较，支持的内置类型见下面的列表。这个函数的前两个参数的数据类型必须相同，否则Compare就会返回一个错误（第二个返回参数）。在第一个参数小于、等于、大于第二个参数的情况下，第一个返回值分别是一个负整数、零、一个正整数。对于 **bool** 类型, false被认为是比true要小。
 - bool
 - int
 - int8

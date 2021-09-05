@@ -35,11 +35,13 @@ func (sc *sortableContainer) Swap(i, j int) {
 func (sc *sortableContainer) Less(i, j int) bool {
 	var cmpRet int
 	var err error
+	cmpRet, err = Compare(sc.items[i], sc.items[j], sc.cmp)
+	/*
 	if nil != sc.cmp {
 		cmpRet, err = sc.cmp.Compare(sc.items[i], sc.items[j])
 	} else {
 		cmpRet, err = Compare(sc.items[i], sc.items[j])
-	}
+	} */
 	if err != nil {
 		panic(err)
 	}
