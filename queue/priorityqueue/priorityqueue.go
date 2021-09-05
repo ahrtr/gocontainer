@@ -14,8 +14,8 @@ import (
 type Interface interface {
 	queue.Interface
 
-	// WithComparator sets a utils.Comparator instance for the queue.
-	// It's used to imposes a total ordering on the elements in the queue.
+	// WithComparator sets an utils.Comparator instance for the queue.
+	// It's used to impose a total ordering on the elements in the queue.
 	WithComparator(c utils.Comparator) Interface
 	// WithMinHeap configures whether or not using min-heap.
 	// If not configured, then it's min-heap by default.

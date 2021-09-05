@@ -32,42 +32,42 @@ func init() {
 	rand.Seed(seed)
 }
 
-// perm returns a random permutation of n btree.Int btree.Items in the range [0, n).
-func perm(n int) (out []btree.Item) {
+// perm returns a random permutation of n integers in the range [0, n).
+func perm(n int) (out []interface{}) {
 	for _, v := range rand.Perm(n) {
-		out = append(out, btree.Int(v))
+		out = append(out, v)
 	}
 	return
 }
 
-// rang returns an ordered list of btree.Int btree.Items in the range [0, n).
-func rang(n int) (out []btree.Item) {
+// rang returns an ordered list of integers in the range [0, n).
+func rang(n int) (out []interface{}) {
 	for i := 0; i < n; i++ {
-		out = append(out, btree.Int(i))
+		out = append(out, i)
 	}
 	return
 }
 
-// all extracts all btree.Items from a tree in order as a slice.
-func all(t btree.Interface) (out []btree.Item) {
-	t.Ascend(func(a btree.Item) bool {
+// all extracts all interface{}s from a tree in order as a slice.
+func all(t btree.Interface) (out []interface{}) {
+	t.Ascend(func(a interface{}) bool {
 		out = append(out, a)
 		return true
 	})
 	return
 }
 
-// rangerev returns a reversed ordered list of btree.Int btree.Items in the range [0, n).
-func rangrev(n btree.Int) (out []btree.Item) {
+// rangerev returns a reversed ordered list of integers in the range [0, n).
+func rangrev(n int) (out []interface{}) {
 	for i := n - 1; i >= 0; i-- {
-		out = append(out, btree.Int(i))
+		out = append(out, i)
 	}
 	return
 }
 
-// allrev extracts all btree.Items from a tree in reverse order as a slice.
-func allrev(t btree.Interface) (out []btree.Item) {
-	t.Descend(func(a btree.Item) bool {
+// allrev extracts all interface{}s from a tree in reverse order as a slice.
+func allrev(t btree.Interface) (out []interface{}) {
+	t.Descend(func(a interface{}) bool {
 		out = append(out, a)
 		return true
 	})
@@ -88,18 +88,18 @@ func TestBTree(t *testing.T) {
 		}
 		for _, item := range perm(treeSize) {
 			if x := tr.ReplaceOrInsert(item); x != nil {
-				t.Fatal("insert found btree.Item", item)
+				t.Fatal("insert found interface{}", item)
 			}
 		}
 		for _, item := range perm(treeSize) {
 			if x := tr.ReplaceOrInsert(item); x == nil {
-				t.Fatal("insert didn't find btree.Item", item)
+				t.Fatal("insert didn't find interface{}", item)
 			}
 		}
-		if min, want := tr.Min(), btree.Item(btree.Int(0)); min != want {
+		if min, want := tr.Min(), interface{}(0); min != want {
 			t.Fatalf("min: want %+v, got %+v", want, min)
 		}
-		if max, want := tr.Max(), btree.Item(btree.Int(treeSize-1)); max != want {
+		if max, want := tr.Max(), interface{}(treeSize-1); max != want {
 			t.Fatalf("max: want %+v, got %+v", want, max)
 		}
 		got := all(tr)
@@ -127,21 +127,21 @@ func TestBTree(t *testing.T) {
 
 func ExampleBTree() {
 	tr := btree.New(*btreeDegree)
-	for i := btree.Int(0); i < 10; i++ {
+	for i := 0; i < 10; i++ {
 		tr.ReplaceOrInsert(i)
 	}
-	fmt.Println("len:       ", tr.Len())
-	fmt.Println("get3:      ", tr.Get(btree.Int(3)))
-	fmt.Println("get100:    ", tr.Get(btree.Int(100)))
-	fmt.Println("del4:      ", tr.Delete(btree.Int(4)))
-	fmt.Println("del100:    ", tr.Delete(btree.Int(100)))
-	fmt.Println("replace5:  ", tr.ReplaceOrInsert(btree.Int(5)))
-	fmt.Println("replace100:", tr.ReplaceOrInsert(btree.Int(100)))
+	fmt.Println("len:       ", tr.Size())
+	fmt.Println("get3:      ", tr.Get(3))
+	fmt.Println("get100:    ", tr.Get(100))
+	fmt.Println("del4:      ", tr.Delete(4))
+	fmt.Println("del100:    ", tr.Delete(100))
+	fmt.Println("replace5:  ", tr.ReplaceOrInsert(5))
+	fmt.Println("replace100:", tr.ReplaceOrInsert(100))
 	fmt.Println("min:       ", tr.Min())
 	fmt.Println("delmin:    ", tr.DeleteMin())
 	fmt.Println("max:       ", tr.Max())
 	fmt.Println("delmax:    ", tr.DeleteMax())
-	fmt.Println("len:       ", tr.Len())
+	fmt.Println("len:       ", tr.Size())
 	// Output:
 	// len:        10
 	// get3:       3
@@ -162,7 +162,7 @@ func TestDeleteMin(t *testing.T) {
 	for _, v := range perm(100) {
 		tr.ReplaceOrInsert(v)
 	}
-	var got []btree.Item
+	var got []interface{}
 	for v := tr.DeleteMin(); v != nil; v = tr.DeleteMin() {
 		got = append(got, v)
 	}
@@ -176,7 +176,7 @@ func TestDeleteMax(t *testing.T) {
 	for _, v := range perm(100) {
 		tr.ReplaceOrInsert(v)
 	}
-	var got []btree.Item
+	var got []interface{}
 	for v := tr.DeleteMax(); v != nil; v = tr.DeleteMax() {
 		got = append(got, v)
 	}
@@ -194,8 +194,8 @@ func TestAscendRange(t *testing.T) {
 	for _, v := range perm(100) {
 		tr.ReplaceOrInsert(v)
 	}
-	var got []btree.Item
-	tr.AscendRange(btree.Int(40), btree.Int(60), func(a btree.Item) bool {
+	var got []interface{}
+	tr.AscendRange(40, 60, func(a interface{}) bool {
 		got = append(got, a)
 		return true
 	})
@@ -203,8 +203,8 @@ func TestAscendRange(t *testing.T) {
 		t.Fatalf("ascendrange:\n got: %v\nwant: %v", got, want)
 	}
 	got = got[:0]
-	tr.AscendRange(btree.Int(40), btree.Int(60), func(a btree.Item) bool {
-		if a.(btree.Int) > 50 {
+	tr.AscendRange(40, 60, func(a interface{}) bool {
+		if a.(int) > 50 {
 			return false
 		}
 		got = append(got, a)
@@ -220,8 +220,8 @@ func TestDescendRange(t *testing.T) {
 	for _, v := range perm(100) {
 		tr.ReplaceOrInsert(v)
 	}
-	var got []btree.Item
-	tr.DescendRange(btree.Int(60), btree.Int(40), func(a btree.Item) bool {
+	var got []interface{}
+	tr.DescendRange(60, 40, func(a interface{}) bool {
 		got = append(got, a)
 		return true
 	})
@@ -229,8 +229,8 @@ func TestDescendRange(t *testing.T) {
 		t.Fatalf("descendrange:\n got: %v\nwant: %v", got, want)
 	}
 	got = got[:0]
-	tr.DescendRange(btree.Int(60), btree.Int(40), func(a btree.Item) bool {
-		if a.(btree.Int) < 50 {
+	tr.DescendRange(60, 40, func(a interface{}) bool {
+		if a.(int) < 50 {
 			return false
 		}
 		got = append(got, a)
@@ -245,8 +245,8 @@ func TestAscendLessThan(t *testing.T) {
 	for _, v := range perm(100) {
 		tr.ReplaceOrInsert(v)
 	}
-	var got []btree.Item
-	tr.AscendLessThan(btree.Int(60), func(a btree.Item) bool {
+	var got []interface{}
+	tr.AscendLessThan(60, func(a interface{}) bool {
 		got = append(got, a)
 		return true
 	})
@@ -254,8 +254,8 @@ func TestAscendLessThan(t *testing.T) {
 		t.Fatalf("ascendrange:\n got: %v\nwant: %v", got, want)
 	}
 	got = got[:0]
-	tr.AscendLessThan(btree.Int(60), func(a btree.Item) bool {
-		if a.(btree.Int) > 50 {
+	tr.AscendLessThan(60, func(a interface{}) bool {
+		if a.(int) > 50 {
 			return false
 		}
 		got = append(got, a)
@@ -271,8 +271,8 @@ func TestDescendLessOrEqual(t *testing.T) {
 	for _, v := range perm(100) {
 		tr.ReplaceOrInsert(v)
 	}
-	var got []btree.Item
-	tr.DescendLessOrEqual(btree.Int(40), func(a btree.Item) bool {
+	var got []interface{}
+	tr.DescendLessOrEqual(40, func(a interface{}) bool {
 		got = append(got, a)
 		return true
 	})
@@ -280,8 +280,8 @@ func TestDescendLessOrEqual(t *testing.T) {
 		t.Fatalf("descendlessorequal:\n got: %v\nwant: %v", got, want)
 	}
 	got = got[:0]
-	tr.DescendLessOrEqual(btree.Int(60), func(a btree.Item) bool {
-		if a.(btree.Int) < 50 {
+	tr.DescendLessOrEqual(60, func(a interface{}) bool {
+		if a.(int) < 50 {
 			return false
 		}
 		got = append(got, a)
@@ -296,8 +296,8 @@ func TestAscendGreaterOrEqual(t *testing.T) {
 	for _, v := range perm(100) {
 		tr.ReplaceOrInsert(v)
 	}
-	var got []btree.Item
-	tr.AscendGreaterOrEqual(btree.Int(40), func(a btree.Item) bool {
+	var got []interface{}
+	tr.AscendGreaterOrEqual(40, func(a interface{}) bool {
 		got = append(got, a)
 		return true
 	})
@@ -305,8 +305,8 @@ func TestAscendGreaterOrEqual(t *testing.T) {
 		t.Fatalf("ascendrange:\n got: %v\nwant: %v", got, want)
 	}
 	got = got[:0]
-	tr.AscendGreaterOrEqual(btree.Int(40), func(a btree.Item) bool {
-		if a.(btree.Int) > 50 {
+	tr.AscendGreaterOrEqual(40, func(a interface{}) bool {
+		if a.(int) > 50 {
 			return false
 		}
 		got = append(got, a)
@@ -322,8 +322,8 @@ func TestDescendGreaterThan(t *testing.T) {
 	for _, v := range perm(100) {
 		tr.ReplaceOrInsert(v)
 	}
-	var got []btree.Item
-	tr.DescendGreaterThan(btree.Int(40), func(a btree.Item) bool {
+	var got []interface{}
+	tr.DescendGreaterThan(40, func(a interface{}) bool {
 		got = append(got, a)
 		return true
 	})
@@ -331,8 +331,8 @@ func TestDescendGreaterThan(t *testing.T) {
 		t.Fatalf("descendgreaterthan:\n got: %v\nwant: %v", got, want)
 	}
 	got = got[:0]
-	tr.DescendGreaterThan(btree.Int(40), func(a btree.Item) bool {
-		if a.(btree.Int) < 50 {
+	tr.DescendGreaterThan(40, func(a interface{}) bool {
+		if a.(int) < 50 {
 			return false
 		}
 		got = append(got, a)
@@ -373,7 +373,7 @@ func BenchmarkSeek(b *testing.B) {
 	b.StartTimer()
 
 	for i := 0; i < b.N; i++ {
-		tr.AscendGreaterOrEqual(btree.Int(i%size), func(i btree.Item) bool { return false })
+		tr.AscendGreaterOrEqual(i%size, func(i interface{}) bool { return false })
 	}
 }
 
@@ -441,8 +441,8 @@ func BenchmarkDelete(b *testing.B) {
 				return
 			}
 		}
-		if tr.Len() > 0 {
-			panic(tr.Len())
+		if tr.Size() > 0 {
+			panic(tr.Size())
 		}
 	}
 }
@@ -494,14 +494,14 @@ func BenchmarkGetCloneEachTime(b *testing.B) {
 	}
 }
 
-type byInts []btree.Item
+type byInts []interface{}
 
 func (a byInts) Len() int {
 	return len(a)
 }
 
 func (a byInts) Less(i, j int) bool {
-	return a[i].(btree.Int) < a[j].(btree.Int)
+	return a[i].(int) < a[j].(int)
 }
 
 func (a byInts) Swap(i, j int) {
@@ -518,9 +518,9 @@ func BenchmarkAscend(b *testing.B) {
 	b.ResetTimer()
 	for i := 0; i < b.N; i++ {
 		j := 0
-		tr.Ascend(func(item btree.Item) bool {
-			if item.(btree.Int) != arr[j].(btree.Int) {
-				b.Fatalf("mismatch: expected: %v, got %v", arr[j].(btree.Int), item.(btree.Int))
+		tr.Ascend(func(item interface{}) bool {
+			if item.(int) != arr[j].(int) {
+				b.Fatalf("mismatch: expected: %v, got %v", arr[j].(int), item.(int))
 			}
 			j++
 			return true
@@ -538,9 +538,9 @@ func BenchmarkDescend(b *testing.B) {
 	b.ResetTimer()
 	for i := 0; i < b.N; i++ {
 		j := len(arr) - 1
-		tr.Descend(func(item btree.Item) bool {
-			if item.(btree.Int) != arr[j].(btree.Int) {
-				b.Fatalf("mismatch: expected: %v, got %v", arr[j].(btree.Int), item.(btree.Int))
+		tr.Descend(func(item interface{}) bool {
+			if item.(int) != arr[j].(int) {
+				b.Fatalf("mismatch: expected: %v, got %v", arr[j].(int), item.(int))
 			}
 			j--
 			return true
@@ -557,9 +557,9 @@ func BenchmarkAscendRange(b *testing.B) {
 	b.ResetTimer()
 	for i := 0; i < b.N; i++ {
 		j := 100
-		tr.AscendRange(btree.Int(100), arr[len(arr)-100], func(item btree.Item) bool {
-			if item.(btree.Int) != arr[j].(btree.Int) {
-				b.Fatalf("mismatch: expected: %v, got %v", arr[j].(btree.Int), item.(btree.Int))
+		tr.AscendRange(100, arr[len(arr)-100], func(item interface{}) bool {
+			if item.(int) != arr[j].(int) {
+				b.Fatalf("mismatch: expected: %v, got %v", arr[j].(int), item.(int))
 			}
 			j++
 			return true
@@ -580,9 +580,9 @@ func BenchmarkDescendRange(b *testing.B) {
 	b.ResetTimer()
 	for i := 0; i < b.N; i++ {
 		j := len(arr) - 100
-		tr.DescendRange(arr[len(arr)-100], btree.Int(100), func(item btree.Item) bool {
-			if item.(btree.Int) != arr[j].(btree.Int) {
-				b.Fatalf("mismatch: expected: %v, got %v", arr[j].(btree.Int), item.(btree.Int))
+		tr.DescendRange(arr[len(arr)-100], 100, func(item interface{}) bool {
+			if item.(int) != arr[j].(int) {
+				b.Fatalf("mismatch: expected: %v, got %v", arr[j].(int), item.(int))
 			}
 			j--
 			return true
@@ -603,9 +603,9 @@ func BenchmarkAscendGreaterOrEqual(b *testing.B) {
 	for i := 0; i < b.N; i++ {
 		j := 100
 		k := 0
-		tr.AscendGreaterOrEqual(btree.Int(100), func(item btree.Item) bool {
-			if item.(btree.Int) != arr[j].(btree.Int) {
-				b.Fatalf("mismatch: expected: %v, got %v", arr[j].(btree.Int), item.(btree.Int))
+		tr.AscendGreaterOrEqual(100, func(item interface{}) bool {
+			if item.(int) != arr[j].(int) {
+				b.Fatalf("mismatch: expected: %v, got %v", arr[j].(int), item.(int))
 			}
 			j++
 			k++
@@ -630,9 +630,9 @@ func BenchmarkDescendLessOrEqual(b *testing.B) {
 	for i := 0; i < b.N; i++ {
 		j := len(arr) - 100
 		k := len(arr)
-		tr.DescendLessOrEqual(arr[len(arr)-100], func(item btree.Item) bool {
-			if item.(btree.Int) != arr[j].(btree.Int) {
-				b.Fatalf("mismatch: expected: %v, got %v", arr[j].(btree.Int), item.(btree.Int))
+		tr.DescendLessOrEqual(arr[len(arr)-100], func(item interface{}) bool {
+			if item.(int) != arr[j].(int) {
+				b.Fatalf("mismatch: expected: %v, got %v", arr[j].(int), item.(int))
 			}
 			j--
 			k--
@@ -649,7 +649,7 @@ func BenchmarkDescendLessOrEqual(b *testing.B) {
 
 const cloneTestSize = 10000
 
-func cloneTest(t *testing.T, b btree.Interface, start btree.Int, p []btree.Item, wg *sync.WaitGroup, trees *[]btree.Interface, lock *sync.Mutex) {
+func cloneTest(t *testing.T, b btree.Interface, start int, p []interface{}, wg *sync.WaitGroup, trees *[]btree.Interface, lock *sync.Mutex) {
 	t.Logf("Starting btree.New clone at %v", start)
 	lock.Lock()
 	*trees = append(*trees, b)
@@ -694,7 +694,7 @@ func TestCloneConcurrentOperations(t *testing.T) {
 	wg.Wait()
 	t.Log("Checking all values again")
 	for i, tree := range trees {
-		var wantpart []btree.Item
+		var wantpart []interface{}
 		if i < len(trees)/2 {
 			wantpart = want[:cloneTestSize/2]
 		} else {
@@ -718,8 +718,8 @@ func BenchmarkDeleteAndRestore(b *testing.B) {
 		b.ReportAllocs()
 		b.ResetTimer()
 		for i := 0; i < b.N; i++ {
-			dels := make([]btree.Item, 0, tr.Len())
-			tr.Ascend(btree.ItemIterator(func(b btree.Item) bool {
+			dels := make([]interface{}, 0, tr.Size())
+			tr.Ascend(btree.ItemIterator(func(b interface{}) bool {
 				dels = append(dels, b)
 				return true
 			}))
@@ -741,8 +741,8 @@ func BenchmarkDeleteAndRestore(b *testing.B) {
 		b.ReportAllocs()
 		b.ResetTimer()
 		for i := 0; i < b.N; i++ {
-			dels := make([]btree.Item, 0, tr.Len())
-			tr.Ascend(btree.ItemIterator(func(b btree.Item) bool {
+			dels := make([]interface{}, 0, tr.Size())
+			tr.Ascend(btree.ItemIterator(func(b interface{}) bool {
 				dels = append(dels, b)
 				return true
 			}))
