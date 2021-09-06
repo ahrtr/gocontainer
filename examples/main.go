@@ -35,15 +35,19 @@ func main() {
 		linkedmapExample1,
 		linkedmapExample2,
 		linkedmapExample3,
+
+		btreeExample1,
+		btreeExample2,
+		btreeExample3,
+		btreeExample4,
+		btreeExample5,
 	}
 
-	cnt := 0
 	for _, f := range funcs {
-		cnt++
 		fmt.Printf("\n%s starting...\n", runtime.FuncForPC(reflect.ValueOf(f).Pointer()).Name())
 		f()
 	}
-	fmt.Printf("\n****** Total examples: %d\n", cnt)
+	fmt.Printf("\n****** Total examples: %d\n", len(funcs))
 }
 
 // printFuncName prints each example function's name.

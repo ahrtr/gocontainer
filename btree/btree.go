@@ -70,7 +70,8 @@ type Interface interface {
 	// It's used to impose a total ordering on the elements in the btree.
 	WithComparator(c utils.Comparator) Interface
 
-	// Clone clones the btree, lazily.
+	// Clone clones the btree, lazily. The internal tree structure is marked read-only and
+	// shared between the old and new btree. Writes to both the old and the new btree use copy-on-write logic.
 	Clone() Interface
 	// ReplaceOrInsert adds the given item to the tree.  If an item in the tree
 	// already equals the given one, it is removed from the tree and returned.
@@ -132,7 +133,7 @@ var (
 	nilChildren = make(children, 16)
 )
 
-// FreeList represents a free list of btree nodes. By default each
+// FreeList represents a free list of btree nodes. By default, each
 // BTree has its own FreeList, but multiple BTrees can share the same
 // FreeList.
 // Two Btrees using the same freelist are safe for concurrent write access.

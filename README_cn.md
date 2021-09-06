@@ -13,6 +13,7 @@ gocontainer实现了一些Java中存在，而Golang中没有的容器。这个�
   - [List](#list)
   - [PriorityQueue](#priorityqueue)
   - [LinkedMap](#linkedMap)
+  - [BTree](#bTree)
   - [其它容器](#其它容器)
 - **[工具箱](#工具箱)**
   - [Comparator](#Comparator)
@@ -93,7 +94,7 @@ import (
 )
 ```
 
-调用stack.New()可以创建要一个stack，
+调用stack.New()可以创建一个stack，
 ```go
 New() Interface
 ```
@@ -492,7 +493,7 @@ func main() {
 
 可以通过方法WithComparator为一个priorityQueue设置一个utils.Comparator实例，具体请参考 **[Comparator](#comparator)**.
 ```go
-WithComparator(c gsort.Comparator) Interface
+WithComparator(c utils.Comparator) Interface
 ```
 
 可以通过方法WithMinHeap将一个priorityQueue设置成小顶堆或大顶堆。如果传给这个方法的参数为true，那就是小顶堆，这也是默认选项。如果为false，则是大顶堆。
@@ -617,6 +618,134 @@ for hasPrev {
 	k, v, hasPrev = it()
 	// do something with k & v
 }
+```
+
+## **BTree**
+BTree是一个B-Tree的实现。最初的实现是从github.com/google/btree拷贝来的，但是做了一定的重构以适应该项目一贯的接口约定。另外，也对原来的一些设计与实现做了一些改进，因此使用起来更加用户友好！
+具体来说，它实现了下面的接口。点击**[这里](examples/btree_example.go)**查看关于btree的示例。
+```go
+// Interface is a type of btree, and bTree implements this interface
+type Interface interface {
+	collection.Interface
+
+	// WithComparator sets an utils.Comparator instance for the btree.
+	// It's used to impose a total ordering on the elements in the btree.
+	WithComparator(c utils.Comparator) Interface
+
+	// Clone clones the btree, lazily. The internal tree structure is marked read-only and
+	// shared between the old and new btree. Writes to both the old and the new btree use copy-on-write logic.
+	Clone() Interface
+	// ReplaceOrInsert adds the given item to the tree.  If an item in the tree
+	// already equals the given one, it is removed from the tree and returned.
+	// Otherwise, nil is returned.
+	ReplaceOrInsert(item interface{}) interface{}
+	// Delete removes an item equal to the passed in item from the tree, returning
+	// it.  If no such item exists, returns nil.
+	Delete(item interface{}) interface{}
+	// DeleteMin removes the smallest item in the tree and returns it.
+	// If no such item exists, returns nil.
+	DeleteMin() interface{}
+	// DeleteMax removes the largest item in the tree and returns it.
+	// If no such item exists, returns nil.
+	DeleteMax() interface{}
+
+	// AscendRange calls the iterator for every value in the tree within the range
+	// [greaterOrEqual, lessThan), until iterator returns false.
+	AscendRange(greaterOrEqual, lessThan interface{}, iterator ItemIterator)
+	// AscendLessThan calls the iterator for every value in the tree within the range
+	// [first, pivot), until iterator returns false.
+	AscendLessThan(pivot interface{}, iterator ItemIterator)
+	// AscendGreaterOrEqual calls the iterator for every value in the tree within
+	// the range [pivot, last], until iterator returns false.
+	AscendGreaterOrEqual(pivot interface{}, iterator ItemIterator)
+	// Ascend calls the iterator for every value in the tree within the range
+	// [first, last], until iterator returns false.
+	Ascend(iterator ItemIterator)
+
+	// DescendRange calls the iterator for every value in the tree within the range
+	// [lessOrEqual, greaterThan), until iterator returns false.
+	DescendRange(lessOrEqual, greaterThan interface{}, iterator ItemIterator)
+	// DescendLessOrEqual calls the iterator for every value in the tree within the range
+	// [pivot, first], until iterator returns false.
+	DescendLessOrEqual(pivot interface{}, iterator ItemIterator)
+	// DescendGreaterThan calls the iterator for every value in the tree within
+	// the range [last, pivot), until iterator returns false.
+	DescendGreaterThan(pivot interface{}, iterator ItemIterator)
+	// Descend calls the iterator for every value in the tree within the range
+	// [last, first], until iterator returns false.
+	Descend(iterator ItemIterator)
+
+	// Get looks for the key item in the tree, returning it.  It returns nil if
+	// unable to find that item.
+	Get(key interface{}) interface{}
+	// Min returns the smallest item in the tree, or nil if the tree is empty.
+	Min() interface{}
+	// Max returns the largest item in the tree, or nil if the tree is empty.
+	Max() interface{}
+	// Has returns true if the given key is in the tree.
+	Has(key interface{}) bool
+}
+```
+
+为了使用btree，必须import下面这个package，
+```go
+import (
+	"github.com/ahrtr/gocontainer/btree"
+)
+```
+
+调用btree.New()可以创建一个btree,
+```go
+New() Interface 
+```
+
+下面是一个简单的使用btree的例子，
+```go
+package main
+
+import (
+	"fmt"
+
+	"github.com/ahrtr/gocontainer/btree"
+)
+
+func main() {
+    items := []int {5, 9, 2, 4, 11, 6}
+    tr := btree.New(2)
+
+    fmt.Printf("tr.Size(): %d\n", tr.Size()) // should be 0 in the beginning
+
+    // Insert values
+    fmt.Printf("Inserting %d items: %v\n", len(items), items)
+    for _, item := range items {
+    	tr.ReplaceOrInsert(item)
+    }
+
+    // Search values
+    fmt.Printf("    tr.Size(): %d\n", tr.Size()) // should be len(items): 6 now
+    fmt.Printf("    tr.Min(): %v\n", tr.Min()) // should be 2
+    fmt.Printf("    tr.Max(): %v\n", tr.Max()) // should be 11
+    fmt.Printf("    tr.Has(6): %t\n", tr.Has(6))  // true
+    fmt.Printf("    tr.Get(6): %v\n", tr.Get(6))  // 6
+    fmt.Printf("    tr.Has(7): %t\n", tr.Has(7))  // false
+    fmt.Printf("    tr.Get(7): %v\n", tr.Get(7))  // nil
+
+    // Delete values
+    fmt.Println("Deleting items:")
+    fmt.Printf("    tr.DeleteMin(): %v\n", tr.DeleteMin()) // 2 is deleted and returned
+    fmt.Printf("    tr.Min(): %v\n", tr.Min()) // should be 4 now
+    fmt.Printf("    tr.DeleteMax(): %v\n", tr.DeleteMax()) // 11 is deleted and returned
+    fmt.Printf("    tr.Max(): %v\n", tr.Max()) // should be 9 now
+    fmt.Printf("    tr.Delete(6): %v\n", tr.Delete(6)) // 6 is deleted and returned
+    fmt.Printf("    tr.Delete(7): %v\n", tr.Delete(7)) // 7 doesn't exist, so nil is returned
+
+    fmt.Printf("tr.Size(): %d\n", tr.Size()) // should be 3 now because 3 items have already been removed
+}
+```
+
+可以通过方法WithComparator为一个btree设置一个utils.Comparator实例，具体请参考**[Comparator](#comparator)**.
+```go
+WithComparator(c utils.Comparator) Interface
 ```
 
 ## 其它容器
