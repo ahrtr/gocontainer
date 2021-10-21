@@ -7,7 +7,7 @@ import (
 
 // example for basic usage
 func btreeExample1() {
-	items := []int {5, 9, 2, 4, 11, 6}
+	items := []int{5, 9, 2, 4, 11, 6}
 	tr := btree.New(2)
 
 	fmt.Printf("tr.Size(): %d\n", tr.Size()) // should be 0 in the beginning
@@ -20,28 +20,28 @@ func btreeExample1() {
 
 	// Search values
 	fmt.Printf("    tr.Size(): %d\n", tr.Size()) // should be len(items): 6 now
-	fmt.Printf("    tr.Min(): %v\n", tr.Min()) // should be 2
-	fmt.Printf("    tr.Max(): %v\n", tr.Max()) // should be 11
-	fmt.Printf("    tr.Has(6): %t\n", tr.Has(6))  // true
-	fmt.Printf("    tr.Get(6): %v\n", tr.Get(6))  // 6
-	fmt.Printf("    tr.Has(7): %t\n", tr.Has(7))  // false
-	fmt.Printf("    tr.Get(7): %v\n", tr.Get(7))  // nil
+	fmt.Printf("    tr.Min(): %v\n", tr.Min())   // should be 2
+	fmt.Printf("    tr.Max(): %v\n", tr.Max())   // should be 11
+	fmt.Printf("    tr.Has(6): %t\n", tr.Has(6)) // true
+	fmt.Printf("    tr.Get(6): %v\n", tr.Get(6)) // 6
+	fmt.Printf("    tr.Has(7): %t\n", tr.Has(7)) // false
+	fmt.Printf("    tr.Get(7): %v\n", tr.Get(7)) // nil
 
 	// Delete values
 	fmt.Println("Deleting items:")
 	fmt.Printf("    tr.DeleteMin(): %v\n", tr.DeleteMin()) // 2 is deleted and returned
-	fmt.Printf("    tr.Min(): %v\n", tr.Min()) // should be 4 now
+	fmt.Printf("    tr.Min(): %v\n", tr.Min())             // should be 4 now
 	fmt.Printf("    tr.DeleteMax(): %v\n", tr.DeleteMax()) // 11 is deleted and returned
-	fmt.Printf("    tr.Max(): %v\n", tr.Max()) // should be 9 now
-	fmt.Printf("    tr.Delete(6): %v\n", tr.Delete(6)) // 6 is deleted and returned
-	fmt.Printf("    tr.Delete(7): %v\n", tr.Delete(7)) // 7 doesn't exist, so nil is returned
+	fmt.Printf("    tr.Max(): %v\n", tr.Max())             // should be 9 now
+	fmt.Printf("    tr.Delete(6): %v\n", tr.Delete(6))     // 6 is deleted and returned
+	fmt.Printf("    tr.Delete(7): %v\n", tr.Delete(7))     // 7 doesn't exist, so nil is returned
 
 	fmt.Printf("tr.Size(): %d\n", tr.Size()) // should be 3 now because 3 items have already been removed
 }
 
 // example for search in ascending or descending order
 func btreeExample2() {
-	items := []int {5, 9, 2, 4, 11, 6}
+	items := []int{5, 9, 2, 4, 11, 6}
 	tr := btree.New(2)
 
 	// Insert values
@@ -104,7 +104,7 @@ func btreeExample2() {
 
 // example of Clone(). Once a btree is cloned, and the following writes to both the old and new btree use copy-on-write logic.
 func btreeExample3() {
-	items := []int {5, 9, 2, 4, 11, 6}
+	items := []int{5, 9, 2, 4, 11, 6}
 	tr := btree.New(2)
 
 	// Insert values
@@ -129,13 +129,12 @@ func btreeExample3() {
 		return true
 	})
 
-	fmt.Printf("\ntr.ReplaceOrInsert(7): %v\n",tr.ReplaceOrInsert(7))
+	fmt.Printf("\ntr.ReplaceOrInsert(7): %v\n", tr.ReplaceOrInsert(7))
 	fmt.Printf("tr.ReplaceOrInsert(13): %v\n", tr.ReplaceOrInsert(13))
 	fmt.Printf("tr.Delete(9): %v\n", tr.Delete(9))
 
 	fmt.Printf("tr2.ReplaceOrInsert(20): %v\n", tr2.ReplaceOrInsert(20))
 	fmt.Printf("tr2.DeleteMin(): %v\n", tr2.DeleteMin())
-
 
 	fmt.Printf("    tr.Size(): %d, tr2.Size(): %d\n", tr.Size(), tr2.Size())
 	fmt.Printf("    tr.Ascend(x): ") // should be 2, 4, 5, 6, 9, 11
@@ -176,13 +175,12 @@ func btreeExample4() {
 	})
 }
 
-
 // example on how to use FreeList, which useful if you want to share a FreeList in multiple btree instances.
 func btreeExample5() {
 	freeList := btree.NewFreeList(32)
 	tr := btree.NewWithFreeList(2, freeList)
 
-	items := []int {5, 9, 2, 4, 11, 6}
+	items := []int{5, 9, 2, 4, 11, 6}
 
 	// Insert values
 	fmt.Printf("Inserting %d items: %v\n", len(items), items)

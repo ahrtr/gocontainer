@@ -70,6 +70,7 @@ type Interface interface {
 - List (ArrayList, LinkedList)
 - PriorityQueue
 - LinkedMap
+- BTree
 
 ## Stack
 Stack(栈)是一种后进先出(LIFO:last-in-first-out)的容器. 它实现了下面的接口。点击 **[这里](examples/stack_example.go)** 查看关于stack的示例。

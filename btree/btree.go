@@ -254,7 +254,7 @@ func (s items) find(item interface{}, cmp utils.Comparator) (index int, found bo
 	})
 
 	if i > 0 && !lessThan(s[i-1], item, cmp) {
-		return i-1, true
+		return i - 1, true
 	}
 
 	return i, false
@@ -685,7 +685,7 @@ type copyOnWriteContext struct {
 // will initially experience minor slow-downs caused by additional allocs and
 // copies due to the aforementioned copy-on-write logic, but should converge to
 // the original performance characteristics of the original tree.
-func (t *bTree) Clone() (Interface) {
+func (t *bTree) Clone() Interface {
 	// Create two entirely new copy-on-write contexts.
 	// This operation effectively creates three trees:
 	//   the original, shared nodes (old b.cow)

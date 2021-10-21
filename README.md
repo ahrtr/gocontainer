@@ -70,6 +70,7 @@ Currently this library implements the following containers:
 - List (ArrayList, LinkedList)
 - PriorityQueue
 - LinkedMap
+- BTree 
 
 ## Stack
 Stack is a LIFO(last-in-first-out) container. It implements the following interface. Click **[here](examples/stack_example.go)** to find examples on how to use a stack. 
