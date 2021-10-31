@@ -1,8 +1,8 @@
 package main
 
 import (
-	"fmt"
 	"github.com/ahrtr/gocontainer/btree"
+	"fmt"
 )
 
 // example for basic usage
@@ -17,6 +17,9 @@ func btreeExample1() {
 	for _, item := range items {
 		tr.ReplaceOrInsert(item)
 	}
+
+
+
 
 	// Search values
 	fmt.Printf("    tr.Size(): %d\n", tr.Size()) // should be len(items): 6 now
@@ -40,7 +43,7 @@ func btreeExample1() {
 }
 
 // example for search in ascending or descending order
-func btreeExample2() {
+func btreeExample2(){
 	items := []int{5, 9, 2, 4, 11, 6}
 	tr := btree.New(2)
 
