@@ -612,6 +612,7 @@ func (n *node) iterate(dir direction, start, stop interface{}, includeStart bool
 				}
 			}
 			if len(n.children) > 0 {
+
 				if hit, ok = n.children[i+1].iterate(dir, start, stop, includeStart, hit, iter, cmp); !ok {
 					return hit, false
 				}
@@ -620,7 +621,7 @@ func (n *node) iterate(dir direction, start, stop interface{}, includeStart bool
 				return hit, false //	continue
 			}
 			hit = true
-			if !iter(n.items[i]) {
+			if !iter(n.items[i] ) {
 				return hit, false
 			}
 		}

@@ -106,12 +106,16 @@ func (lm *linkedMap) Size() int {
 }
 
 func (lm *linkedMap) IsEmpty() bool {
-	return lm.Size() == 0
+	return lm.Size() ==   0
 }
 
 func (lm *linkedMap) Put(k, v interface{}) interface{} {
 	var retVal interface{} = nil
 	if oldElement, ok := lm.data[k]; ok {
+
+
+
+		
 		retVal = oldElement.value
 		oldElement.value = v
 		// move the element to the end of the list
