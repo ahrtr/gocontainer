@@ -49,9 +49,7 @@ func (al *arrayList) IsEmpty() bool {
 }
 
 func (al *arrayList) Add(vals ...interface{}) {
-	for _, v := range vals {
-		al.items = append(al.items, v)
-	}
+	al.items = append(al.items, vals...)
 }
 
 func (al *arrayList) AddTo(index int, val interface{}) error {
@@ -179,7 +177,7 @@ func (al *arrayList) shrinkList() {
 	}
 	oldlen := len(al.items)
 	if oldlen <= oldcap/4 { // shrink when len(list) <= cap(list)/4
-		newItems := make([]interface{}, oldlen, oldlen)
+		newItems := make([]interface{}, oldlen)
 		copy(newItems, al.items)
 		al.Clear()
 		al.items = newItems

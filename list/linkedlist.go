@@ -256,7 +256,7 @@ func (ll *linkedList) values() []interface{} {
 		return []interface{}{}
 	}
 
-	values := make([]interface{}, ll.Size(), ll.Size())
+	values := make([]interface{}, ll.Size())
 
 	it, hasNext := ll.Iterator()
 	var v interface{}
