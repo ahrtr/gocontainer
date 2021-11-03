@@ -50,7 +50,6 @@ func (s *stack) Pop() interface{} {
 		val, _ := s.l.Get(size - 1)
 		if _, err := s.l.Remove(size - 1); err !=  nil {
 			//todo: what should we do if failing to remove the element?
-			return nil
 		}
 
 		return val

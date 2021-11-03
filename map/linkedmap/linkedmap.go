@@ -115,7 +115,7 @@ func (lm *linkedMap) Put(k, v interface{}) interface{} {
 
 
 
-		
+
 		retVal = oldElement.value
 		oldElement.value = v
 		// move the element to the end of the list

@@ -635,7 +635,6 @@ func (n *node) iterate(dir direction, start, stop interface{}, includeStart bool
 }
 
 // Used for testing/debugging purposes.
-//nolint
 func (n *node) print(w io.Writer, level int) {
 	fmt.Fprintf(w, "%sNODE:%v\n", strings.Repeat("  ", level), n.items)
 	for _, c := range n.children {
