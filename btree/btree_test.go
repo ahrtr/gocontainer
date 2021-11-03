@@ -125,6 +125,7 @@ func TestBTree(t *testing.T) {
 	}
 }
 
+//nolint
 func ExampleBTree() {
 	tr := btree.New(*btreeDegree)
 	for i := 0; i < 10; i++ {

@@ -634,6 +634,7 @@ func (n *node) iterate(dir direction, start, stop interface{}, includeStart bool
 }
 
 // Used for testing/debugging purposes.
+//nolint
 func (n *node) print(w io.Writer, level int) {
 	fmt.Fprintf(w, "%sNODE:%v\n", strings.Repeat("  ", level), n.items)
 	for _, c := range n.children {
@@ -941,6 +942,7 @@ func (t *bTree) Clear() {
 // reset returns a subtree to the freelist.  It breaks out immediately if the
 // freelist is full, since the only benefit of iterating is to fill that
 // freelist up.  Returns true if parent reset call should continue.
+//nolint
 func (n *node) reset(c *copyOnWriteContext) bool {
 	for _, child := range n.children {
 		if !child.reset(c) {
