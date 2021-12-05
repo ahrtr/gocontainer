@@ -46,6 +46,12 @@ type Interface interface {
 	Get(k interface{}) interface{}
 	// GetOrDefault returns the value to which the specified key is mapped, or the defaultValue if this map contains no mapping for the key.
 	GetOrDefault(k, defaultValue interface{}) interface{}
+	// GetFirstElement gets the first element from this map, which is the head of the list.
+	// It returns the (key, value, true) if the map isn't empty, or (nil, nil, false) if the map is empty.
+	GetFirstElement() (interface{}, interface{}, bool)
+	// GetLastElement gets the last element from this map, which is the tail of the list.
+	// It returns the (key, value, true) if the map isn't empty, or (nil, nil, false) if the map is empty.
+	GetLastElement() (interface{}, interface{}, bool)
 
 	// ContainsKey returns true if this map contains a mapping for the specified key.
 	ContainsKey(k interface{}) bool
@@ -110,7 +116,7 @@ func (lm *linkedMap) IsEmpty() bool {
 }
 
 func (lm *linkedMap) Put(k, v interface{}) interface{} {
-	var retVal interface{} = nil
+	var retVal interface{}
 	if oldElement, ok := lm.data[k]; ok {
 		retVal = oldElement.value
 		oldElement.value = v
@@ -155,6 +161,28 @@ func (lm *linkedMap) GetOrDefault(k, defaultValue interface{}) interface{} {
 	}
 
 	return defaultValue
+}
+
+func (lm *linkedMap) GetFirstElement() (interface{}, interface{}, bool) {
+	if lm.head != nil {
+		e := lm.head
+		k, v := e.key, e.value
+
+		return k, v, true
+	}
+
+	return nil, nil, false
+}
+
+func (lm *linkedMap) GetLastElement() (interface{}, interface{}, bool) {
+	if lm.tail != nil {
+		e := lm.tail
+		k, v := e.key, e.value
+
+		return k, v, true
+	}
+
+	return nil, nil, false
 }
 
 func (lm *linkedMap) ContainsKey(k interface{}) bool {

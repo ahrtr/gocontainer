@@ -277,7 +277,7 @@ type Interface interface {
 
 	// Contains returns true if this list contains the specified element.
 	Contains(val interface{}) bool
-	// Get returns the element at the specified positon in this list. The index must be in the range of [0, size).
+	// Get returns the element at the specified position in this list. The index must be in the range of [0, size).
 	Get(index int) (interface{}, error)
 
 	// Remove removes the element at the specified position in this list.
@@ -522,6 +522,12 @@ type Interface interface {
 	Get(k interface{}) interface{}
 	// GetOrDefault returns the value to which the specified key is mapped, or the defaultValue if this map contains no mapping for the key.
 	GetOrDefault(k, defaultValue interface{}) interface{}
+    // GetFirstElement gets the first element from this map, which is the head of the list.
+    // It returns the (key, value, true) if the map isn't empty, or (nil, nil, false) if the map is empty.
+    GetFirstElement() (interface{}, interface{}, bool)
+    // GetLastElement gets the last element from this map, which is the tail of the list.
+    // It returns the (key, value, true) if the map isn't empty, or (nil, nil, false) if the map is empty.
+    GetLastElement() (interface{}, interface{}, bool)
 
 	// ContainsKey returns true if this map contains a mapping for the specified key.
 	ContainsKey(k interface{}) bool

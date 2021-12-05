@@ -25,12 +25,12 @@ func Compare(v1 interface{}, v2 interface{}, cmp Comparator) (int, error) {
 		return 0, nil
 	}
 	if nil == v1 || nil == v2 {
-		return 0, errors.New("A nil value can't be compared to a non-nil value")
+		return 0, errors.New("a nil value can't be compared to a non-nil value")
 	}
 
 	k1, k2 := reflect.TypeOf(v1).Kind(), reflect.TypeOf(v2).Kind()
 	if k1 != k2 {
-		return 0, fmt.Errorf("Two values of different type can't be compared, %s: %s", k1, k2)
+		return 0, fmt.Errorf("two values of different type can't be compared, %s: %s", k1, k2)
 	}
 
 	// Compare the two values using the given customized comparator

@@ -84,7 +84,7 @@ func (ll *linkedList) linkLast(val interface{}) {
 func (ll *linkedList) AddTo(index int, val interface{}) error {
 	size := ll.Size()
 	if index < 0 || index > size {
-		return fmt.Errorf("Index out of range, index:%d, len:%d", index, size)
+		return fmt.Errorf("index out of range, index:%d, len:%d", index, size)
 	}
 
 	if index == size {
@@ -119,7 +119,7 @@ func (ll *linkedList) linkBefore(val interface{}, e *element) {
 	ll.length++
 }
 
-// getElement returns the element at the specified positon.
+// getElement returns the element at the specified position.
 func (ll *linkedList) getElement(index int) *element {
 	size := ll.Size()
 	var e *element
@@ -141,7 +141,7 @@ func (ll *linkedList) Contains(val interface{}) bool {
 	return ll.indexOf(val) >= 0
 }
 
-// indexOf returns the index of the first occurence of the specified element
+// indexOf returns the index of the first occurrence of the specified element
 // in this list, or -1 if this list does not contain the element.
 func (ll *linkedList) indexOf(val interface{}) int {
 	index := 0
@@ -159,7 +159,7 @@ func (ll *linkedList) indexOf(val interface{}) int {
 func (ll *linkedList) Get(index int) (interface{}, error) {
 	size := ll.Size()
 	if index < 0 || index >= size {
-		return nil, fmt.Errorf("Index out of range, index:%d, len:%d", index, size)
+		return nil, fmt.Errorf("index out of range, index:%d, len:%d", index, size)
 	}
 
 	return ll.getElement(index).value, nil
@@ -168,7 +168,7 @@ func (ll *linkedList) Get(index int) (interface{}, error) {
 func (ll *linkedList) Remove(index int) (interface{}, error) {
 	size := ll.Size()
 	if index < 0 || index >= size {
-		return nil, fmt.Errorf("Index out of range, index:%d, len:%d", index, size)
+		return nil, fmt.Errorf("index out of range, index:%d, len:%d", index, size)
 	}
 
 	return ll.unlink(ll.getElement(index)), nil

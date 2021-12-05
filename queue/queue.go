@@ -20,7 +20,7 @@ type Interface interface {
 	Poll() interface{}
 }
 
-// element is an element of the queue
+// element is an element of the queue.
 type element struct {
 	next  *element
 	value interface{}

@@ -17,13 +17,14 @@ package btree_test
 import (
 	"flag"
 	"fmt"
-	"github.com/ahrtr/gocontainer/btree"
 	"math/rand"
 	"reflect"
 	"sort"
 	"sync"
 	"testing"
 	"time"
+
+	"github.com/ahrtr/gocontainer/btree"
 )
 
 func init() {
