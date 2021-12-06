@@ -54,7 +54,7 @@ func (al *arrayList) Add(vals ...interface{}) {
 
 func (al *arrayList) AddTo(index int, val interface{}) error {
 	if index < 0 || index > len(al.items) {
-		return fmt.Errorf("Index out of range, index:%d, len:%d", index, al.Size())
+		return fmt.Errorf("index out of range, index:%d, len:%d", index, al.Size())
 	}
 
 	if index == al.Size() {
@@ -85,7 +85,7 @@ func (al *arrayList) Contains(val interface{}) bool {
 
 func (al *arrayList) Get(index int) (interface{}, error) {
 	if index < 0 || index >= len(al.items) {
-		return nil, fmt.Errorf("Index out of range, index:%d, len:%d", index, al.Size())
+		return nil, fmt.Errorf("index out of range, index:%d, len:%d", index, al.Size())
 	}
 
 	return al.items[index], nil
@@ -93,7 +93,7 @@ func (al *arrayList) Get(index int) (interface{}, error) {
 
 func (al *arrayList) Remove(index int) (interface{}, error) {
 	if index < 0 || index >= len(al.items) {
-		return nil, fmt.Errorf("Index out of range, index:%d, len:%d", index, al.Size())
+		return nil, fmt.Errorf("index out of range, index:%d, len:%d", index, al.Size())
 	}
 
 	val := al.items[index]

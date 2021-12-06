@@ -19,13 +19,13 @@ type Interface interface {
 
 	// Contains returns true if this list contains the specified element.
 	Contains(val interface{}) bool
-	// Get returns the element at the specified positon in this list. The index must be in the range of [0, size).
+	// Get returns the element at the specified position in this list. The index must be in the range of [0, size).
 	Get(index int) (interface{}, error)
 
 	// Remove removes the element at the specified position in this list.
 	// It returns an error if the index is out of range.
 	Remove(index int) (interface{}, error)
-	// RemoveByValue removes the first occurence of the specified element from this list, if it is present.
+	// RemoveByValue removes the first occurrence of the specified element from this list, if it is present.
 	// It returns false if the target value isn't present, otherwise returns true.
 	RemoveByValue(val interface{}) bool
 

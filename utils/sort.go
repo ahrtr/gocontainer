@@ -21,7 +21,7 @@ func Sort(values []interface{}, c Comparator) {
 	sort.Sort(&sortableContainer{values, c})
 }
 
-// ReverseSort sorts the values into opposite ordering to Sort
+// ReverseSort sorts the values into opposite ordering to Sort.
 func ReverseSort(values []interface{}, c Comparator) {
 	sort.Sort(&reverseSortableContainer{&sortableContainer{values, c}})
 }

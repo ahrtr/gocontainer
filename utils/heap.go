@@ -105,7 +105,7 @@ func Remove(h Interface, i int) interface{} {
 
 // HeapPreRemove move the element with the specified index down or up until it gets to the right place. The operation is in-place.
 // Remove workflow(this function takes care of step 1 and 2):
-//    1*. swap the element with the specifed index and the last element;
+//    1*. swap the element with the specified index and the last element;
 //    2*. move the element with the specified index down or up until it gets to the right place;
 //    3.  remove the last element, and return the removed element to users.
 // Parameters:
@@ -161,7 +161,7 @@ func constructHeapContainer(values []interface{}, isMinHeap bool, c Comparator) 
 	return &reverseSortableContainer{&sortableContainer{values, c}}
 }
 
-// copied from Go's package container/heap, but changed the first parameter from heap.Interface to sort.Interface
+// copied from Go's package container/heap, but changed the first parameter from heap.Interface to sort.Interface.
 func up(h sort.Interface, j int) {
 	for {
 		i := (j - 1) / 2 // parent
@@ -173,7 +173,7 @@ func up(h sort.Interface, j int) {
 	}
 }
 
-// copied from Go's package container/heap, but changed the first parameter from heap.Interface to sort.Interface
+// copied from Go's package container/heap, but changed the first parameter from heap.Interface to sort.Interface.
 func down(h sort.Interface, i0, n int) bool {
 	i := i0
 	for {

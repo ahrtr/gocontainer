@@ -205,7 +205,7 @@ func TestArrayListSort(t *testing.T) {
 		t.Errorf("The second element isn't correct, excepted: 6, actual: %d\n", v)
 	}
 	if v, _ := al.Get(2); v != 7 {
-		t.Errorf("The thrid element isn't correct, excepted: 7, actual: %d\n", v)
+		t.Errorf("The third element isn't correct, excepted: 7, actual: %d\n", v)
 	}
 	if v, _ := al.Get(3); v != 15 {
 		t.Errorf("The fourth element isn't correct, excepted: 15, actual: %d\n", v)
@@ -225,7 +225,7 @@ func TestArrayListSort(t *testing.T) {
 		t.Errorf("The second element isn't correct, excepted: 7, actual: %d\n", v)
 	}
 	if v, _ := al.Get(2); v != 6 {
-		t.Errorf("The thrid element isn't correct, excepted: 6, actual: %d\n", v)
+		t.Errorf("The third element isn't correct, excepted: 6, actual: %d\n", v)
 	}
 	if v, _ := al.Get(3); v != 4 {
 		t.Errorf("The fourth element isn't correct, excepted: 4, actual: %d\n", v)

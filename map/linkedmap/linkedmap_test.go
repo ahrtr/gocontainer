@@ -54,7 +54,7 @@ func TestLinkedMapValue(t *testing.T) {
 		}
 	}
 
-	// test Get & GetOrDefault
+	// test Get & GetOrDefault & GetFirstElement & GetLastElement
 	for i, k := range keys {
 		v := lm.Get(k)
 		if v != values[i] {
@@ -67,13 +67,23 @@ func TestLinkedMapValue(t *testing.T) {
 		t.Errorf("The returned value should be the default value, but actual: %v\n", v)
 	}
 
+	k, v, ok := lm.GetFirstElement()
+	if k != 24 || v != "benjamin" || !ok {
+		t.Errorf("Failed to get the first element, key: %v, value: %v, success: %t\n", k, v, ok)
+	}
+
+	k, v, ok = lm.GetLastElement()
+	if k != 35 || v != "bill" || !ok {
+		t.Errorf("Failed to get the last element, key: %v, value: %v, success: %t\n", k, v, ok)
+	}
+
 	// test Remove, RemoveFirstElement and RemoveLastElement
-	v, ok := lm.Remove(43)
+	v, ok = lm.Remove(43)
 	if v != "alice" || !ok {
 		t.Errorf("Failed to remove element with key 43, returned value: %v, success: %t\n", v, ok)
 	}
 
-	k, v, ok := lm.RemoveFirstElement()
+	k, v, ok = lm.RemoveFirstElement()
 	if k != 24 || v != "benjamin" || !ok {
 		t.Errorf("Failed to remove the first element, key: %v, value: %v, success: %t\n", k, v, ok)
 	}

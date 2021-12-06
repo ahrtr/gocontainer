@@ -54,12 +54,13 @@ package btree
 
 import (
 	"fmt"
-	"github.com/ahrtr/gocontainer/collection"
-	"github.com/ahrtr/gocontainer/utils"
 	"io"
 	"sort"
 	"strings"
 	"sync"
+
+	"github.com/ahrtr/gocontainer/collection"
+	"github.com/ahrtr/gocontainer/utils"
 )
 
 // Interface is a type of btree, and bTree implements this interface
@@ -735,12 +736,10 @@ func (c *copyOnWriteContext) freeNode(n *node) freeType {
 		n.cow = nil
 		if c.freelist.freeNode(n) {
 			return ftStored
-		} else {
-			return ftFreelistFull
 		}
-	} else {
-		return ftNotOwned
+		return ftFreelistFull
 	}
+	return ftNotOwned
 }
 
 // ReplaceOrInsert adds the given item to the tree.  If an item in the tree
@@ -757,16 +756,17 @@ func (t *bTree) ReplaceOrInsert(item interface{}) interface{} {
 		t.root.items = append(t.root.items, item)
 		t.length++
 		return nil
-	} else {
-		t.root = t.root.mutableFor(t.cow)
-		if len(t.root.items) >= t.maxItems() {
-			item2, second := t.root.split(t.maxItems() / 2)
-			oldroot := t.root
-			t.root = t.cow.newNode()
-			t.root.items = append(t.root.items, item2)
-			t.root.children = append(t.root.children, oldroot, second)
-		}
 	}
+
+	t.root = t.root.mutableFor(t.cow)
+	if len(t.root.items) >= t.maxItems() {
+		item2, second := t.root.split(t.maxItems() / 2)
+		oldRoot := t.root
+		t.root = t.cow.newNode()
+		t.root.items = append(t.root.items, item2)
+		t.root.children = append(t.root.children, oldRoot, second)
+	}
+
 	out := t.root.insert(item, t.maxItems(), t.cmp)
 	if out == nil {
 		t.length++
