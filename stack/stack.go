@@ -21,7 +21,7 @@ type Interface interface {
 	Peek() interface{}
 }
 
-// stack is LIFO.
+// stack is a LIFO data structure.
 type stack struct {
 	l list.Interface
 }
