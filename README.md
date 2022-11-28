@@ -34,6 +34,7 @@ import (
 )
 
 func main() {
+	// Create an array list
 	al := list.NewArrayList()
 	al.Add(5, 6, 7)
 
